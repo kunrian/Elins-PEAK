@@ -1,8 +1,8 @@
 {
   "name": "Elins_PEAK",
-  "version_number": "0.3.0",
+  "version_number": "0.3.2",
   "website_url": "https://github.com/kunrian/Elins-PEAK",
-  "description": "Persistent, use-based PEAK skills with player-owned levels, scalable stats, climbing specializations, resistances, recoveries, and inventory growth.",
+  "description": "Level Up Everything! Inspired by Elin, 21 persistent skills grow through actual use—making you stronger, faster, tougher, better at climbing, more resistant to the mountain, and better at hauling a growing backpack!",
   "dependencies": [
     "BepInEx-BepInExPack_PEAK-5.4.75301",
     "PEAKModding-PEAKLib_Core-1.7.2",

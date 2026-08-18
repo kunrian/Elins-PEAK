@@ -5,6 +5,57 @@ using UnityEngine;
 
 namespace PEAKUsageSkills.GameAdapters.Patches
 {
+    internal static class ExplicitItemStatusScope
+    {
+        [ThreadStatic]
+        private static int depth;
+
+        public static bool Active => depth > 0;
+
+        public static void Enter()
+        {
+            depth++;
+        }
+
+        public static void Exit()
+        {
+            depth = Math.Max(0, depth - 1);
+        }
+    }
+
+    internal static class EnvironmentalColdRecoveryScope
+    {
+        [ThreadStatic]
+        private static int depth;
+
+        public static bool Active => depth > 0;
+
+        public static void Enter()
+        {
+            depth++;
+        }
+
+        public static void Exit()
+        {
+            depth = Math.Max(0, depth - 1);
+        }
+    }
+
+    [HarmonyPatch(typeof(Action_ModifyStatus), "RunAction")]
+    internal static class ExplicitItemStatusScopePatch
+    {
+        private static void Prefix()
+        {
+            ExplicitItemStatusScope.Enter();
+        }
+
+        private static Exception? Finalizer(Exception? __exception)
+        {
+            ExplicitItemStatusScope.Exit();
+            return __exception;
+        }
+    }
+
     internal static class FallScope
     {
         [ThreadStatic]
@@ -66,6 +117,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             public string Source;
             public bool ConditionExposure;
             public SkillId ConditionSkill;
+            public bool EnvironmentalColdRecovery;
         }
 
         private static void Prefix(
@@ -87,13 +139,22 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 StatusType = statusType,
                 Source = fromRPC ? "AddRPC" : "AddLocal",
                 ConditionExposure = false,
-                ConditionSkill = default
+                ConditionSkill = default,
+                EnvironmentalColdRecovery = false
             };
 
             string? fallSource = FallScope.Source;
             if (!local || amount <= 0f)
             {
                 return;
+            }
+
+            bool warmingExistingCold = statusType == CharacterAfflictions.STATUSTYPE.Hot
+                && __instance!.GetCurrentStatus(CharacterAfflictions.STATUSTYPE.Cold) > 0f;
+            if (warmingExistingCold && !ExplicitItemStatusScope.Active)
+            {
+                EnvironmentalColdRecoveryScope.Enter();
+                __state.EnvironmentalColdRecovery = true;
             }
 
             if (statusType == CharacterAfflictions.STATUSTYPE.Injury && fallSource != null)
@@ -124,7 +185,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             __state.ConditionExposure = true;
             __state.ConditionSkill = conditionSkill;
             __state.Source = "Exposure:" + statusType;
-            if (Plugin.Effects.CanApply(__instance!.character))
+            if (!warmingExistingCold && Plugin.Effects.CanApply(__instance!.character))
             {
                 amount *= Plugin.Effects.ConditionGainMultiplier(conditionSkill);
             }
@@ -160,6 +221,16 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 after,
                 __state.Source);
         }
+
+        private static Exception? Finalizer(Exception? __exception, State __state)
+        {
+            if (__state.EnvironmentalColdRecovery)
+            {
+                EnvironmentalColdRecoveryScope.Exit();
+            }
+
+            return __exception;
+        }
     }
 
     [HarmonyPatch(typeof(CharacterAfflictions), "SubtractStatus")]
@@ -188,26 +259,34 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             bool local = __instance != null
                 && __instance.character != null
                 && Character.localCharacter == __instance.character;
+            bool environmentalColdRecovery = statusType == CharacterAfflictions.STATUSTYPE.Cold
+                && EnvironmentalColdRecoveryScope.Active;
+            bool naturalRecovery = decreasedNaturally || environmentalColdRecovery;
             __state = new State
             {
                 Local = local,
                 Before = local ? __instance!.GetCurrentStatus(statusType) : 0f,
                 Requested = amount,
                 StatusType = statusType,
-                Source = decreasedNaturally ? "NaturalRecovery" : fromRPC ? "SubtractRPC" : "SubtractLocal",
-                NaturalRecovery = decreasedNaturally,
+                Source = environmentalColdRecovery
+                    ? "NaturalRecovery:ColdByWarmth"
+                    : decreasedNaturally ? "NaturalRecovery" : fromRPC ? "SubtractRPC" : "SubtractLocal",
+                NaturalRecovery = naturalRecovery,
                 HasRecoverySkill = ConditionSkillAdapter.TryGetRecoverySkill(statusType, out SkillId recoverySkill),
                 RecoverySkill = recoverySkill
             };
 
             if (local
-                && decreasedNaturally
+                && naturalRecovery
                 && amount > 0f
                 && __state.HasRecoverySkill
                 && Plugin.Effects.CanApply(__instance!.character))
             {
                 amount *= Plugin.Effects.ConditionRecoveryMultiplier(__state.RecoverySkill);
-                __state.Source = "NaturalRecovery:" + statusType;
+                if (!environmentalColdRecovery)
+                {
+                    __state.Source = "NaturalRecovery:" + statusType;
+                }
             }
         }
 

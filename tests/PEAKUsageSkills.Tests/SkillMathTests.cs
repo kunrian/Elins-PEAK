@@ -136,46 +136,15 @@ namespace PEAKUsageSkills.Tests
         }
 
         [Theory]
-        [InlineData(9, 0)]
-        [InlineData(10, 1)]
-        [InlineData(50, 2)]
-        [InlineData(100, 3)]
-        [InlineData(200, 4)]
-        [InlineData(999, 4)]
-        public void PackRatMainSlotMilestonesAreStable(int level, int expected)
-        {
-            Assert.Equal(expected, SkillMath.ExtraMainInventorySlots(level));
-        }
-
-        [Theory]
         [InlineData(19, 0)]
         [InlineData(20, 1)]
         [InlineData(40, 2)]
         [InlineData(70, 3)]
         [InlineData(120, 4)]
         [InlineData(200, 5)]
-        public void PackRatBackpackSlotMilestonesAreStable(int level, int expected)
+        public void StrengthBackpackSlotMilestonesAreStable(int level, int expected)
         {
             Assert.Equal(expected, SkillMath.ExtraBackpackSlots(level));
-        }
-
-        [Theory]
-        [InlineData(4, 4, 1)]
-        [InlineData(4, 5, 2)]
-        [InlineData(4, 6, 3)]
-        [InlineData(3, 4, 0)]
-        public void OverflowMatchesApprovedOccupiedItemExamples(int main, int backpack, int expected)
-        {
-            Assert.Equal(expected, SkillMath.OverflowItemCount(main, backpack));
-        }
-
-        [Fact]
-        public void PackRatBootstrapStopsAtFirstUnlock()
-        {
-            Assert.Equal(0, SkillMath.PackRatTrainingLoad(1, 2, 0));
-            Assert.Equal(1, SkillMath.PackRatTrainingLoad(1, 3, 0));
-            Assert.Equal(0, SkillMath.PackRatTrainingLoad(10, 3, 0));
-            Assert.Equal(2, SkillMath.PackRatTrainingLoad(10, 3, 2));
         }
 
         [Fact]

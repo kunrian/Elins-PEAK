@@ -93,38 +93,14 @@ namespace PEAKUsageSkills.Core
             return Math.Max(0f, currentMaximum + expandedBase - vanillaBase);
         }
 
-        public static int ExtraMainInventorySlots(int packRatLevel)
+        public static int ExtraBackpackSlots(int strengthLevel)
         {
-            if (packRatLevel >= 200) return 4;
-            if (packRatLevel >= 100) return 3;
-            if (packRatLevel >= 50) return 2;
-            if (packRatLevel >= 10) return 1;
+            if (strengthLevel >= 200) return 5;
+            if (strengthLevel >= 120) return 4;
+            if (strengthLevel >= 70) return 3;
+            if (strengthLevel >= 40) return 2;
+            if (strengthLevel >= 20) return 1;
             return 0;
-        }
-
-        public static int ExtraBackpackSlots(int packRatLevel)
-        {
-            if (packRatLevel >= 200) return 5;
-            if (packRatLevel >= 120) return 4;
-            if (packRatLevel >= 70) return 3;
-            if (packRatLevel >= 40) return 2;
-            if (packRatLevel >= 20) return 1;
-            return 0;
-        }
-
-        public static int OverflowItemCount(int occupiedMain, int occupiedBackpack)
-        {
-            return Math.Max(0, occupiedMain - 3) + Math.Max(0, occupiedBackpack - 4);
-        }
-
-        public static int PackRatTrainingLoad(int packRatLevel, int occupiedVanillaMain, int overflowItems)
-        {
-            if (overflowItems > 0 || packRatLevel >= 10)
-            {
-                return Math.Max(0, overflowItems);
-            }
-
-            return occupiedVanillaMain >= 3 ? 1 : 0;
         }
 
         public static double HungerMovementWork(float normalizedHunger, float distance, float threshold = 0.30f)

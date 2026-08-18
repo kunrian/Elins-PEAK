@@ -65,11 +65,9 @@ namespace PEAKUsageSkills.Diagnostics
         {
             if (Math.Abs(Metrics.RawWeight - raw) >= 0.0001f || Math.Abs(Metrics.EffectiveWeight - effective) >= 0.0001f)
             {
-                int overflow = InventorySkillService.GetOverflowItemCount(Character.localCharacter);
                 log.LogInfo(
                     $"[UsageSkills:Weight] raw={raw:F4} effective={effective:F4} "
-                    + $"strengthMultiplier={effects.StrengthWeightMultiplier:F4} overflowItems={overflow} "
-                    + $"packRatWeightMultiplier={effects.PackRatWeightMultiplier(overflow):F4}");
+                    + $"strengthMultiplier={effects.StrengthWeightMultiplier:F4}");
             }
 
             Metrics.RawWeight = raw;
@@ -240,7 +238,6 @@ namespace PEAKUsageSkills.Diagnostics
                 $"[UsageSkills:Snapshot] scene={runState.ActiveSceneName} xpEligible={runState.IsExperienceEligible} "
                 + $"stamina={character.data.currentStamina:F4}/{character.GetMaxStamina():F4} extra={character.data.extraStamina:F4} "
                 + $"weight={Metrics.RawWeight:F4}->{Metrics.EffectiveWeight:F4} "
-                + $"overflow={InventorySkillService.GetOverflowItemCount(character)} "
                 + $"states=ground:{character.data.isGrounded},sprint:{character.data.isSprinting},wall:{character.data.isClimbing},rope:{character.data.isRopeClimbing},vine:{character.data.isVineClimbing} "
                 + $"movement={Metrics.LastPhysicalMovementDistance:F4} wallDeltaY={Metrics.LastWallVerticalDelta:F4} "
                 + $"ropeDeltaY={Metrics.LastRopeVerticalDelta:F4} vineDeltaY={Metrics.LastVineVerticalDelta:F4} "

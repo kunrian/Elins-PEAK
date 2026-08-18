@@ -1,14 +1,23 @@
 # Changelog
 
+## 0.3.2
+
+- Removed the bugged main-inventory slot expansion. Your normal inventory stays vanilla-sized.
+- Retired Pack Rat and its overflow Weight, movement, and stamina penalties.
+- Moved backpack-slot unlocks to Strength at levels 20, 40, 70, 120, and 200.
+- Fixed Cold Recovery so passive environmental warming counts, while status-changing items still do not grant Recovery XP.
+- Reduced Athletics XP by 30% and Hunger Tolerance XP by 90% after runtime testing.
+- Added the new package icon.
+
+## 0.3.1
+
+- Updated Readme's and manifest. Sounded *too* robotic. I need to at least give it some personality.
+
 ## 0.3.0
 
+- Initial public package.
 - Added 22 persistent, player-owned usage skills.
-- Added Strength, Endurance, three climbing disciplines, Athletics, Agility, and Resilience.
-- Added Pack Rat with built-in main-inventory and backpack expansion.
-- Added overflow weight, movement, and stamina penalties with Pack Rat mitigation.
-- Added Wet Grip and Climbing Tenacity.
-- Split Poison, Cold, Heat, Drowsy, and Spore progression into Resistance and Recovery skills.
-- Added Hunger Tolerance progression above the 30 Hunger threshold.
-- Added scalable stamina capacity and HUD-frame handling beyond 100 stamina.
-- Added pause-menu skill panels and hover descriptions.
-- Added atomic local saves, rotating backups, Airport XP exclusion, and diagnostic logging.
+- Added scalable stamina, movement, climbing, resistance, recovery, and inventory effects.
+- Added built-in Pack Rat inventory expansion and overflow penalties.
+- Added pause-menu skill panels and hover explanations.
+- Added atomic saves, rotating backups, Airport XP exclusion, and diagnostic logging.
