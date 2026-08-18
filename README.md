@@ -212,6 +212,20 @@ The package declares the following dependencies:
 - Multiplayer progression is designed around locally owned player saves, but final multiplayer runtime validation is still pending.
 - Broader anti-farming and diminishing-return systems are intentionally deferred for now. Basic action validity is already used in several places so obviously unrelated actions do not simply award the wrong XP.
 
+## Development status and handoff documentation
+
+Source and package version 0.3.2 are current, but the last audited `devtest` installation and logs are still from 0.3.1. The Strength backpack milestones, special Cold Recovery warmth hook, and final XP reductions therefore need a fresh 0.3.2 runtime pass before they should be described as live-verified.
+
+For development or a new Codex conversation, begin with:
+
+- [`AGENTS.md`](AGENTS.md) — current repository rules and accepted product decisions.
+- [`docs/HANDOFF.md`](docs/HANDOFF.md) — current state, history, what was tried, and the immediate continuation prompt.
+- [`docs/SKILLS_AND_BALANCE.md`](docs/SKILLS_AND_BALANCE.md) — exact implemented XP/effect defaults.
+- [`docs/TESTING_AND_COMPATIBILITY.md`](docs/TESTING_AND_COMPATIBILITY.md) — verified versus unverified behavior and the next test checklist.
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — pending work, deferred systems, and future options.
+
+The full documentation index is in [`docs/README.md`](docs/README.md). The sibling `PEAK_UsageSkills_Spec` folder is historical research and is no longer authoritative where it conflicts with these documents or current source.
+
 ## Source and issues
 
 The source is public, and issues/technical reports can be submitted here:

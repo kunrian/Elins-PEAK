@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added a canonical project handoff covering implemented behavior, runtime evidence, failed/retired approaches, compatibility findings, pending validation, future skill options, and the next test sequence.
+- Added exact skill/balance, architecture/hook, development/release, reference-mod, roadmap, and file-index documentation.
+- Documented that the current `devtest` installation/logs are still 0.3.1 and cannot validate the final 0.3.2 Strength-backpack, Cold Recovery, or XP-balance changes.
+- Added repository-level agent guidance so future work preserves local-player progression, vanilla main inventory, retired Pack Rat behavior, save safety, and current scope decisions.
+
 ## 0.3.2
 
 - Removed the bugged main-inventory slot expansion. Your normal inventory stays vanilla-sized.
