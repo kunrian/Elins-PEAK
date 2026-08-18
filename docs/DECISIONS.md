@@ -31,7 +31,6 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | Anti-farming | Fundamental validity now; rate limits/diminishing returns later | Explicitly deferred by owner |
 | Diagnostics | Rate-limited BepInEx logs; no manual import/export | Accepted |
 | Pause menu | Main and blue Resiliency stacked on left; green Recovery removed; refresh once on open | Accepted in 0.4.0 |
-| Debug controls | Keep lightweight +10-all and reset-all buttons on the right for runtime testing | Owner override in 0.4.0 |
 | Weight display | Gameplay value matters; PeakStatsEx decimal label is secondary compatibility work | Current limitation |
 | Multiplayer order | Solo validation first, multiplayer last | Accepted |
 

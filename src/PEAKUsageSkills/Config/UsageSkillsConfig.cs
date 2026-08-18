@@ -30,7 +30,8 @@ namespace PEAKUsageSkills.Config
             AthleticsXpPerMeter = config.Bind("XP", "AthleticsXpPerMeter", 0.28f, "XP per qualifying grounded walking meter.");
             AthleticsSprintXpPerMeter = config.Bind("XP", "AthleticsSprintXpPerMeter", 1.12f, "XP per qualifying grounded sprinting meter.");
             AgilityXpPerJump = config.Bind("XP", "AgilityXpPerJump", 3.2f, "XP per successfully executed local jump.");
-            ResilienceXpPerInjury = config.Bind("XP", "ResilienceXpPerInjury", 100f, "XP per normalized point of raw fall Injury.");
+            ConfigEntry<float> legacyResilienceXpPerInjury = config.Bind("XP", "ResilienceXpPerInjury", 100f, "Legacy Vitality XP setting retained only for 0.4.1 migration.");
+            VitalityXpPerInjury = config.Bind("XP", "VitalityXpPerInjury", 100f, "XP per normalized point of raw fall Injury.");
             ConditionXpPerStatus = config.Bind("XP", "ConditionXpPerStatus", 100f, "XP per normalized point of actual incoming Resiliency affliction.");
             WetGripXpPerMeter = config.Bind("XP", "WetGripXpPerMeter", 6f, "XP per slippery wall-climbing meter, weighted by current slipperiness.");
             ClimbingTenacityXpPerMeter = config.Bind("XP", "ClimbingTenacityXpPerMeter", 6f, "XP per intentional wall-climbing meter while regular stamina is below 20%.");
@@ -58,8 +59,8 @@ namespace PEAKUsageSkills.Config
             AgilityJumpPerLevel = config.Bind("Effects", "AgilityJumpPerformancePerLevel", 0.0015f, "Jump impulse increase per Agility level.");
             AgilityAirControlPerLevel = config.Bind("Effects", "AgilityAirControlPerLevel", 0.00025f, "Light airborne turning responsiveness increase per Agility level.");
             AgilityJumpEfficiencyPerLevel = config.Bind("Effects", "AgilityJumpEfficiencyPerLevel", 0.003f, "Anchored jump stamina cost reduction rate per Agility level.");
-            ResilienceFallReductionPerLevel = config.Bind("Effects", "ResilienceFallReductionPerLevel", 0.003f, "Fall Injury reduction per Resilience level.");
-            MaximumResilienceFallReduction = config.Bind("Effects", "MaximumResilienceFallReduction", 0.15f, "Legacy cap retained for configuration compatibility; linear level scaling does not use it.");
+            ConfigEntry<float> legacyResilienceFallReductionPerLevel = config.Bind("Effects", "ResilienceFallReductionPerLevel", 0.003f, "Legacy Vitality effect setting retained only for 0.4.1 migration.");
+            VitalityFallReductionPerLevel = config.Bind("Effects", "VitalityFallReductionPerLevel", 0.003f, "Fall Injury reduction per Vitality level.");
             ConditionResistancePerLevel = config.Bind("Effects", "ConditionResistancePerLevel", 0.0015f, "Anchored incoming-condition reduction rate per matching Resiliency level.");
             ConditionRecoveryPerLevel = config.Bind("Effects", "ConditionRecoveryPerLevel", 0.0015f, "Natural condition-recovery increase per matching tolerance level.");
             WetGripReductionPerLevel = config.Bind("Effects", "WetGripReductionPerLevel", 0.003f, "Anchored reduction rate for slippery downward pull and wind climbing drain.");
@@ -131,7 +132,18 @@ namespace PEAKUsageSkills.Config
                 configSchema.Value = 4;
             }
 
+            bool migratedToSchema5 = configSchema.Value < 5;
+            if (migratedToSchema5)
+            {
+                VitalityXpPerInjury.Value = legacyResilienceXpPerInjury.Value;
+                VitalityFallReductionPerLevel.Value = legacyResilienceFallReductionPerLevel.Value;
+                configSchema.Value = 5;
+            }
+
             bool removedObsoleteEntries = false;
+            removedObsoleteEntries |= config.Remove(new ConfigDefinition("XP", "ResilienceXpPerInjury"));
+            removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "ResilienceFallReductionPerLevel"));
+            removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "MaximumResilienceFallReduction"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("XP", "ConditionRecoveryXpPerStatus"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("XP", "HungerMovementXpPerWork"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("XP", "PackRatXpPerWork"));
@@ -140,7 +152,7 @@ namespace PEAKUsageSkills.Config
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatWeightPenaltyPerItem"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatMovementPenaltyPerItem"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatStaminaPenaltyPerItem"));
-            if (removedObsoleteEntries || migratedToSchema4)
+            if (removedObsoleteEntries || migratedToSchema4 || migratedToSchema5)
             {
                 config.Save();
             }
@@ -174,7 +186,7 @@ namespace PEAKUsageSkills.Config
         public ConfigEntry<float> AthleticsXpPerMeter { get; }
         public ConfigEntry<float> AthleticsSprintXpPerMeter { get; }
         public ConfigEntry<float> AgilityXpPerJump { get; }
-        public ConfigEntry<float> ResilienceXpPerInjury { get; }
+        public ConfigEntry<float> VitalityXpPerInjury { get; }
         public ConfigEntry<float> ConditionXpPerStatus { get; }
         public ConfigEntry<float> WetGripXpPerMeter { get; }
         public ConfigEntry<float> ClimbingTenacityXpPerMeter { get; }
@@ -201,8 +213,7 @@ namespace PEAKUsageSkills.Config
         public ConfigEntry<float> AgilityJumpPerLevel { get; }
         public ConfigEntry<float> AgilityAirControlPerLevel { get; }
         public ConfigEntry<float> AgilityJumpEfficiencyPerLevel { get; }
-        public ConfigEntry<float> ResilienceFallReductionPerLevel { get; }
-        public ConfigEntry<float> MaximumResilienceFallReduction { get; }
+        public ConfigEntry<float> VitalityFallReductionPerLevel { get; }
         public ConfigEntry<float> ConditionResistancePerLevel { get; }
         public ConfigEntry<float> ConditionRecoveryPerLevel { get; }
         public ConfigEntry<float> WetGripReductionPerLevel { get; }

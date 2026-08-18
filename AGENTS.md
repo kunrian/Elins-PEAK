@@ -41,7 +41,7 @@ These instructions are the repository-local source of truth for future coding ag
 - The build must not deploy to Gale unless `DeployToDevtest=true` is explicitly selected.
 - Do not replace a live DLL while PEAK is running.
 - A local package build, a Gale installation, a GitHub merge, and a Thunderstore upload are separate actions. Never infer authorization for one from another.
-- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.0 changes require a fresh runtime pass and must not be described as live-verified yet.
+- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.1 changes require a fresh runtime pass and must not be described as live-verified yet.
 
 ## Scope discipline
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+- Renamed Resilience to Vitality while preserving existing progression and settings.
+- Shortened the eight Resiliency skill names in the pause menu.
+
 ## 0.4.0
 
 - Combined condition Resistance and Recovery into eight blue Resiliency skills, including new Curse Tolerance and Petrification Resistance.

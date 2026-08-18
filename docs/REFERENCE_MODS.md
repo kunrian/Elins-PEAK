@@ -42,4 +42,4 @@ The package manifest is the authority for exact dependency package identifiers/v
 
 ## Profile hygiene for reliable tests
 
-Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 0.3.2 solo log is a valid baseline; it does not approve the 0.4.0 Resiliency merge or typed Fanny/Jet capacity.
+Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 0.3.2 solo log is a valid baseline; it does not approve the 0.4.1 naming/migration changes or typed Fanny/Jet capacity.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+- Renamed Resilience to Vitality while preserving existing progression and settings.
+- Shortened the eight Resiliency skill names in the pause menu.
+
 ## 0.4.0
 
 - Merged Poison/Cold/Heat/Drowsy/Spore Resistance and Recovery into single Tolerance skills. Existing Recovery progression is converted into its matching Tolerance without discarding accumulated XP or work.

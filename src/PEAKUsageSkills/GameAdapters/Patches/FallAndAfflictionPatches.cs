@@ -159,14 +159,14 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             {
                 float rawAmount = amount;
                 Plugin.Progression.AwardWork(
-                    SkillId.Resilience,
+                    SkillId.Vitality,
                     rawAmount,
-                    Plugin.Settings.ResilienceXpPerInjury.Value,
+                    Plugin.Settings.VitalityXpPerInjury.Value,
                     fallSource);
 
                 if (Plugin.Effects.CanApply(__instance!.character))
                 {
-                    amount *= Plugin.Effects.ResilienceFallMultiplier;
+                    amount *= Plugin.Effects.VitalityFallMultiplier;
                 }
 
                 __state.Source = "Fall:" + fallSource;

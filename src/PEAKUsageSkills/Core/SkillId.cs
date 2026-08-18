@@ -9,7 +9,7 @@ namespace PEAKUsageSkills.Core
         VineClimbing = 4,
         Athletics = 5,
         Agility = 6,
-        Resilience = 7,
+        Vitality = 7,
         Toxicology = 8,
         ColdTolerance = 9,
         HeatTolerance = 10,

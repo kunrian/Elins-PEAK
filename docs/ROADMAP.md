@@ -1,15 +1,15 @@
-# Roadmap from 0.4.0
+# Roadmap from 0.4.1
 
 ## Priority 0 — focused live validation
 
-- Validate 0.4.0 startup, ESC layout, 18-skill migration, and test buttons.
+- Validate 0.4.1 startup, ESC layout, and Vitality save/config migration.
 - Validate Strength capacity on Backpack/Fanny/Jet and confirm Jet fuel/Rocket behavior remain vanilla.
 - Capture Curse and Petrification XP/effect evidence.
 - Confirm recovery gives effect but no XP for Poison/Heat/Drowsy/Spores.
 
 ## Priority 1 — Cold Tolerance recovery path
 
-The latest 0.3.2 log showed warming as `Cold:SubtractLocal`, and the existing Heat scope did not classify it. Trace the actual caller in a fresh 0.4.0 log/stack-aware diagnostic, then apply Cold's recovery multiplier only to that environmental path. Do not restore Recovery XP and do not multiply item cleansing.
+The latest 0.3.2 log showed warming as `Cold:SubtractLocal`, and the existing Heat scope did not classify it. Trace the actual caller in a fresh 0.4.1 log/stack-aware diagnostic, then apply Cold's recovery multiplier only to that environmental path. Do not restore Recovery XP and do not multiply item cleansing.
 
 ## Priority 2 — multiplayer
 
@@ -32,6 +32,5 @@ Recommended first design: award XP for valid charged local throws, weighted by c
 
 ## Deferred publication
 
-- Publish to GitHub only after the owner approves the local 0.4.0 commit.
+- Publish to GitHub only after the owner approves the local 0.4.1 commit.
 - Upload the exact tested ZIP to Thunderstore through its separate authenticated workflow.
-- Remove or hide the runtime +10/reset controls before a non-testing public release if the owner no longer wants them exposed.

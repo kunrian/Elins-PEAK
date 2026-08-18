@@ -100,9 +100,9 @@ namespace PEAKUsageSkills.Effects
             GetEffectiveLevel(SkillId.Agility),
             config.AgilityJumpEfficiencyPerLevel.Value);
 
-        public float ResilienceFallMultiplier => SkillMath.AnchoredReductionMultiplier(
-            GetEffectiveLevel(SkillId.Resilience),
-            config.ResilienceFallReductionPerLevel.Value);
+        public float VitalityFallMultiplier => SkillMath.AnchoredReductionMultiplier(
+            GetEffectiveLevel(SkillId.Vitality),
+            config.VitalityFallReductionPerLevel.Value);
 
         public float ConditionGainMultiplier(SkillId skillId)
         {

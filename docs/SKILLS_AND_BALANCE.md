@@ -1,6 +1,6 @@
 # Skills and balance
 
-This is the implemented 0.4.0 default balance. Generated BepInEx configuration can override the rates.
+This is the implemented 0.4.1 default balance. Generated BepInEx configuration can override the rates.
 
 All skills default to level 1, cap at 999, and use `round(100 × level^1.21)` XP for the next level. Airport XP is always disabled; custom-run XP is disabled by default.
 
@@ -15,7 +15,7 @@ All skills default to level 1, cap at 999, and use `round(100 × level^1.21)` XP
 | Vine Climbing | intentional meter × 4 XP | +0.3% speed, anchored cost reduction, and light momentum retention. |
 | Athletics | grounded walk × 0.28 XP; sprint × 1.12 XP | +0.1% ground force and another +0.2% sprint force per level; anchored sprint-cost reduction. |
 | Agility | successful local jump × 3.2 XP | +0.15% jump impulse, +0.025% air-control responsiveness, and anchored jump-cost reduction per level. |
-| Resilience | normalized raw fall Injury × 100 XP | Anchored fall-Injury reduction. |
+| Vitality | normalized raw fall Injury × 100 XP | Anchored fall-Injury reduction. |
 | Wet Grip | slippery weighted wall meter × 6 XP | Anchored slippery pull and related wind-drain reduction. |
 | Climbing Tenacity | intentional wall meter below 20% regular stamina × 6 XP | Anchored low-stamina climbing-penalty reduction. |
 
@@ -25,16 +25,16 @@ Every Resiliency skill earns `actual incoming normalized affliction × 100 XP`. 
 
 | Skill | Incoming effect | Natural recovery effect |
 |---|---|---|
-| Poison Tolerance | 0.15% anchored reduction rate per level | +0.15% per level |
-| Cold Tolerance | 0.15% anchored reduction rate per level | +0.15% where PEAK exposes a natural-recovery path; ordinary warming remains under investigation |
-| Heat Tolerance | 0.15% anchored reduction rate per level | +0.15% per level |
-| Drowsy Tolerance | 0.15% anchored reduction rate per level | +0.15% per level |
-| Spore Tolerance | 0.15% anchored reduction rate per level | +0.15% per level |
-| Hunger Tolerance | 0.15% anchored reduction rate per level | None |
-| Curse Tolerance | 0.15% anchored reduction rate per level | None |
-| Petrification Resistance | 0.15% anchored reduction rate per level | None |
+| Poison | 0.15% anchored reduction rate per level | +0.15% per level |
+| Cold | 0.15% anchored reduction rate per level | +0.15% where PEAK exposes a natural-recovery path; ordinary warming remains under investigation |
+| Heat | 0.15% anchored reduction rate per level | +0.15% per level |
+| Drowsy | 0.15% anchored reduction rate per level | +0.15% per level |
+| Spores | 0.15% anchored reduction rate per level | +0.15% per level |
+| Hunger | 0.15% anchored reduction rate per level | None |
+| Curse | 0.15% anchored reduction rate per level | None |
+| Petrification | 0.15% anchored reduction rate per level | None |
 
-`Toxicology` remains the internal save/enum name for Poison Tolerance so existing progression keeps its stable key.
+`Toxicology` remains the internal save/enum name for Poison so existing progression keeps its stable key. The other shortened names likewise retain their stable 0.4.0 keys.
 
 ## Strength item storage
 

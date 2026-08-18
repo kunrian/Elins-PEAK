@@ -78,7 +78,7 @@ namespace PEAKUsageSkills.Diagnostics
         {
             Metrics.LastRawFallInjury = raw;
             Metrics.LastEffectiveFallInjury = effective;
-            log.LogInfo($"[UsageSkills:Fall] source={source} rawInjury={raw:F4} effectiveInjury={effective:F4} resilienceMultiplier={effects.ResilienceFallMultiplier:F4}");
+            log.LogInfo($"[UsageSkills:Fall] source={source} rawInjury={raw:F4} effectiveInjury={effective:F4} vitalityMultiplier={effects.VitalityFallMultiplier:F4}");
         }
 
         public void RecordStatusChange(string status, float requested, float actual, float latestValue, string source)

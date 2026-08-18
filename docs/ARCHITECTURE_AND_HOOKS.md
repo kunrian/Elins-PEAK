@@ -1,6 +1,6 @@
 # Architecture and hooks
 
-This map describes source version 0.4.0 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
+This map describes source version 0.4.1 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
 
 ## Runtime flow
 
@@ -24,7 +24,7 @@ Progression and effects are local-player only. There is no custom RPC or host-ow
 | `CharacterRopeHandling.Update`, `CharacterVineClimbing.FixedUpdate` | Rope/vine movement and cost transforms. |
 | `CharacterMovement.GetMovementForce` | Athletics ground/sprint force. |
 | `CharacterMovement.JumpRpc` | Agility XP, impulse, and jump cost. |
-| `CharacterMovement.CheckFallDamage`, `CharacterClimbing.CheckFallDamage` | Scope legitimate falls for Resilience XP/effect. |
+| `CharacterMovement.CheckFallDamage`, `CharacterClimbing.CheckFallDamage` | Scope legitimate falls for Vitality XP/effect. |
 | `CharacterAfflictions.AddStatus` | Incoming Poison/Cold/Hot/Drowsy/Spores/Hunger/Curse reduction and XP. Petrify is deliberately delegated. |
 | `CharacterAfflictions.AddPetrify` | One shared positive Petrification reduction/XP hook for AddStatus, amulet, and Citadel callers. Negative removal is ignored for XP/effect. |
 | `CharacterAfflictions.SubtractStatus` | Apply matching Tolerance recovery speed only on natural recovery; never grant XP. |
@@ -46,4 +46,4 @@ Petrification cannot share the normal `AddStatus` calculation: PEAK converts tha
 
 ## Save/config compatibility
 
-Enum values 8–13 remain stable; value 14 remains unused; Wet Grip/Tenacity retain 15/16. Recovery values 17–21 are retired, and new Curse/Petrification values use 22/23. Save migration addresses retired states by their string keys. Config schema 4 updates only exact former defaults and deletes obsolete generated entries.
+Vitality retains enum value 7 and migrates the legacy `Resilience` save key. Values 8–13 remain stable; value 14 remains unused; Wet Grip/Tenacity retain 15/16. Recovery values 17–21 are retired, and Curse/Petrification use 22/23. Config schema 5 migrates Resilience settings to Vitality and removes obsolete generated entries.

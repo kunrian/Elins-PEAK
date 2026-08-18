@@ -24,7 +24,7 @@ namespace PEAKUsageSkills
     {
         public const string PluginGuid = "com.chiseled.peak.usageskills";
         public const string PluginName = "Elin's PEAK";
-        public const string PluginVersion = "0.4.0";
+        public const string PluginVersion = "0.4.1";
 
         private Harmony? harmony;
 

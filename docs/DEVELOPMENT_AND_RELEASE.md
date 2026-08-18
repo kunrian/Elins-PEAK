@@ -35,7 +35,7 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 
 The script validates `package/manifest.json`, checks the 256×256 icon, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root must contain `manifest.json`, `README.md`, `CHANGELOG.md`, `icon.png`, and the plugin DLL in the structure expected by Thunderstore.
 
-The current local artifact is `dist\Elins_PEAK-0.4.0.zip` with SHA-256 `D493F40397E44F6AC06104902B6EA6234AF5B81BF9C5FC17C1D70A6ABD4ED050`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused runtime/balance cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
+The current local artifact is `dist\Elins_PEAK-0.4.1.zip` with SHA-256 `5A6E3C98F3A855EE1C20995601A4CF3C2983802EC000E0126455FD843B415393`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused UI/migration cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
 
 ## Runtime deployment and data
 
@@ -71,7 +71,7 @@ Use a branch from current `main`, stage explicit paths, commit a coherent change
 & 'C:\Program Files\GitHub CLI\gh.exe' auth status
 ```
 
-GitHub source publication is not a Thunderstore upload. Thunderstore publication requires its own authenticated workflow and should happen only after the exact package passes runtime validation. No remote push or Thunderstore upload is authorized for the current 0.4.0 live-test build.
+GitHub source publication is not a Thunderstore upload. Thunderstore publication requires its own authenticated workflow and should happen only after the exact package passes runtime validation. No remote push or Thunderstore upload is authorized for the current 0.4.1 live-test build.
 
 ## Updating after a PEAK release
 

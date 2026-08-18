@@ -40,7 +40,7 @@ This map helps a new conversation find the current source of truth quickly.
 | `src/PEAKUsageSkills/GameAdapters/Patches/WeightPatches.cs` | Strength Weight multiplier and optional numeric-label attempt. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/ClimbingPatches.cs` | Wall/rope/vine performance, Wet Grip, Climbing Tenacity. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/MovementPatches.cs` | Athletics, jumps, and air control. |
-| `src/PEAKUsageSkills/GameAdapters/Patches/FallAndAfflictionPatches.cs` | Resilience, Tolerances, shared Petrification hook, natural recovery effect, and cold-warmth scope. |
+| `src/PEAKUsageSkills/GameAdapters/Patches/FallAndAfflictionPatches.cs` | Vitality, Resiliency afflictions, shared Petrification hook, natural recovery effect, and cold-warmth scope. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/InventoryPatches.cs` | Type-neutral deserialization plus typed wheel and visuals. |
 | `src/PEAKUsageSkills/Tracking/ActivitySampler.cs` | Distance/work sampling for Strength, climbing, Wet Grip, Tenacity, Athletics. |
 
@@ -48,7 +48,7 @@ This map helps a new conversation find the current source of truth quickly.
 
 | Path | Purpose |
 |---|---|
-| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Main/Resiliency panels, `Lv. ##.##`, right-side test controls, one refresh per open, hover tooltips. |
+| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Main/Resiliency panels, `Lv. ##.##`, one refresh per open, and hover tooltips. |
 | `src/PEAKUsageSkills/UI/DebugOverlay.cs` | Optional config-driven compact diagnostics overlay. |
 | `src/PEAKUsageSkills/Diagnostics/DiagnosticHub.cs` | Rate-limited aggregate BepInEx logging. |
 | `src/PEAKUsageSkills/Diagnostics/RuntimeMetrics.cs` | Current runtime measurements used by logs/overlay. |

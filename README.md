@@ -20,7 +20,7 @@ A lot!
 - **Endurance** — Spend stamina to train it. Endurance increases your actual maximum stamina and improves stamina regeneration.
 - **Athletics** — Walking trains it; sprinting trains it faster. Athletics improves normal ground movement, sprint movement, and sprint stamina efficiency.
 - **Agility** — Jump! Agility improves jump impulse, jump stamina efficiency, and gives you a little more control while airborne.
-- **Resilience** — Surviving legitimate fall injuries trains it. Higher Resilience reduces future fall Injury.
+- **Vitality** — Surviving legitimate fall injuries trains it. Higher Vitality reduces future fall Injury.
 
 You are not picking a build from a menu here. If you are the person sprinting across every flat surface, you naturally become the better runner. If you insist on carrying half the mountain in your backpack, your character eventually starts adapting to that too.
 
@@ -38,14 +38,14 @@ Climbing is split up because a wall, a rope, and a vine do not behave the same w
 
 Repeated exposure to conditions creates its own progression instead of being rolled into one generic resistance stat.
 
-- **Poison Tolerance** — Reduces incoming Poison and speeds its natural recovery.
-- **Cold Tolerance** — Reduces incoming Cold and speeds natural recovery where PEAK marks that recovery path.
-- **Heat Tolerance** — Reduces incoming Heat and speeds its natural recovery.
-- **Drowsy Tolerance** — Reduces incoming Drowsy and speeds its natural recovery.
-- **Spore Tolerance** — Reduces incoming Spores and speeds their natural recovery.
-- **Hunger Tolerance** — Reduces incoming Hunger.
-- **Curse Tolerance** — Reduces incoming Curse.
-- **Petrification Resistance** — Reduces petrification from the shared amulet and Citadel path.
+- **Poison** — Reduces incoming Poison and speeds its natural recovery.
+- **Cold** — Reduces incoming Cold and speeds natural recovery where PEAK marks that recovery path.
+- **Heat** — Reduces incoming Heat and speeds its natural recovery.
+- **Drowsy** — Reduces incoming Drowsy and speeds its natural recovery.
+- **Spores** — Reduces incoming Spores and speeds their natural recovery.
+- **Hunger** — Reduces incoming Hunger.
+- **Curse** — Reduces incoming Curse.
+- **Petrification** — Reduces petrification from the shared amulet and Citadel path.
 
 These eight skills appear together in the blue **Resiliency** panel. They gain XP only when the matching affliction actually increases; natural recovery and cleansing no longer grant XP. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
 
@@ -77,7 +77,7 @@ XP is disabled in the **Airport/lobby**, so standing around before a run does no
 
 ## Skill menu
 
-Elin's PEAK adds skill information directly to the pause menu. Main Skills are on the left, the blue Resiliency section sits below them, and lightweight +10/reset test buttons sit on the right for the current runtime-validation cycle.
+Elin's PEAK adds skill information directly to the pause menu. Main Skills are on the left, with the blue Resiliency section below them.
 
 You can see your skill levels, progression, and current bonuses, with hover explanations for what the skills actually do. The goal is for you to be able to look at a skill and understand *why* it is leveling and what the next levels are doing without needing to keep this README open on another monitor.
 
@@ -115,7 +115,7 @@ The current defaults use the following underlying work values:
 | Athletics | 0.28 XP per qualifying walking meter |
 | Athletics while sprinting | 1.12 XP per qualifying sprinting meter |
 | Agility | 3.2 XP per successfully executed local jump |
-| Resilience | 100 XP per normalized point of raw fall Injury |
+| Vitality | 100 XP per normalized point of raw fall Injury |
 | Resiliency skills | 100 XP per normalized point of actual incoming matching affliction |
 | Wet Grip | 6 XP per slippery climbing meter, weighted by slipperiness |
 | Climbing Tenacity | 6 XP per intentional wall-climbing meter while regular stamina is below 20% |
@@ -142,7 +142,7 @@ Default positive scaling includes:
 | Agility air-control responsiveness | +0.025% per level |
 | Matching natural condition recovery | +0.15% per level for Poison/Cold/Heat/Drowsy/Spores |
 
-Reduction-style effects use an **anchored reciprocal curve** rather than simply subtracting a flat percentage forever. This applies to systems such as Strength Weight reduction, climbing/sprint/jump efficiency, Resilience, condition resistance, Wet Grip, and Climbing Tenacity.
+Reduction-style effects use an **anchored reciprocal curve** rather than simply subtracting a flat percentage forever. This applies to systems such as Strength Weight reduction, climbing/sprint/jump efficiency, Vitality, condition resistance, Wet Grip, and Climbing Tenacity.
 
 Most reduction effects use a default rate of `0.003`; Resiliency uses the halved `0.0015` rate. The curve accelerates after its level-500 anchor and continues toward **99.9% reduction at level 999**. This keeps very high progression meaningful without allowing a basic linear formula to cross zero and turn a penalty into nonsense.
 
@@ -154,7 +154,7 @@ Endurance currently increases capacity and regeneration. General stamina-cost re
 
 ## Condition handling
 
-Tolerance is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spore Tolerance also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
+Resiliency is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spores also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
 
 ## Save data and backups
 
@@ -204,7 +204,7 @@ The package declares the following dependencies:
 
 ## Development status and handoff documentation
 
-Source and package version 0.4.0 are current. Version 0.3.2 received a solo runtime pass; the 0.4.0 Resiliency merge, typed Fanny/Jet item slots, and new balance now need the next `devtest` run. Multiplayer remains unvalidated.
+Source and package version 0.4.1 are current. Multiplayer remains unvalidated.
 
 For development or a new Codex conversation, begin with:
 

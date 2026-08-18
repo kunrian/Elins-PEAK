@@ -32,6 +32,7 @@ namespace PEAKUsageSkills.Core
                 log.LogInfo("Removed retired Pack Rat progression from the local save.");
             }
 
+            MergeLegacySkill("Resilience", SkillId.Vitality);
             MergeRetiredRecoverySkills();
 
             EnsureAllSkills();
@@ -61,56 +62,6 @@ namespace PEAKUsageSkills.Core
         }
 
         public int MaximumLevel => Math.Max(1, config.MaximumLevel.Value);
-
-        public void AddLevelsToAll(int levels)
-        {
-            if (levels <= 0)
-            {
-                return;
-            }
-
-            foreach (SkillId skillId in Enum.GetValues(typeof(SkillId)))
-            {
-                SkillSave state = GetState(skillId);
-                int newLevel = Math.Min(MaximumLevel, state.Level + levels);
-                if (newLevel == state.Level)
-                {
-                    continue;
-                }
-
-                state.Level = newLevel;
-                if (newLevel >= MaximumLevel)
-                {
-                    state.Experience = 0d;
-                }
-
-                LevelChanged?.Invoke(skillId, newLevel);
-            }
-
-            dirty = true;
-            Flush();
-            log.LogWarning($"Added {levels} saved levels to every usage skill for runtime testing.");
-        }
-
-        public void ResetAllProgression()
-        {
-            foreach (SkillId skillId in Enum.GetValues(typeof(SkillId)))
-            {
-                SkillSave state = GetState(skillId);
-                bool levelChanged = state.Level != 1;
-                state.Level = 1;
-                state.Experience = 0d;
-                state.LifetimeWork = 0d;
-                if (levelChanged)
-                {
-                    LevelChanged?.Invoke(skillId, 1);
-                }
-            }
-
-            dirty = true;
-            Flush();
-            log.LogWarning("All saved usage-skill levels, XP, and lifetime work were reset to level 1.00.");
-        }
 
         public bool AwardWork(SkillId skillId, double work, double experiencePerWork, string source)
         {
@@ -221,29 +172,29 @@ namespace PEAKUsageSkills.Core
 
         private void MergeRetiredRecoverySkills()
         {
-            MergeRetiredRecoverySkill("PoisonRecovery", SkillId.Toxicology);
-            MergeRetiredRecoverySkill("ColdRecovery", SkillId.ColdTolerance);
-            MergeRetiredRecoverySkill("HeatRecovery", SkillId.HeatTolerance);
-            MergeRetiredRecoverySkill("DrowsyRecovery", SkillId.DrowsyTolerance);
-            MergeRetiredRecoverySkill("SporeRecovery", SkillId.SporeTolerance);
+            MergeLegacySkill("PoisonRecovery", SkillId.Toxicology);
+            MergeLegacySkill("ColdRecovery", SkillId.ColdTolerance);
+            MergeLegacySkill("HeatRecovery", SkillId.HeatTolerance);
+            MergeLegacySkill("DrowsyRecovery", SkillId.DrowsyTolerance);
+            MergeLegacySkill("SporeRecovery", SkillId.SporeTolerance);
         }
 
-        private void MergeRetiredRecoverySkill(string retiredKey, SkillId toleranceSkill)
+        private void MergeLegacySkill(string legacyKey, SkillId targetSkill)
         {
-            if (!save.Skills.TryGetValue(retiredKey, out SkillSave retired))
+            if (!save.Skills.TryGetValue(legacyKey, out SkillSave legacy))
             {
                 return;
             }
 
-            SkillSave tolerance = GetState(toleranceSkill);
-            double combinedExperience = TotalAccumulatedExperience(tolerance)
-                + TotalAccumulatedExperience(retired);
-            tolerance.LifetimeWork = Math.Max(0d, tolerance.LifetimeWork)
-                + Math.Max(0d, retired.LifetimeWork);
-            SetFromTotalAccumulatedExperience(tolerance, combinedExperience);
-            save.Skills.Remove(retiredKey);
+            SkillSave target = GetState(targetSkill);
+            double combinedExperience = TotalAccumulatedExperience(target)
+                + TotalAccumulatedExperience(legacy);
+            target.LifetimeWork = Math.Max(0d, target.LifetimeWork)
+                + Math.Max(0d, legacy.LifetimeWork);
+            SetFromTotalAccumulatedExperience(target, combinedExperience);
+            save.Skills.Remove(legacyKey);
             dirty = true;
-            log.LogInfo($"Merged retired {retiredKey} progression into {toleranceSkill}.");
+            log.LogInfo($"Merged legacy {legacyKey} progression into {targetSkill}.");
         }
 
         private double TotalAccumulatedExperience(SkillSave state)

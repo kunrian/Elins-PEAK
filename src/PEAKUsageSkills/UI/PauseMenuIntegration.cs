@@ -16,8 +16,6 @@ namespace PEAKUsageSkills.UI
         private const float PanelWidth = 390f;
         private const float HeaderHeight = 56f;
         private const float RowHeight = 32f;
-        private const float TestButtonHeight = 40f;
-        private const float TestButtonGap = 10f;
         private static readonly Color MainPanelColor = new Color(0.66f, 0.09f, 0.15f, 1f);
         private static readonly Color ResiliencyPanelColor = new Color(0.08f, 0.30f, 0.68f, 1f);
 
@@ -30,7 +28,7 @@ namespace PEAKUsageSkills.UI
             SkillId.VineClimbing,
             SkillId.Athletics,
             SkillId.Agility,
-            SkillId.Resilience,
+            SkillId.Vitality,
             SkillId.WetGrip,
             SkillId.ClimbingTenacity
         };
@@ -56,17 +54,17 @@ namespace PEAKUsageSkills.UI
             { SkillId.VineClimbing, "Vine Climbing" },
             { SkillId.Athletics, "Athletics" },
             { SkillId.Agility, "Agility" },
-            { SkillId.Resilience, "Resilience" },
+            { SkillId.Vitality, "Vitality" },
             { SkillId.WetGrip, "Wet Grip" },
             { SkillId.ClimbingTenacity, "Climbing Tenacity" },
-            { SkillId.Toxicology, "Poison Tolerance" },
-            { SkillId.ColdTolerance, "Cold Tolerance" },
-            { SkillId.HeatTolerance, "Heat Tolerance" },
-            { SkillId.DrowsyTolerance, "Drowsy Tolerance" },
-            { SkillId.SporeTolerance, "Spore Tolerance" },
-            { SkillId.HungerTolerance, "Hunger Tolerance" },
-            { SkillId.CurseTolerance, "Curse Tolerance" },
-            { SkillId.PetrificationResistance, "Petrification Resistance" }
+            { SkillId.Toxicology, "Poison" },
+            { SkillId.ColdTolerance, "Cold" },
+            { SkillId.HeatTolerance, "Heat" },
+            { SkillId.DrowsyTolerance, "Drowsy" },
+            { SkillId.SporeTolerance, "Spores" },
+            { SkillId.HungerTolerance, "Hunger" },
+            { SkillId.CurseTolerance, "Curse" },
+            { SkillId.PetrificationResistance, "Petrification" }
         };
 
         public static void Register()
@@ -99,53 +97,9 @@ namespace PEAKUsageSkills.UI
                 ResiliencyPanelColor,
                 new Vector2(24f, -88f - SectionHeight(MainSkills.Length) - 18f),
                 false);
-            BuildTestButtons(root, new Vector2(-24f, -88f));
             SkillTooltip.Create(root);
             Refresh(root);
             Plugin.ModLog.LogInfo("[UsageSkills:UI] release skill panels built; values refresh once when the pause UI opens");
-        }
-
-        private static void BuildTestButtons(RectTransform root, Vector2 offset)
-        {
-            float buttonWidth = (PanelWidth - TestButtonGap) * 0.5f;
-            BuildTestButton(root, "+10 ALL LEVELS", "UI_PEAKUsageSkills_AddTenLevels", offset - new Vector2(buttonWidth + TestButtonGap, 0f), buttonWidth, () =>
-            {
-                Plugin.Progression.AddLevelsToAll(10);
-                Refresh(root);
-            });
-            BuildTestButton(root, "RESET ALL TO 1", "UI_PEAKUsageSkills_ResetAll", offset, buttonWidth, () =>
-            {
-                Plugin.Progression.ResetAllProgression();
-                Refresh(root);
-            });
-        }
-
-        private static void BuildTestButton(RectTransform root, string label, string objectName, Vector2 offset, float width, UnityEngine.Events.UnityAction action)
-        {
-            PeakMenuButton button = MenuAPI.CreatePauseMenuButton(label);
-            button.gameObject.name = objectName;
-            RectTransform rect = button.GetComponent<RectTransform>();
-            rect.SetParent(root, false);
-            rect.anchorMin = rect.anchorMax = new Vector2(1f, 1f);
-            rect.pivot = new Vector2(1f, 1f);
-            rect.anchoredPosition = offset;
-            rect.sizeDelta = new Vector2(width, TestButtonHeight);
-
-            LayoutElement? layout = button.GetComponent<LayoutElement>();
-            if (layout != null)
-            {
-                layout.ignoreLayout = true;
-            }
-
-            ConfigureTestButtonGraphics(button, new Color(0.32f, 0.07f, 0.10f, 1f));
-            button.OnClick(action);
-            foreach (TextMeshProUGUI text in button.GetComponentsInChildren<TextMeshProUGUI>(true))
-            {
-                text.fontSize = 18f;
-                text.alignment = TextAlignmentOptions.Center;
-                text.textWrappingMode = TextWrappingModes.NoWrap;
-                text.overflowMode = TextOverflowModes.Overflow;
-            }
         }
 
         private static void BuildSection(RectTransform root, string title, SkillId[] skills, Color panelColor, Vector2 offset, bool alignRight)
@@ -256,8 +210,8 @@ namespace PEAKUsageSkills.UI
                 case SkillId.Agility:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.AgilityJumpEfficiencyPerLevel.Value)) * 100f;
                     return $"Improves jump impulse and very lightly improves air control. Current: +{level * 0.15f:F1}% jump impulse, {reduction:F1}% less jump cost.";
-                case SkillId.Resilience:
-                    return ReductionTooltip("fall Injury", level, Plugin.Settings.ResilienceFallReductionPerLevel.Value);
+                case SkillId.Vitality:
+                    return ReductionTooltip("fall Injury", level, Plugin.Settings.VitalityFallReductionPerLevel.Value);
                 case SkillId.WetGrip:
                     return ReductionTooltip("rain/slippery climbing pull and wind stamina drain", level, Plugin.Settings.WetGripReductionPerLevel.Value);
                 case SkillId.ClimbingTenacity:
@@ -267,10 +221,10 @@ namespace PEAKUsageSkills.UI
                 case SkillId.HeatTolerance:
                 case SkillId.DrowsyTolerance:
                 case SkillId.SporeTolerance:
-                    return ToleranceTooltip(DisplayNames[skillId].Replace(" Tolerance", string.Empty).ToLowerInvariant(), level, true);
+                    return ToleranceTooltip(DisplayNames[skillId].ToLowerInvariant(), level, true);
                 case SkillId.HungerTolerance:
                 case SkillId.CurseTolerance:
-                    return ToleranceTooltip(DisplayNames[skillId].Replace(" Tolerance", string.Empty).ToLowerInvariant(), level, false);
+                    return ToleranceTooltip(DisplayNames[skillId].ToLowerInvariant(), level, false);
                 case SkillId.PetrificationResistance:
                     return ToleranceTooltip("petrification", level, false);
                 default:
@@ -323,19 +277,6 @@ namespace PEAKUsageSkills.UI
             ConfigureBorder(panel.BorderBottom.rectTransform, false);
             panel.BorderTop.raycastTarget = false;
             panel.BorderBottom.raycastTarget = false;
-        }
-
-        private static void ConfigureTestButtonGraphics(PeakMenuButton button, Color color)
-        {
-            button.SetColor(color, true);
-            Stretch(button.Panel.rectTransform);
-            button.Panel.raycastTarget = true;
-            button.Panel.rectTransform.SetAsFirstSibling();
-
-            ConfigureBorder(button.BorderTop.rectTransform, true);
-            ConfigureBorder(button.BorderBottom.rectTransform, false);
-            button.BorderTop.raycastTarget = false;
-            button.BorderBottom.raycastTarget = false;
         }
 
         private static void Stretch(RectTransform rect)
