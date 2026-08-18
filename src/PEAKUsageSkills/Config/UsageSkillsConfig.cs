@@ -22,19 +22,19 @@ namespace PEAKUsageSkills.Config
             SaveIntervalSeconds = config.Bind("Progression", "SaveIntervalSeconds", 30f, "Minimum interval between dirty progression saves.");
             DebugAllSkillLevelOverride = config.Bind("Progression", "DebugAllSkillLevelOverride", -1, "-1 uses saved levels. Set 0..MaximumLevel to test effects without altering progression.");
 
-            EnduranceXpPerStamina = config.Bind("XP", "EnduranceXpPerStamina", 6f, "XP per normalized point of raw stamina requested (0.06 XP per displayed stamina point).");
+            EnduranceXpPerStamina = config.Bind("XP", "EnduranceXpPerStamina", 10f, "XP per normalized point of raw stamina requested (0.10 XP per displayed stamina point).");
             StrengthXpPerWork = config.Bind("XP", "StrengthXpPerWork", 2f, "XP per raw Weight x movement meter.");
-            WallClimbingXpPerMeter = config.Bind("XP", "WallClimbingXpPerMeter", 4f, "XP per intentional wall-climbing meter in any direction.");
-            RopeClimbingXpPerMeter = config.Bind("XP", "RopeClimbingXpPerMeter", 4f, "XP per intentional rope-climbing meter in any direction.");
-            VineClimbingXpPerMeter = config.Bind("XP", "VineClimbingXpPerMeter", 4f, "XP per intentional vine-climbing meter in any direction.");
-            AthleticsXpPerMeter = config.Bind("XP", "AthleticsXpPerMeter", 0.28f, "XP per qualifying grounded walking meter.");
-            AthleticsSprintXpPerMeter = config.Bind("XP", "AthleticsSprintXpPerMeter", 1.12f, "XP per qualifying grounded sprinting meter.");
-            AgilityXpPerJump = config.Bind("XP", "AgilityXpPerJump", 3.2f, "XP per successfully executed local jump.");
+            WallClimbingXpPerMeter = config.Bind("XP", "WallClimbingXpPerMeter", 8f, "XP per intentional wall-climbing meter in any direction.");
+            RopeClimbingXpPerMeter = config.Bind("XP", "RopeClimbingXpPerMeter", 8f, "XP per intentional rope-climbing meter in any direction.");
+            VineClimbingXpPerMeter = config.Bind("XP", "VineClimbingXpPerMeter", 8f, "XP per intentional vine-climbing meter in any direction.");
+            AthleticsXpPerMeter = config.Bind("XP", "AthleticsXpPerMeter", 0.22f, "XP per qualifying grounded walking meter.");
+            AthleticsSprintXpPerMeter = config.Bind("XP", "AthleticsSprintXpPerMeter", 1.05f, "XP per qualifying grounded sprinting meter.");
+            AgilityXpPerJump = config.Bind("XP", "AgilityXpPerJump", 8f, "XP per successfully executed local jump.");
             ConfigEntry<float> legacyResilienceXpPerInjury = config.Bind("XP", "ResilienceXpPerInjury", 100f, "Legacy Vitality XP setting retained only for 0.4.1 migration.");
             VitalityXpPerInjury = config.Bind("XP", "VitalityXpPerInjury", 100f, "XP per normalized point of raw fall Injury.");
             ConditionXpPerStatus = config.Bind("XP", "ConditionXpPerStatus", 100f, "XP per normalized point of actual incoming Resiliency affliction.");
-            WetGripXpPerMeter = config.Bind("XP", "WetGripXpPerMeter", 6f, "XP per slippery wall-climbing meter, weighted by current slipperiness.");
-            ClimbingTenacityXpPerMeter = config.Bind("XP", "ClimbingTenacityXpPerMeter", 6f, "XP per intentional wall-climbing meter while regular stamina is below 20%.");
+            WetGripXpPerMeter = config.Bind("XP", "WetGripXpPerMeter", 20f, "XP per slippery wall-climbing meter, weighted by current slipperiness.");
+            ClimbingTenacityXpPerMeter = config.Bind("XP", "ClimbingTenacityXpPerMeter", 40f, "XP per intentional wall-climbing meter while regular stamina is below 20%.");
 
             StrengthReductionPerLevel = config.Bind("Effects", "StrengthWeightReductionPerLevel", 0.003f, "Anchored carry-Weight reduction rate per Strength level.");
             MaximumStrengthReduction = config.Bind("Effects", "MaximumStrengthWeightReduction", 0.25f, "Legacy cap retained for configuration compatibility; linear level scaling does not use it.");
@@ -140,6 +140,21 @@ namespace PEAKUsageSkills.Config
                 configSchema.Value = 5;
             }
 
+            bool migratedToSchema6 = configSchema.Value < 6;
+            if (migratedToSchema6)
+            {
+                MigrateExact(EnduranceXpPerStamina, 6f, 10f);
+                MigrateExact(WallClimbingXpPerMeter, 4f, 8f);
+                MigrateExact(RopeClimbingXpPerMeter, 4f, 8f);
+                MigrateExact(VineClimbingXpPerMeter, 4f, 8f);
+                MigrateExact(AthleticsXpPerMeter, 0.28f, 0.22f);
+                MigrateExact(AthleticsSprintXpPerMeter, 1.12f, 1.05f);
+                MigrateExact(AgilityXpPerJump, 3.2f, 8f);
+                MigrateExact(WetGripXpPerMeter, 6f, 20f);
+                MigrateExact(ClimbingTenacityXpPerMeter, 6f, 40f);
+                configSchema.Value = 6;
+            }
+
             bool removedObsoleteEntries = false;
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("XP", "ResilienceXpPerInjury"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "ResilienceFallReductionPerLevel"));
@@ -152,7 +167,7 @@ namespace PEAKUsageSkills.Config
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatWeightPenaltyPerItem"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatMovementPenaltyPerItem"));
             removedObsoleteEntries |= config.Remove(new ConfigDefinition("Effects", "PackRatStaminaPenaltyPerItem"));
-            if (removedObsoleteEntries || migratedToSchema4 || migratedToSchema5)
+            if (removedObsoleteEntries || migratedToSchema4 || migratedToSchema5 || migratedToSchema6)
             {
                 config.Save();
             }

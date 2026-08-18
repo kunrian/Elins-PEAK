@@ -7,6 +7,7 @@
 | 0.3.2 solo runtime | Passed in `devtest` on 2026-08-18; startup/UI buttons/Backpack milestones/reset produced expected logs with no plugin exception. |
 | 0.4.1 Release compile | Passed with zero warnings/errors. |
 | 0.4.1 package structure | Passed; exact artifact is recorded in `DEVELOPMENT_AND_RELEASE.md`. |
+| Config schema 6 migration | Compile/package verified; fresh-config and prior-default migration remain runtime-pending. |
 | 0.4.1 live runtime | Pending the user's next run. |
 | Multiplayer | Never runtime-tested. |
 | Cold natural warming speed | Open; latest log classified it as `SubtractLocal`. |
@@ -17,7 +18,7 @@ The full unit suite is intentionally not required for this balance/runtime pass.
 
 1. Confirm `Elin's PEAK 0.4.1 loaded` and healthy hook lines for Afflictions, Petrification, Backpack Inventory, Backpack Wheel, and Backpack Visuals.
 2. Confirm ESC layout: Main and blue Resiliency on the left, Vitality in Main, and short names for all eight Resiliency skills.
-3. Confirm the previous Resilience level/XP appears under Vitality and the old save/config keys are gone after a save.
+3. Confirm the previous Resilience level/XP appears under Vitality, the old save/config keys are gone after a save, and the generated config reports schema 6 with the documented XP defaults.
 4. Test typed storage at one milestone and at +5: Backpack `4+n`, Fanny `2+n`, Jet `1+n` item slices plus exactly one fuel slice, Rocket unchanged.
 5. Put an item in a newly exposed high index, reset levels, reopen, and confirm occupied data remains reachable rather than deleted.
 6. Receive Poison/Cold/Heat/Drowsy/Spore/Hunger/Curse. Confirm actual incoming amount awards the matching Tolerance once. Recovery/cleanse should award no XP.

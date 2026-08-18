@@ -107,18 +107,18 @@ The current defaults use the following underlying work values:
 
 | Skill | Default XP source |
 |---|---|
-| Endurance | 6 XP per normalized point of raw stamina requested |
+| Endurance | 10 XP per normalized point of raw stamina requested |
 | Strength | 2 XP per raw Weight × movement meter |
-| Wall Climbing | 4 XP per intentional climbing meter |
-| Rope Climbing | 4 XP per intentional climbing meter |
-| Vine Climbing | 4 XP per intentional climbing meter |
-| Athletics | 0.28 XP per qualifying walking meter |
-| Athletics while sprinting | 1.12 XP per qualifying sprinting meter |
-| Agility | 3.2 XP per successfully executed local jump |
+| Wall Climbing | 8 XP per intentional climbing meter |
+| Rope Climbing | 8 XP per intentional climbing meter |
+| Vine Climbing | 8 XP per intentional climbing meter |
+| Athletics | 0.22 XP per qualifying walking meter |
+| Athletics while sprinting | 1.05 XP per qualifying sprinting meter |
+| Agility | 8 XP per successfully executed local jump |
 | Vitality | 100 XP per normalized point of raw fall Injury |
 | Resiliency skills | 100 XP per normalized point of actual incoming matching affliction |
-| Wet Grip | 6 XP per slippery climbing meter, weighted by slipperiness |
-| Climbing Tenacity | 6 XP per intentional wall-climbing meter while regular stamina is below 20% |
+| Wet Grip | 20 XP per slippery climbing meter, weighted by slipperiness |
+| Climbing Tenacity | 40 XP per intentional wall-climbing meter while regular stamina is below 20% |
 
 These values can be changed in the generated BepInEx configuration.
 

@@ -46,4 +46,4 @@ Petrification cannot share the normal `AddStatus` calculation: PEAK converts tha
 
 ## Save/config compatibility
 
-Vitality retains enum value 7 and migrates the legacy `Resilience` save key. Values 8–13 remain stable; value 14 remains unused; Wet Grip/Tenacity retain 15/16. Recovery values 17–21 are retired, and Curse/Petrification use 22/23. Config schema 5 migrates Resilience settings to Vitality and removes obsolete generated entries.
+Vitality retains enum value 7 and migrates the legacy `Resilience` save key. Values 8–13 remain stable; value 14 remains unused; Wet Grip/Tenacity retain 15/16. Recovery values 17–21 are retired, and Curse/Petrification use 22/23. Config schema 5 migrates Resilience settings to Vitality and removes obsolete generated entries. Schema 6 adopts the refreshed XP defaults only for entries still equal to the prior defaults, preserving custom values.

@@ -6,7 +6,7 @@
 
 **Game assembly inspected:** PEAK `Assembly-CSharp.dll` SHA-256 `CAD8EF0702F512F0AD4595F9C169D4025EB8FA351083B64FD4E9FD6F78D5D14C`
 
-**0.4.1 package:** `dist/Elins_PEAK-0.4.1.zip`, SHA-256 `5A6E3C98F3A855EE1C20995601A4CF3C2983802EC000E0126455FD843B415393`
+**0.4.1 package:** `dist/Elins_PEAK-0.4.1.zip`, SHA-256 `CFE187DB40A08E6988AF5E213965634E3AE663CB1EA2FC9E90B9B2FE534B6077`
 
 ## Where the project is
 
@@ -31,17 +31,17 @@ Version 0.4.1 is the current implementation. It compiles and packages with zero 
 
 | Skill/source | XP rate |
 |---|---:|
-| Endurance | 6 per normalized stamina requested |
+| Endurance | 10 per normalized stamina requested |
 | Strength | 2 per raw Weight × meter |
-| Wall/Rope/Vine Climbing | 4 per intentional meter |
-| Athletics walk / sprint | 0.28 / 1.12 per meter |
-| Agility | 3.2 per successful jump |
+| Wall/Rope/Vine Climbing | 8 per intentional meter |
+| Athletics walk / sprint | 0.22 / 1.05 per meter |
+| Agility | 8 per successful jump |
 | Vitality | 100 per normalized fall Injury |
 | Resiliency | 100 per normalized actual incoming affliction |
-| Wet Grip | 6 per slippery weighted wall meter |
-| Climbing Tenacity | 6 per low-stamina wall meter |
+| Wet Grip | 20 per slippery weighted wall meter |
+| Climbing Tenacity | 40 per low-stamina wall meter |
 
-Config migration changes only values still equal to the old defaults; user-tuned values are preserved. Obsolete recovery-XP, hungry-movement, and Pack Rat entries are removed from the generated config.
+Config schema 6 changes only values still equal to the prior 0.4.1 defaults; user-tuned values are preserved. Obsolete recovery-XP, hungry-movement, and Pack Rat entries are removed from the generated config.
 
 ## Verified assembly findings
 
@@ -75,4 +75,4 @@ Do not run the full unit suite for this balance/runtime cycle unless a core math
 
 ## Publication state
 
-The exact 0.4.1 payload is installed in `devtest`; PEAK was closed and the installed/source DLL hashes match. The previous 0.4.0 live folder is recoverable from `dist/Elins_PEAK-live-before-0.4.1-20260818.zip`. The local Git repository may be updated and committed, but no remote push or Thunderstore upload is authorized by this handoff.
+An earlier 0.4.1 payload is installed in `devtest`. The current schema-6 XP-default refresh has not been deployed or runtime-tested, so the installed and current source DLLs should not be described as matching. The previous 0.4.0 live folder is recoverable from `dist/Elins_PEAK-live-before-0.4.1-20260818.zip`. Git publication is authorized by the owner; Thunderstore upload remains a separate action.

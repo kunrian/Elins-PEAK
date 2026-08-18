@@ -4,6 +4,7 @@
 
 - Renamed Resilience to Vitality while preserving existing progression and settings.
 - Shortened the eight Resiliency skill names in the pause menu.
+- Updated the default XP rates for Endurance, climbing, Athletics, Agility, Wet Grip, and Climbing Tenacity.
 
 ## 0.4.0
 
