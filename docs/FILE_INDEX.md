@@ -17,6 +17,8 @@ This map helps a new conversation find the current source of truth quickly.
 | `package/README.md` | Player-facing Thunderstore README. |
 | `package/CHANGELOG.md` | Player-facing packaged changelog. |
 | `package/icon.png` | Final package icon; must be 256×256. |
+| `README.<locale>.md`, `package/README.<locale>.md` | Supplied localized player documentation. |
+| `package/Localization/*.json` | Runtime skill-panel catalogs copied beside the packaged DLL. |
 
 ## Core and configuration
 
@@ -28,6 +30,7 @@ This map helps a new conversation find the current source of truth quickly.
 | `src/PEAKUsageSkills/Core/ProgressionService.cs` | XP eligibility, awarding, leveling, Recovery-to-Tolerance save migration, dirty save state. |
 | `src/PEAKUsageSkills/Config/UsageSkillsConfig.cs` | All public config entries and exact-default schema migrations. |
 | `src/PEAKUsageSkills/Effects/EffectService.cs` | Converts effective levels/config into gameplay multipliers. |
+| `src/PEAKUsageSkills/Localization/LocalizationService.cs` | Registers JSON catalogs through PEAKLib/`LocalizedText`, provides English fallback, locale-aware formatting, and the live language-change event. |
 
 ## Game integration
 
@@ -48,7 +51,7 @@ This map helps a new conversation find the current source of truth quickly.
 
 | Path | Purpose |
 |---|---|
-| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Main/Resiliency panels, `Lv. ##.##`, one refresh per open, and hover tooltips. |
+| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Localized Main/Resiliency panels, `Lv. ##.##`, live language refresh, CJK tooltip wrapping, and hover tooltips. |
 | `src/PEAKUsageSkills/UI/DebugOverlay.cs` | Optional config-driven compact diagnostics overlay. |
 | `src/PEAKUsageSkills/Diagnostics/DiagnosticHub.cs` | Rate-limited aggregate BepInEx logging. |
 | `src/PEAKUsageSkills/Diagnostics/RuntimeMetrics.cs` | Current runtime measurements used by logs/overlay. |

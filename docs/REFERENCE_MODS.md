@@ -12,7 +12,7 @@ Reference mods help identify PEAK APIs, UI patterns, and compatibility risks. Th
 |---|---|
 | BepInEx | Plugin loader, configuration, logging, Harmony environment. |
 | PEAKLib Core | PEAK integration utilities required by the package manifest. |
-| PEAKLib UI | Pause-menu panels, text, and tooltip construction. |
+| PEAKLib UI | Pause-menu panels/text/tooltips and registration into PEAK's native localization table. |
 
 The package manifest is the authority for exact dependency package identifiers/versions.
 
@@ -29,7 +29,7 @@ The package manifest is the authority for exact dependency package identifiers/v
 | EasyBackpack Fix | Potential backpack compatibility target | Present in some environments but not specifically tested with the final Strength milestones. |
 | PEAK Unlimited | General reference/co-installed mod | No deliberate integration or targeted compatibility result. |
 | ItemStats | UI/stat reference | No deliberate integration or targeted compatibility result. |
-| Sense of Direction | UI/co-installed reference | No deliberate integration or targeted compatibility result. |
+| Sense of Direction | Localization/UI reference | Confirms the shipped PEAK language set; Elin's PEAK uses its own catalogs and has no dependency. |
 
 ## Dependency policy
 
@@ -42,4 +42,4 @@ The package manifest is the authority for exact dependency package identifiers/v
 
 ## Profile hygiene for reliable tests
 
-Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 0.3.2 solo log is a valid baseline; it does not approve the 0.4.1 naming/migration changes or typed Fanny/Jet capacity.
+Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 0.3.2 solo log is a valid baseline; it does not approve the 0.4.2 localization/Petrification changes, naming migration, or typed Fanny/Jet capacity.

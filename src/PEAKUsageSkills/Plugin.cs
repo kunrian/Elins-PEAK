@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
@@ -9,6 +10,7 @@ using PEAKUsageSkills.Diagnostics;
 using PEAKUsageSkills.Effects;
 using PEAKUsageSkills.GameAdapters;
 using PEAKUsageSkills.GameAdapters.Patches;
+using PEAKUsageSkills.Localization;
 using PEAKUsageSkills.Persistence;
 using PEAKUsageSkills.Tracking;
 using PEAKUsageSkills.UI;
@@ -24,7 +26,7 @@ namespace PEAKUsageSkills
     {
         public const string PluginGuid = "com.chiseled.peak.usageskills";
         public const string PluginName = "Elin's PEAK";
-        public const string PluginVersion = "0.4.1";
+        public const string PluginVersion = "0.4.2";
 
         private Harmony? harmony;
 
@@ -39,6 +41,8 @@ namespace PEAKUsageSkills
         {
             ModLog = Logger;
             Settings = new UsageSkillsConfig(Config);
+            string pluginDirectory = Path.GetDirectoryName(Info.Location) ?? Paths.PluginPath;
+            LocalizationService.Initialize(pluginDirectory);
             RunState = new RunStateAdapter(Settings);
             SaveStore store = new SaveStore(Logger);
             Progression = new ProgressionService(Settings, store, Logger, RunState);
@@ -74,6 +78,8 @@ namespace PEAKUsageSkills
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             Progression.LevelChanged -= OnSkillLevelChanged;
+            PauseMenuIntegration.Unregister();
+            LocalizationService.Shutdown();
             Progression.Flush();
             harmony?.UnpatchSelf();
         }
@@ -116,7 +122,7 @@ namespace PEAKUsageSkills
             RecordHook("WallFalls", typeof(CharacterClimbing), "CheckFallDamage");
             RecordHook("Afflictions", typeof(CharacterAfflictions), "AddStatus");
             RecordHook("ConditionRecovery", typeof(CharacterAfflictions), "SubtractStatus");
-            RecordHook("Petrification", typeof(CharacterAfflictions), "AddPetrify");
+            RecordHook("Petrification", typeof(CharacterAfflictions), "AddPetrify", new Type[] { typeof(int) });
             RecordHook("BackpackInventory", typeof(BackpackData), "DeserializeValue");
             RecordHook("BackpackWheel", typeof(BackpackWheel), "InitWheel");
             RecordHook("WetGrip", typeof(WindChillZone), "ApplyStatus");
@@ -144,11 +150,16 @@ namespace PEAKUsageSkills
             }
         }
 
-        private static void RecordHook(string adapter, Type type, string methodName)
+        private static void RecordHook(string adapter, Type type, string methodName, Type[]? parameterTypes = null)
         {
-            MethodInfo? method = AccessTools.Method(type, methodName);
+            MethodInfo? method = parameterTypes == null
+                ? AccessTools.Method(type, methodName)
+                : AccessTools.Method(type, methodName, parameterTypes);
             bool healthy = method != null && Harmony.GetPatchInfo(method)?.Owners.Contains(PluginGuid) == true;
-            Diagnostics?.RecordPatchHealth(adapter, healthy, type.FullName + "." + methodName);
+            string signature = parameterTypes == null
+                ? type.FullName + "." + methodName
+                : type.FullName + "." + methodName + "(" + string.Join(",", Array.ConvertAll(parameterTypes, value => value.Name)) + ")";
+            Diagnostics?.RecordPatchHealth(adapter, healthy, signature);
         }
     }
 }

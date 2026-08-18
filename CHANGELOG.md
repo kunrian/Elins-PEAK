@@ -1,27 +1,29 @@
 # Changelog
 
+## 0.4.2
+
+- Added translated skill names and tooltips for Simplified Chinese, Japanese, Korean, German, Spanish, and French. The skill panel now follows PEAK's language setting and refreshes when it changes; untranslated languages fall back to English.
+- Fixed Petrification so real gains from status effects, amulets, and Citadel hazards receive the skill reduction and award EXP correctly.
+
 ## 0.4.1
+### Please delete your current config file and regenerate by starting the game.
 
 - Renamed Resilience to Vitality while preserving existing progression and settings.
 - Shortened the eight Resiliency skill names in the pause menu.
-- Updated the default XP rates for Endurance, climbing, Athletics, Agility, Wet Grip, and Climbing Tenacity.
+- Further adjusted EXP values.
 
 ## 0.4.0
 
-- Merged Poison/Cold/Heat/Drowsy/Spore Resistance and Recovery into single Tolerance skills. Existing Recovery progression is converted into its matching Tolerance without discarding accumulated XP or work.
-- Renamed the blue condition panel to Resiliency, moved it below Main Skills on the left, removed the green Recovery panel, and moved the two runtime test buttons to the right.
-- Added Curse Tolerance and Petrification Resistance. Petrification covers the shared amulet/Citadel gain path; neither skill has a recovery-speed effect.
-- Tolerances train only when the matching affliction increases. Hunger movement training and all Recovery XP were removed.
-- Halved both condition-resistance and recovery-speed bonuses to 0.15% per level now that each Tolerance owns both effects.
-- Added Strength item-slot milestones to Fanny Packs and Jet Packs while preserving Jet Pack fuel and excluding Rocket Packs. Backpacks retain their existing behavior.
-- Rebalanced XP: Endurance 3x; wall/rope/vine climbing 2x; Wet Grip and Climbing Tenacity 3x; Athletics and Agility 20% lower.
-- Removed stale Pack Rat, recovery-XP, and Hunger-movement configuration entries.
-- Documented the sprint-to-jump momentum finding and candidate Gliding/Aeronautics and Throwing skills.
-- Updated package/source version to 0.4.0.
+- Combined condition Resistance and Recovery into eight blue Resiliency skills, including new Curse Tolerance and Petrification Resistance.
+- Tolerances now train only from receiving their matching affliction; existing Recovery progression is merged into its Tolerance.
+- Fanny Packs and Jet Packs now receive Strength's extra item slots. Jet fuel remains separate, and Rocket Packs are excluded.
+- Rebalanced Endurance, climbing, Athletics, Agility, Wet Grip, and Climbing Tenacity XP.
+- Moved the Resiliency panel below Main Skills and the test controls to the right.
+- Removed stale configurations and cleaned up a bit
 
 ## 0.3.2
 
-- Removed the bugged main-inventory slot expansion. Your normal inventory stays vanilla-sized.
+- Removed the bugged main-inventory slot expansion.
 - Retired Pack Rat and its overflow Weight, movement, and stamina penalties.
 - Moved backpack-slot unlocks to Strength at levels 20, 40, 70, 120, and 200.
 - Fixed Cold Recovery so passive environmental warming counts, while status-changing items still do not grant Recovery XP.

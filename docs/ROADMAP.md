@@ -1,15 +1,15 @@
-# Roadmap from 0.4.1
+# Roadmap from 0.4.2
 
 ## Priority 0 — focused live validation
 
-- Validate 0.4.1 startup, ESC layout, and Vitality save/config migration.
+- Validate 0.4.2 startup, live PEAK-language switching/fallback, CJK rendering, and Vitality save/config migration.
 - Validate Strength capacity on Backpack/Fanny/Jet and confirm Jet fuel/Rocket behavior remain vanilla.
-- Capture Curse and Petrification XP/effect evidence.
+- Confirm the explicit `AddPetrify(int)` hook is healthy and capture Curse/Petrification XP/effect evidence from an amulet and Citadel hazard.
 - Confirm recovery gives effect but no XP for Poison/Heat/Drowsy/Spores.
 
 ## Priority 1 — Cold Tolerance recovery path
 
-The latest 0.3.2 log showed warming as `Cold:SubtractLocal`, and the existing Heat scope did not classify it. Trace the actual caller in a fresh 0.4.1 log/stack-aware diagnostic, then apply Cold's recovery multiplier only to that environmental path. Do not restore Recovery XP and do not multiply item cleansing.
+The latest 0.3.2 log showed warming as `Cold:SubtractLocal`, and the existing Heat scope did not classify it. Trace the actual caller in a fresh 0.4.2 log/stack-aware diagnostic, then apply Cold's recovery multiplier only to that environmental path. Do not restore Recovery XP and do not multiply item cleansing.
 
 ## Priority 2 — multiplayer
 
@@ -30,7 +30,6 @@ Assembly finding: `CharacterItems.DropItemRpc` derives force from 0..1 charge an
 
 Recommended first design: award XP for valid charged local throws, weighted by charge and possibly item carry weight. Scale the computed impulse after charge interpolation while preserving the item multiplier. Do not modify `throwCharge` itself. Use a guarded transpiler or a prefix/finalizer strategy that cannot leak temporary force values after exceptions.
 
-## Deferred publication
+## Deferred Thunderstore publication
 
-- Publish to GitHub only after the owner approves the local 0.4.1 commit.
 - Upload the exact tested ZIP to Thunderstore through its separate authenticated workflow.

@@ -31,6 +31,34 @@ foreach ($fileName in $requiredPackageFiles) {
     }
 }
 
+$localizationSource = Join-Path $packageSource "Localization"
+$requiredLocalizationFiles = @("de.json", "es.json", "fr.json", "ja.json", "ko.json", "zh-CN.json")
+$baselineLocalizationKeys = $null
+foreach ($fileName in $requiredLocalizationFiles) {
+    $filePath = Join-Path $localizationSource $fileName
+    if (-not (Test-Path -LiteralPath $filePath -PathType Leaf)) {
+        throw "Required localization file is missing: $filePath"
+    }
+
+    $localization = Get-Content -LiteralPath $filePath -Raw | ConvertFrom-Json
+    $keys = @($localization.PSObject.Properties.Name | Sort-Object)
+    if ($keys.Count -eq 0) {
+        throw "Localization file contains no translations: $filePath"
+    }
+
+    $emptyKeys = @($localization.PSObject.Properties | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.Value) })
+    if ($emptyKeys.Count -gt 0) {
+        throw "Localization file contains empty translations: $filePath"
+    }
+
+    if ($null -eq $baselineLocalizationKeys) {
+        $baselineLocalizationKeys = $keys
+    }
+    elseif (Compare-Object -ReferenceObject $baselineLocalizationKeys -DifferenceObject $keys) {
+        throw "Localization key set does not match the other locale files: $filePath"
+    }
+}
+
 Add-Type -AssemblyName System.Drawing
 $iconPath = Join-Path $packageSource "icon.png"
 $icon = [System.Drawing.Image]::FromFile($iconPath)
@@ -67,6 +95,8 @@ New-Item -ItemType Directory -Path $stagingRoot -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $packageSource "icon.png") -Destination $stagingRoot
 Copy-Item -LiteralPath (Join-Path $packageSource "README.md") -Destination $stagingRoot
 Copy-Item -LiteralPath (Join-Path $packageSource "manifest.json") -Destination $stagingRoot
+Get-ChildItem -LiteralPath $packageSource -Filter "README.*.md" -File |
+    ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $stagingRoot }
 
 $changelogPath = Join-Path $packageSource "CHANGELOG.md"
 if (Test-Path -LiteralPath $changelogPath -PathType Leaf) {
@@ -76,6 +106,11 @@ if (Test-Path -LiteralPath $changelogPath -PathType Leaf) {
 $pluginDestination = Join-Path $stagingRoot "BepInEx\plugins\Elins_PEAK"
 New-Item -ItemType Directory -Path $pluginDestination -Force | Out-Null
 Copy-Item -LiteralPath $pluginPath -Destination $pluginDestination
+$localizationDestination = Join-Path $pluginDestination "Localization"
+New-Item -ItemType Directory -Path $localizationDestination -Force | Out-Null
+foreach ($fileName in $requiredLocalizationFiles) {
+    Copy-Item -LiteralPath (Join-Path $localizationSource $fileName) -Destination $localizationDestination
+}
 
 $zipPath = Join-Path $distRoot "$($manifest.name)-$($manifest.version_number).zip"
 if (Test-Path -LiteralPath $zipPath -PathType Leaf) {
@@ -96,6 +131,13 @@ try {
 
     if ($entries -notcontains "BepInEx/plugins/Elins_PEAK/PEAKUsageSkills.dll") {
         throw "Generated archive does not contain the plugin DLL in the BepInEx plugins directory."
+    }
+
+    foreach ($fileName in $requiredLocalizationFiles) {
+        $entryName = "BepInEx/plugins/Elins_PEAK/Localization/$fileName"
+        if ($entries -notcontains $entryName) {
+            throw "Generated archive does not contain localization file $entryName."
+        }
     }
 }
 finally {

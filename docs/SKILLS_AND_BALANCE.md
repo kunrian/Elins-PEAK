@@ -1,6 +1,6 @@
 # Skills and balance
 
-This is the implemented 0.4.1 default balance. Generated BepInEx configuration can override the rates.
+This is the implemented 0.4.2 default balance. Generated BepInEx configuration can override the rates.
 
 All skills default to level 1, cap at 999, and use `round(100 × level^1.21)` XP for the next level. Airport XP is always disabled; custom-run XP is disabled by default.
 

@@ -33,9 +33,9 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 .\scripts\Build-Package.ps1
 ```
 
-The script validates `package/manifest.json`, checks the 256×256 icon, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root must contain `manifest.json`, `README.md`, `CHANGELOG.md`, `icon.png`, and the plugin DLL in the structure expected by Thunderstore.
+The script validates `package/manifest.json`, checks the 256×256 icon, validates matching non-empty keys across all six JSON catalogs, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root contains `manifest.json`, the English/localized READMEs, `CHANGELOG.md`, and `icon.png`; the DLL and `Localization/*.json` live together under `BepInEx/plugins/Elins_PEAK`.
 
-The current local artifact is `dist\Elins_PEAK-0.4.1.zip` with SHA-256 `CFE187DB40A08E6988AF5E213965634E3AE663CB1EA2FC9E90B9B2FE534B6077`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused balance/config-migration cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
+The current local artifact is `dist\Elins_PEAK-0.4.2.zip` with SHA-256 `590A350E9A7E78D292B9010354C85D109EE065B05F2FF744FDF67416C55BD1A9`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused localization/overload-targeting cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
 
 ## Runtime deployment and data
 
@@ -71,7 +71,7 @@ Use a branch from current `main`, stage explicit paths, commit a coherent change
 & 'C:\Program Files\GitHub CLI\gh.exe' auth status
 ```
 
-GitHub source publication is not a Thunderstore upload. Thunderstore publication requires its own authenticated workflow and should happen only after the exact package passes runtime validation. No remote push or Thunderstore upload is authorized for the current 0.4.1 live-test build.
+GitHub source publication is not a Thunderstore upload. The owner authorized the 0.4.2 Git commit/push; Thunderstore publication remains a separate authenticated workflow and should happen only after the exact package passes runtime validation.
 
 ## Updating after a PEAK release
 

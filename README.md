@@ -1,5 +1,7 @@
 # Elin's PEAK
 
+**Languages:** English · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Français](README.fr.md)
+
 ## Level Up Everything!
 
 PEAK already gives you a mountain full of terrible decisions, near-death climbs, overloaded backpacks, poison, cold, heat, exhaustion, and the occasional extremely avoidable fall. **Elin's PEAK makes your character actually learn from all of it!**
@@ -20,7 +22,7 @@ A lot!
 - **Endurance** — Spend stamina to train it. Endurance increases your actual maximum stamina and improves stamina regeneration.
 - **Athletics** — Walking trains it; sprinting trains it faster. Athletics improves normal ground movement, sprint movement, and sprint stamina efficiency.
 - **Agility** — Jump! Agility improves jump impulse, jump stamina efficiency, and gives you a little more control while airborne.
-- **Vitality** — Surviving legitimate fall injuries trains it. Higher Vitality reduces future fall Injury.
+- **Vitality** — Surviving legitimate fall injuries trains it. Higher Vitality reduces future Injuries.
 
 You are not picking a build from a menu here. If you are the person sprinting across every flat surface, you naturally become the better runner. If you insist on carrying half the mountain in your backpack, your character eventually starts adapting to that too.
 
@@ -31,27 +33,22 @@ Climbing is split up because a wall, a rope, and a vine do not behave the same w
 - **Wall Climbing** — Improves wall-climbing speed and reduces wall-climbing stamina cost.
 - **Rope Climbing** — Improves rope-climbing speed and stamina efficiency.
 - **Vine Climbing** — Improves vine-climbing speed and stamina efficiency, while also preserving more vine momentum.
-- **Wet Grip** — Trains while climbing slippery walls. It reduces slippery downward pull and related climbing drain without simply making you immune to Cold.
+- **Wet Grip** — Improves "slippery" climbing speed in cases of rain or blizzard.
 - **Climbing Tenacity** — Trains while you continue wall climbing below 20% regular stamina. It reduces the nasty low-stamina climbing penalty, so repeatedly pushing those desperate last few meters actually makes you better at doing it!
 
 ### The mountain can train you too
 
 Repeated exposure to conditions creates its own progression instead of being rolled into one generic resistance stat.
 
-- **Poison** — Reduces incoming Poison and speeds its natural recovery.
-- **Cold** — Reduces incoming Cold and speeds natural recovery where PEAK marks that recovery path.
-- **Heat** — Reduces incoming Heat and speeds its natural recovery.
-- **Drowsy** — Reduces incoming Drowsy and speeds its natural recovery.
-- **Spores** — Reduces incoming Spores and speeds their natural recovery.
-- **Hunger** — Reduces incoming Hunger.
-- **Curse** — Reduces incoming Curse.
-- **Petrification** — Reduces petrification from the shared amulet and Citadel path.
+- **Poison, Cold, Heat, Drowsy, & Spores** — Reduces incoming affliction values, and speeds their natural recovery.
+- **Curse & Petrification** — Reduces received values.
+- **Hunger** — Increases the interval time that hunger increases
 
-These eight skills appear together in the blue **Resiliency** panel. They gain XP only when the matching affliction actually increases; natural recovery and cleansing no longer grant XP. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
+These eight skills appear together in the blue **Resiliency** panel. EXP is gained by gaining these afflictions. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
 
-## Strength: yes, your backpack can grow
+## Strength: yes, your backpack can grow!
 
-Strength does more than make the Weight affliction less painful. As it levels, it also unlocks more room in your backpack. The extra space is earned by actually hauling weight around, so the character who insists on carrying half the mountain gradually becomes better equipped to keep doing exactly that.
+Strength does more than just allowing you to feel less weight effects. As it levels, it also unlocks more room in your backpack. The extra space is earned by actually hauling weight around, so the character who insists on carrying half the mountain gradually becomes better equipped to keep doing exactly that.
 
 ### Backpack unlocks
 
@@ -63,9 +60,7 @@ Strength does more than make the Weight affliction less painful. As it levels, i
 | 120 | +4 |
 | 200 | +5 |
 
-Your **main inventory remains PEAK's normal vanilla size**. The ordinary Backpack starts with 4 item slots, the Fanny Pack starts with 2, and the Jet Pack starts with 1; all three receive the same +1/+2/+3/+4/+5 Strength milestones. The Jet Pack's separate fuel slot is untouched. Rocket Packs have no item storage and are explicitly excluded. Extra stored items still use PEAK's ordinary Weight system.
-
-> **BackpackCapacity should remain disabled alongside Elin's PEAK** because both mods change the same backpack data. MoreSlots is not required, and compatibility with it is not currently guaranteed.
+> **NOTE: The Mod "BackpackCapacity" should remain disabled alongside Elin's PEAK** because both mods change the same backpack data. MoreSlots is not required, and compatibility with it is not currently guaranteed.
 
 ## Your progression is yours
 
@@ -77,9 +72,11 @@ XP is disabled in the **Airport/lobby**, so standing around before a run does no
 
 ## Skill menu
 
-Elin's PEAK adds skill information directly to the pause menu. Main Skills are on the left, with the blue Resiliency section below them.
+Elin's PEAK adds skill information directly to the pause menu on the left.
 
 You can see your skill levels, progression, and current bonuses, with hover explanations for what the skills actually do. The goal is for you to be able to look at a skill and understand *why* it is leveling and what the next levels are doing without needing to keep this README open on another monitor.
+
+The skill panel follows the language selected in PEAK and refreshes immediately when that setting changes. Simplified Chinese, Japanese, Korean, German, both Spanish selections, and French are translated; every other PEAK language automatically falls back to English.
 
 ---
 
@@ -154,7 +151,7 @@ Endurance currently increases capacity and regeneration. General stamina-cost re
 
 ## Condition handling
 
-Resiliency is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spores also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
+Tolerance is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spore Tolerance also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
 
 ## Save data and backups
 
@@ -195,29 +192,11 @@ The package declares the following dependencies:
 
 ## Compatibility and current limitations
 
-- Built for **PEAK `2.1.a`**.
-- **BackpackCapacity** should remain disabled because Elin's PEAK expands the same backpack data through Strength. **MoreSlots** is not required, and compatibility with it is not currently guaranteed.
+- Built for **version `2.1.a`**.
+- **BackpackCapacity** should remain disabled because Elin's PEAK expands the same backpack data through Strength.
 - **PeakStatsEx** may continue showing its own cached/rounded Weight number even though gameplay Weight is recalculated immediately.
-- Hunger intentionally keeps PEAK's normal **2.5-point display increments**.
-- Multiplayer progression is designed around locally owned player saves, but final multiplayer runtime validation is still pending.
-- Broader anti-farming and diminishing-return systems are intentionally deferred for now. Basic action validity is already used in several places so obviously unrelated actions do not simply award the wrong XP.
-
-## Development status and handoff documentation
-
-Source and package version 0.4.1 are current. Multiplayer remains unvalidated.
-
-For development or a new Codex conversation, begin with:
-
-- [`AGENTS.md`](AGENTS.md) — current repository rules and accepted product decisions.
-- [`docs/HANDOFF.md`](docs/HANDOFF.md) — current state, history, what was tried, and the immediate continuation prompt.
-- [`docs/SKILLS_AND_BALANCE.md`](docs/SKILLS_AND_BALANCE.md) — exact implemented XP/effect defaults.
-- [`docs/TESTING_AND_COMPATIBILITY.md`](docs/TESTING_AND_COMPATIBILITY.md) — verified versus unverified behavior and the next test checklist.
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — pending work, deferred systems, and future options.
-
-The full documentation index is in [`docs/README.md`](docs/README.md). The sibling `PEAK_UsageSkills_Spec` folder is historical research and is no longer authoritative where it conflicts with these documents or current source.
 
 ## Source and issues
-
 The source is public, and issues/technical reports can be submitted here:
 
 https://github.com/kunrian/Elins-PEAK

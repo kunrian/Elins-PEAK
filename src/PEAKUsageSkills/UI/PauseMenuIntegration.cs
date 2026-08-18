@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PEAKLib.UI;
 using PEAKLib.UI.Elements;
 using PEAKUsageSkills.Core;
+using PEAKUsageSkills.Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,6 +19,7 @@ namespace PEAKUsageSkills.UI
         private const float RowHeight = 32f;
         private static readonly Color MainPanelColor = new Color(0.66f, 0.09f, 0.15f, 1f);
         private static readonly Color ResiliencyPanelColor = new Color(0.08f, 0.30f, 0.68f, 1f);
+        private static RectTransform? activeRoot;
 
         private static readonly SkillId[] MainSkills =
         {
@@ -45,31 +47,16 @@ namespace PEAKUsageSkills.UI
             SkillId.PetrificationResistance
         };
 
-        private static readonly Dictionary<SkillId, string> DisplayNames = new Dictionary<SkillId, string>
-        {
-            { SkillId.Strength, "Strength" },
-            { SkillId.Endurance, "Endurance" },
-            { SkillId.WallClimbing, "Wall Climbing" },
-            { SkillId.RopeClimbing, "Rope Climbing" },
-            { SkillId.VineClimbing, "Vine Climbing" },
-            { SkillId.Athletics, "Athletics" },
-            { SkillId.Agility, "Agility" },
-            { SkillId.Vitality, "Vitality" },
-            { SkillId.WetGrip, "Wet Grip" },
-            { SkillId.ClimbingTenacity, "Climbing Tenacity" },
-            { SkillId.Toxicology, "Poison" },
-            { SkillId.ColdTolerance, "Cold" },
-            { SkillId.HeatTolerance, "Heat" },
-            { SkillId.DrowsyTolerance, "Drowsy" },
-            { SkillId.SporeTolerance, "Spores" },
-            { SkillId.HungerTolerance, "Hunger" },
-            { SkillId.CurseTolerance, "Curse" },
-            { SkillId.PetrificationResistance, "Petrification" }
-        };
-
         public static void Register()
         {
+            LocalizationService.LanguageChanged += OnLanguageChanged;
             MenuAPI.AddToPauseMenu(BuildPauseMenu);
+        }
+
+        public static void Unregister()
+        {
+            LocalizationService.LanguageChanged -= OnLanguageChanged;
+            activeRoot = null;
         }
 
         private static void BuildPauseMenu(Transform parent)
@@ -88,11 +75,13 @@ namespace PEAKUsageSkills.UI
             root.anchorMax = Vector2.one;
             root.offsetMin = Vector2.zero;
             root.offsetMax = Vector2.zero;
+            activeRoot = root;
 
-            BuildSection(root, "MAIN SKILLS", MainSkills, MainPanelColor, new Vector2(24f, -88f), false);
+            BuildSection(root, "Main", LocalizationService.Get("section.main"), MainSkills, MainPanelColor, new Vector2(24f, -88f), false);
             BuildSection(
                 root,
-                "RESILIENCY",
+                "Resiliency",
+                LocalizationService.Get("section.resiliency"),
                 ResiliencySkills,
                 ResiliencyPanelColor,
                 new Vector2(24f, -88f - SectionHeight(MainSkills.Length) - 18f),
@@ -102,10 +91,10 @@ namespace PEAKUsageSkills.UI
             Plugin.ModLog.LogInfo("[UsageSkills:UI] release skill panels built; values refresh once when the pause UI opens");
         }
 
-        private static void BuildSection(RectTransform root, string title, SkillId[] skills, Color panelColor, Vector2 offset, bool alignRight)
+        private static void BuildSection(RectTransform root, string sectionName, string title, SkillId[] skills, Color panelColor, Vector2 offset, bool alignRight)
         {
             PeakMenuButton panel = MenuAPI.CreatePauseMenuButton(title);
-            panel.gameObject.name = "UI_PEAKUsageSkills_Section_" + title.Replace(" ", string.Empty);
+            panel.gameObject.name = "UI_PEAKUsageSkills_Section_" + sectionName;
             RectTransform rect = panel.GetComponent<RectTransform>();
             rect.SetParent(root, false);
             rect.anchorMin = rect.anchorMax = alignRight ? new Vector2(1f, 1f) : new Vector2(0f, 1f);
@@ -174,6 +163,8 @@ namespace PEAKUsageSkills.UI
 
         internal static void Refresh(RectTransform root)
         {
+            RefreshSectionTitle(root, "Main", "section.main");
+            RefreshSectionTitle(root, "Resiliency", "section.resiliency");
             foreach (SkillId skillId in Enum.GetValues(typeof(SkillId)))
             {
                 Transform? row = FindDeep(root, "UI_PEAKUsageSkills_" + skillId);
@@ -186,6 +177,21 @@ namespace PEAKUsageSkills.UI
             }
         }
 
+        private static void RefreshSectionTitle(RectTransform root, string sectionName, string localizationKey)
+        {
+            PeakMenuButton? panel = FindDeep(root, "UI_PEAKUsageSkills_Section_" + sectionName)?.GetComponent<PeakMenuButton>();
+            panel?.SetText(LocalizationService.Get(localizationKey));
+        }
+
+        private static void OnLanguageChanged()
+        {
+            SkillTooltip.Hide();
+            if (activeRoot != null)
+            {
+                Refresh(activeRoot);
+            }
+        }
+
         internal static string GetTooltipText(SkillId skillId)
         {
             int level = Plugin.Progression.GetLevel(skillId);
@@ -194,54 +200,75 @@ namespace PEAKUsageSkills.UI
             {
                 case SkillId.Strength:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.StrengthReductionPerLevel.Value)) * 100f;
-                    return $"Reduces carried Weight and adds item slots to Backpacks, Fanny Packs, and Jet Packs at levels 20/40/70/120/200. Current: {reduction:F1}% less Weight, +{GameAdapters.InventorySkillService.ExtraBackpackSlots} slots.";
+                    return LocalizationService.Get(
+                        "tooltip.strength",
+                        LocalizationService.FormatNumber(reduction, 1),
+                        GameAdapters.InventorySkillService.ExtraBackpackSlots);
                 case SkillId.Endurance:
-                    return $"Adds 0.5% base stamina and 0.1% regeneration per level. Current: +{level * 0.5f:F1} stamina, +{level * 0.1f:F1}% regeneration.";
+                    return LocalizationService.Get(
+                        "tooltip.endurance",
+                        LocalizationService.FormatNumber(level * 0.5f, 1),
+                        LocalizationService.FormatNumber(level * 0.1f, 1));
                 case SkillId.WallClimbing:
-                    return ClimbingTooltip("wall", level, Plugin.Settings.WallSpeedPerLevel.Value, Plugin.Settings.WallCostReductionPerLevel.Value);
+                    return ClimbingTooltip(LocalizationService.Get("term.wall"), level, Plugin.Settings.WallSpeedPerLevel.Value, Plugin.Settings.WallCostReductionPerLevel.Value);
                 case SkillId.RopeClimbing:
-                    return ClimbingTooltip("rope", level, Plugin.Settings.RopeSpeedPerLevel.Value, Plugin.Settings.RopeCostEfficiencyPerLevel.Value);
+                    return ClimbingTooltip(LocalizationService.Get("term.rope"), level, Plugin.Settings.RopeSpeedPerLevel.Value, Plugin.Settings.RopeCostEfficiencyPerLevel.Value);
                 case SkillId.VineClimbing:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.VineCostEfficiencyPerLevel.Value)) * 100f;
-                    return $"Improves vine speed by 0.3% per level, reduces stamina cost, and retains light slide momentum. Current: +{level * 0.3f:F1}% speed, {reduction:F1}% less cost.";
+                    return LocalizationService.Get(
+                        "tooltip.vine",
+                        LocalizationService.FormatNumber(level * 0.3f, 1),
+                        LocalizationService.FormatNumber(reduction, 1));
                 case SkillId.Athletics:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.AthleticsSprintEfficiencyPerLevel.Value)) * 100f;
-                    return $"Improves ground force by 0.1% and sprint force by another 0.2% per level. Current sprint cost reduction: {reduction:F1}%.";
+                    return LocalizationService.Get("tooltip.athletics", LocalizationService.FormatNumber(reduction, 1));
                 case SkillId.Agility:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.AgilityJumpEfficiencyPerLevel.Value)) * 100f;
-                    return $"Improves jump impulse and very lightly improves air control. Current: +{level * 0.15f:F1}% jump impulse, {reduction:F1}% less jump cost.";
+                    return LocalizationService.Get(
+                        "tooltip.agility",
+                        LocalizationService.FormatNumber(level * 0.15f, 1),
+                        LocalizationService.FormatNumber(reduction, 1));
                 case SkillId.Vitality:
-                    return ReductionTooltip("fall Injury", level, Plugin.Settings.VitalityFallReductionPerLevel.Value);
+                    return ReductionTooltip(LocalizationService.Get("term.fall_injury"), level, Plugin.Settings.VitalityFallReductionPerLevel.Value);
                 case SkillId.WetGrip:
-                    return ReductionTooltip("rain/slippery climbing pull and wind stamina drain", level, Plugin.Settings.WetGripReductionPerLevel.Value);
+                    return ReductionTooltip(LocalizationService.Get("term.wet_grip_penalty"), level, Plugin.Settings.WetGripReductionPerLevel.Value);
                 case SkillId.ClimbingTenacity:
-                    return ReductionTooltip("climbing control, slide, and stamina penalties below 20% stamina", level, Plugin.Settings.ClimbingTenacityReductionPerLevel.Value);
+                    return ReductionTooltip(LocalizationService.Get("term.tenacity_penalty"), level, Plugin.Settings.ClimbingTenacityReductionPerLevel.Value);
                 case SkillId.Toxicology:
                 case SkillId.ColdTolerance:
                 case SkillId.HeatTolerance:
                 case SkillId.DrowsyTolerance:
                 case SkillId.SporeTolerance:
-                    return ToleranceTooltip(DisplayNames[skillId].ToLowerInvariant(), level, true);
+                    return ToleranceTooltip(LocalizationService.SkillName(skillId), level, true);
                 case SkillId.HungerTolerance:
                 case SkillId.CurseTolerance:
-                    return ToleranceTooltip(DisplayNames[skillId].ToLowerInvariant(), level, false);
+                    return ToleranceTooltip(LocalizationService.SkillName(skillId), level, false);
                 case SkillId.PetrificationResistance:
-                    return ToleranceTooltip("petrification", level, false);
+                    return ToleranceTooltip(LocalizationService.SkillName(skillId), level, false);
                 default:
-                    return DisplayNames[skillId];
+                    return LocalizationService.SkillName(skillId);
             }
         }
 
         private static string ClimbingTooltip(string kind, int level, float speedRate, float costRate)
         {
             float reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, costRate)) * 100f;
-            return $"Improves {kind} climbing speed by {speedRate * 100f:F1}% per level and reduces stamina cost. Current: +{level * speedRate * 100f:F1}% speed, {reduction:F1}% less cost.";
+            return LocalizationService.Get(
+                "tooltip.climbing",
+                kind,
+                LocalizationService.FormatNumber(speedRate * 100f, 1),
+                LocalizationService.FormatNumber(level * speedRate * 100f, 1),
+                LocalizationService.FormatNumber(reduction, 1));
         }
 
         private static string ReductionTooltip(string effect, int level, float rate)
         {
             float reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, rate)) * 100f;
-            return $"Reduces {effect} using the {rate * 100f:F2}% anchored curve. Current bonus: {reduction:F1}% reduction.";
+            return LocalizationService.Get(
+                "tooltip.reduction",
+                effect,
+                LocalizationService.FormatNumber(rate * 100f, 2),
+                LocalizationService.FormatNumber(reduction, 1));
         }
 
         private static string ToleranceTooltip(string condition, int level, bool hasNaturalRecovery)
@@ -250,9 +277,15 @@ namespace PEAKUsageSkills.UI
                 level,
                 Plugin.Settings.ConditionResistancePerLevel.Value)) * 100f;
             string recovery = hasNaturalRecovery
-                ? $" Natural recovery: +{level * Plugin.Settings.ConditionRecoveryPerLevel.Value * 100f:F1}%."
+                ? LocalizationService.Get(
+                    "tooltip.natural_recovery",
+                    LocalizationService.FormatNumber(level * Plugin.Settings.ConditionRecoveryPerLevel.Value * 100f, 1))
                 : "";
-            return $"Reduces incoming {condition}. Current reduction: {reduction:F1}%.{recovery} XP comes only from receiving the affliction.";
+            return LocalizationService.Get(
+                "tooltip.tolerance",
+                condition,
+                LocalizationService.FormatNumber(reduction, 1),
+                recovery);
         }
 
         private static string GetSkillText(SkillId skillId)
@@ -261,7 +294,7 @@ namespace PEAKUsageSkills.UI
             int percentage = level >= Plugin.Progression.MaximumLevel
                 ? 0
                 : SkillMath.ExperienceProgressPercent(Plugin.Progression.GetExperience(skillId), Plugin.Progression.GetExperienceToNextLevel(skillId));
-            return $"{DisplayNames[skillId]} Lv. {level:00}.{percentage:00}";
+            return $"{LocalizationService.SkillName(skillId)} {LocalizationService.Get("level.abbreviation")} {level:00}.{percentage:00}";
         }
 
         private static float SectionHeight(int rowCount) => HeaderHeight + rowCount * RowHeight + 16f;
@@ -309,6 +342,38 @@ namespace PEAKUsageSkills.UI
 
         internal static string WrapTooltipText(string message, int maximumLineLength = 58)
         {
+            if (ContainsCjk(message))
+            {
+                int maximumColumns = Math.Max(32, maximumLineLength - 14);
+                System.Text.StringBuilder localized = new System.Text.StringBuilder(message.Length + 8);
+                int columns = 0;
+                foreach (char character in message)
+                {
+                    if (character == '\n')
+                    {
+                        localized.Append(character);
+                        columns = 0;
+                        continue;
+                    }
+
+                    int width = IsCjk(character) ? 2 : 1;
+                    if (columns > 0 && columns + width > maximumColumns)
+                    {
+                        localized.Append('\n');
+                        columns = 0;
+                        if (char.IsWhiteSpace(character))
+                        {
+                            continue;
+                        }
+                    }
+
+                    localized.Append(character);
+                    columns += width;
+                }
+
+                return localized.ToString();
+            }
+
             string[] words = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             System.Text.StringBuilder builder = new System.Text.StringBuilder(message.Length + 8);
             int lineLength = 0;
@@ -331,6 +396,26 @@ namespace PEAKUsageSkills.UI
             }
 
             return builder.ToString();
+        }
+
+        private static bool ContainsCjk(string value)
+        {
+            foreach (char character in value)
+            {
+                if (IsCjk(character))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsCjk(char character)
+        {
+            return (character >= '\u3040' && character <= '\u30ff')
+                || (character >= '\u3400' && character <= '\u9fff')
+                || (character >= '\uac00' && character <= '\ud7af');
         }
 
         private static void RemoveLegacyControls(Transform parent)

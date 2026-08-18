@@ -1,8 +1,8 @@
 {
   "name": "Elins_PEAK",
-  "version_number": "0.4.1",
+  "version_number": "0.4.2",
   "website_url": "https://github.com/kunrian/Elins-PEAK",
-  "description": "Level Up Everything! Inspired by Elin, 18 persistent skills grow through actual use—making you stronger, faster, tougher, better at climbing, more resilient, and better at hauling back-item storage!",
+  "description": "Level Up Everything! Inspired by Elin, 18 persistent usage-based passive skills that level over time. Become Stronger, faster, tougher, better at climbing, more durable, and even hold more items!",
   "dependencies": [
     "BepInEx-BepInExPack_PEAK-5.4.75301",
     "PEAKModding-PEAKLib_Core-1.7.2",

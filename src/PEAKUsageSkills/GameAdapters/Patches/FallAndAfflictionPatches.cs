@@ -236,7 +236,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
         }
     }
 
-    [HarmonyPatch(typeof(CharacterAfflictions), "AddPetrify")]
+    [HarmonyPatch(typeof(CharacterAfflictions), nameof(CharacterAfflictions.AddPetrify), new Type[] { typeof(int) })]
     internal static class AddPetrifyPatch
     {
         private struct State

@@ -1,10 +1,10 @@
 # Architecture and hooks
 
-This map describes source version 0.4.1 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
+This map describes source version 0.4.2 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
 
 ## Runtime flow
 
-1. `Plugin` binds/migrates config, loads the local save, merges retired Recovery states, creates services, and patches each Harmony class fail-soft.
+1. `Plugin` binds/migrates config, registers supplied translations into PEAK's localization table, loads the local save, merges retired Recovery states, creates services, and patches each Harmony class fail-soft.
 2. `ActivitySampler` measures real character-center movement for Strength, climbing, Athletics, Wet Grip, and Climbing Tenacity.
 3. Direct patches observe stamina use, jumps, falls, affliction gains/removal, movement/climbing calculations, and typed back-item UI/data.
 4. `ProgressionService` validates eligibility, accumulates XP, levels, and emits level changes.
@@ -26,11 +26,16 @@ Progression and effects are local-player only. There is no custom RPC or host-ow
 | `CharacterMovement.JumpRpc` | Agility XP, impulse, and jump cost. |
 | `CharacterMovement.CheckFallDamage`, `CharacterClimbing.CheckFallDamage` | Scope legitimate falls for Vitality XP/effect. |
 | `CharacterAfflictions.AddStatus` | Incoming Poison/Cold/Hot/Drowsy/Spores/Hunger/Curse reduction and XP. Petrify is deliberately delegated. |
-| `CharacterAfflictions.AddPetrify` | One shared positive Petrification reduction/XP hook for AddStatus, amulet, and Citadel callers. Negative removal is ignored for XP/effect. |
+| `CharacterAfflictions.AddPetrify(int)` | One shared positive Petrification reduction/XP hook for AddStatus, amulet, and Citadel callers. The parameterless console-command overload is deliberately excluded; negative removal is ignored for XP/effect. |
 | `CharacterAfflictions.SubtractStatus` | Apply matching Tolerance recovery speed only on natural recovery; never grant XP. |
 | `BackpackData.DeserializeValue` | Preserve every serialized/current stored item without guessing back-item type. |
 | `BackpackWheel.InitWheel` | Apply typed logical capacity and add only normal item slices. Jet fuel remains its separate vanilla slice. |
 | `BackpackVisuals.RefreshVisuals` | Render typed item capacity for world/on-back visuals; skip Rocket Pack. |
+| `LocalizedText.OnLangugageChanged` | Refresh dynamic skill rows/section titles after PEAK changes language; no Harmony patch or separate language setting. |
+
+## Localization invariant
+
+`LocalizationService` loads the six packaged JSON catalogs once and registers every key through `PEAKLib.UI.MenuAPI.CreateLocalization`. PEAK's current `LocalizedText.Language` selects the displayed value and PEAK's own language-change event refreshes the dynamic panel. Spanish Spain and Spanish LatAm share `es.json`. Other game languages and missing/invalid entries remain English because the English value initializes every language slot before translated slots are overwritten. Locale files live beside the DLL under `Localization`; malformed or missing files fail soft and log their fallback.
 
 ## Typed back-item invariant
 
@@ -42,7 +47,7 @@ Jet fuel uses `DataEntryKey.Fuel` and `BackpackWheel.jetpackSlice`; the mod chan
 
 XP is calculated from the actual increase after PEAK validation, resistance, clamping, and rounding. Poison/Cold/Heat/Drowsy/Spore natural removal is multiplied by the same skill but cannot train it. Hunger, Curse, and Petrification have incoming behavior only.
 
-Petrification cannot share the normal `AddStatus` calculation: PEAK converts that call to integer points and forwards to `AddPetrify`, while amulet/Citadel code can call `AddPetrify` directly. Owning the shared method avoids missed sources and double application.
+Petrification cannot share the normal `AddStatus` calculation: PEAK converts that call to integer points and forwards to `AddPetrify(int)`, while amulet/Citadel code can call that overload directly. PEAK also has a parameterless console command named `AddPetrify`; Harmony annotations must include `typeof(int)` or patch discovery is ambiguous. Owning the integer method avoids missed sources and double application.
 
 ## Save/config compatibility
 

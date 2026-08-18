@@ -16,6 +16,7 @@ These instructions are the repository-local source of truth for future coding ag
 - The release has 18 skills: 10 Main Skills and 8 blue Resiliency skills. Retired Recovery progression is merged into matching Tolerances during load.
 - Main-inventory capacity remains vanilla. Strength unlocks typed item slots for Backpack, Fanny Pack, and Jet Pack at levels 20, 40, 70, 120, and 200; Jet fuel and Rocket Pack remain untouched.
 - Airport/lobby XP is always rejected. Custom-run XP is disabled by default.
+- Pause-menu translations register through PEAKLib UI and PEAK's `LocalizedText` table. The UI follows PEAK's selected language live; supplied translations cover French, German, Spanish, Simplified Chinese, Japanese, and Korean, with English fallback for every other selection or missing key.
 - Multiplayer runtime testing is the final validation phase, not an assumption of correctness.
 - Anti-farming beyond fundamental action validity and teleport rejection remains intentionally deferred.
 
@@ -41,7 +42,7 @@ These instructions are the repository-local source of truth for future coding ag
 - The build must not deploy to Gale unless `DeployToDevtest=true` is explicitly selected.
 - Do not replace a live DLL while PEAK is running.
 - A local package build, a Gale installation, a GitHub merge, and a Thunderstore upload are separate actions. Never infer authorization for one from another.
-- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.1 changes require a fresh runtime pass and must not be described as live-verified yet.
+- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.2 changes require a fresh runtime pass and must not be described as live-verified yet.
 
 ## Scope discipline
 

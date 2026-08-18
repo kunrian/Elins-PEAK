@@ -31,6 +31,7 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | Anti-farming | Fundamental validity now; rate limits/diminishing returns later | Explicitly deferred by owner |
 | Diagnostics | Rate-limited BepInEx logs; no manual import/export | Accepted |
 | Pause menu | Main and blue Resiliency stacked on left; green Recovery removed; refresh once on open | Accepted in 0.4.0 |
+| Localization | Follow PEAK's selected language through PEAKLib/`LocalizedText`; supplied catalogs override English per key and unsupported selections fall back to English | Accepted in 0.4.2; no separate mod-language config |
 | Weight display | Gameplay value matters; PeakStatsEx decimal label is secondary compatibility work | Current limitation |
 | Multiplayer order | Solo validation first, multiplayer last | Accepted |
 
