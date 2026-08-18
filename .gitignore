@@ -1,0 +1,16 @@
+# Local build configuration
+Config.Build.user.props
+
+# .NET build and test output
+**/bin/
+**/obj/
+TestResults/
+
+# IDE files
+.vs/
+.vscode/
+*.suo
+*.user
+
+# Generated Thunderstore packages
+dist/

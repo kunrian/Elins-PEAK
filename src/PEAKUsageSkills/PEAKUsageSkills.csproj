@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Config.Build.user.props" Condition="Exists('..\..\Config.Build.user.props')" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>PEAKUsageSkills</AssemblyName>
+    <RootNamespace>PEAKUsageSkills</RootNamespace>
+    <Version>0.3.0</Version>
+    <PeakManagedDir>$(PeakGameDir)\PEAK_Data\Managed</PeakManagedDir>
+    <BepInExCoreDir>$(GaleProfileDir)\BepInEx\core</BepInExCoreDir>
+    <GalePluginsDir>$(GaleProfileDir)\BepInEx\plugins</GalePluginsDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx" HintPath="$(BepInExCoreDir)\BepInEx.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(BepInExCoreDir)\0Harmony.dll" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(PeakManagedDir)\Assembly-CSharp.dll" Private="false" />
+    <Reference Include="PhotonUnityNetworking" HintPath="$(PeakManagedDir)\PhotonUnityNetworking.dll" Private="false" />
+    <Reference Include="PhotonRealtime" HintPath="$(PeakManagedDir)\PhotonRealtime.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(PeakManagedDir)\UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(PeakManagedDir)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.IMGUIModule" HintPath="$(PeakManagedDir)\UnityEngine.IMGUIModule.dll" Private="false" />
+    <Reference Include="UnityEngine.InputLegacyModule" HintPath="$(PeakManagedDir)\UnityEngine.InputLegacyModule.dll" Private="false" />
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(PeakManagedDir)\UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(PeakManagedDir)\UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(PeakManagedDir)\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(PeakManagedDir)\Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(PeakManagedDir)\Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="Zorro.Core.Runtime" HintPath="$(PeakManagedDir)\Zorro.Core.Runtime.dll" Private="false" />
+    <Reference Include="Sirenix.Serialization" HintPath="$(PeakManagedDir)\Sirenix.Serialization.dll" Private="false" />
+    <Reference Include="PEAKLib.Core" HintPath="$(GalePluginsDir)\PEAKModding-PEAKLib_Core\com.github.PEAKModding.PEAKLib.Core.dll" Private="false" />
+    <Reference Include="PEAKLib.UI" HintPath="$(GalePluginsDir)\PEAKModding-PEAKLib_UI\com.github.PEAKModding.PEAKLib.UI.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="DeployDevtest" AfterTargets="Build" Condition="'$(DeployToDevtest)' == 'true'">
+    <MakeDir Directories="$(GalePluginsDir)\Chiseled-PEAKUsageSkills" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GalePluginsDir)\Chiseled-PEAKUsageSkills" />
+  </Target>
+</Project>

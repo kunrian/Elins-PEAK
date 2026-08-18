@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/PEAKUsageSkills/PEAKUsageSkills.csproj" />
+  <Project Path="tests/PEAKUsageSkills.Tests/PEAKUsageSkills.Tests.csproj" />
+</Solution>

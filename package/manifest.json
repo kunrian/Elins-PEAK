@@ -1,0 +1,11 @@
+{
+  "name": "Elins_PEAK",
+  "version_number": "0.3.0",
+  "website_url": "https://github.com/kunrian/Elins-PEAK",
+  "description": "Persistent, use-based PEAK skills with player-owned levels, scalable stats, climbing specializations, resistances, recoveries, and inventory growth.",
+  "dependencies": [
+    "BepInEx-BepInExPack_PEAK-5.4.75301",
+    "PEAKModding-PEAKLib_Core-1.7.2",
+    "PEAKModding-PEAKLib_UI-1.6.1"
+  ]
+}
