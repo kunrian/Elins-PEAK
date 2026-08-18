@@ -32,6 +32,8 @@ namespace PEAKUsageSkills.Core
                 log.LogInfo("Removed retired Pack Rat progression from the local save.");
             }
 
+            MergeRetiredRecoverySkills();
+
             EnsureAllSkills();
         }
 
@@ -59,6 +61,36 @@ namespace PEAKUsageSkills.Core
         }
 
         public int MaximumLevel => Math.Max(1, config.MaximumLevel.Value);
+
+        public void AddLevelsToAll(int levels)
+        {
+            if (levels <= 0)
+            {
+                return;
+            }
+
+            foreach (SkillId skillId in Enum.GetValues(typeof(SkillId)))
+            {
+                SkillSave state = GetState(skillId);
+                int newLevel = Math.Min(MaximumLevel, state.Level + levels);
+                if (newLevel == state.Level)
+                {
+                    continue;
+                }
+
+                state.Level = newLevel;
+                if (newLevel >= MaximumLevel)
+                {
+                    state.Experience = 0d;
+                }
+
+                LevelChanged?.Invoke(skillId, newLevel);
+            }
+
+            dirty = true;
+            Flush();
+            log.LogWarning($"Added {levels} saved levels to every usage skill for runtime testing.");
+        }
 
         public void ResetAllProgression()
         {
@@ -184,6 +216,67 @@ namespace PEAKUsageSkills.Core
             foreach (SkillId skillId in Enum.GetValues(typeof(SkillId)))
             {
                 GetState(skillId);
+            }
+        }
+
+        private void MergeRetiredRecoverySkills()
+        {
+            MergeRetiredRecoverySkill("PoisonRecovery", SkillId.Toxicology);
+            MergeRetiredRecoverySkill("ColdRecovery", SkillId.ColdTolerance);
+            MergeRetiredRecoverySkill("HeatRecovery", SkillId.HeatTolerance);
+            MergeRetiredRecoverySkill("DrowsyRecovery", SkillId.DrowsyTolerance);
+            MergeRetiredRecoverySkill("SporeRecovery", SkillId.SporeTolerance);
+        }
+
+        private void MergeRetiredRecoverySkill(string retiredKey, SkillId toleranceSkill)
+        {
+            if (!save.Skills.TryGetValue(retiredKey, out SkillSave retired))
+            {
+                return;
+            }
+
+            SkillSave tolerance = GetState(toleranceSkill);
+            double combinedExperience = TotalAccumulatedExperience(tolerance)
+                + TotalAccumulatedExperience(retired);
+            tolerance.LifetimeWork = Math.Max(0d, tolerance.LifetimeWork)
+                + Math.Max(0d, retired.LifetimeWork);
+            SetFromTotalAccumulatedExperience(tolerance, combinedExperience);
+            save.Skills.Remove(retiredKey);
+            dirty = true;
+            log.LogInfo($"Merged retired {retiredKey} progression into {toleranceSkill}.");
+        }
+
+        private double TotalAccumulatedExperience(SkillSave state)
+        {
+            int level = Math.Max(1, Math.Min(MaximumLevel, state.Level));
+            double total = Math.Max(0d, state.Experience);
+            for (int completedLevel = 1; completedLevel < level; completedLevel++)
+            {
+                total += SkillMath.ExperienceToNextLevel(completedLevel);
+            }
+
+            return total;
+        }
+
+        private void SetFromTotalAccumulatedExperience(SkillSave state, double total)
+        {
+            state.Level = 1;
+            state.Experience = Math.Max(0d, total);
+            while (state.Level < MaximumLevel)
+            {
+                double required = SkillMath.ExperienceToNextLevel(state.Level);
+                if (state.Experience + 0.000001d < required)
+                {
+                    break;
+                }
+
+                state.Experience -= required;
+                state.Level++;
+            }
+
+            if (state.Level >= MaximumLevel)
+            {
+                state.Experience = 0d;
             }
         }
     }

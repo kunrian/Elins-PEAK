@@ -1,11 +1,17 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
-- Added a canonical project handoff covering implemented behavior, runtime evidence, failed/retired approaches, compatibility findings, pending validation, future skill options, and the next test sequence.
-- Added exact skill/balance, architecture/hook, development/release, reference-mod, roadmap, and file-index documentation.
-- Documented that the current `devtest` installation/logs are still 0.3.1 and cannot validate the final 0.3.2 Strength-backpack, Cold Recovery, or XP-balance changes.
-- Added repository-level agent guidance so future work preserves local-player progression, vanilla main inventory, retired Pack Rat behavior, save safety, and current scope decisions.
+- Merged Poison/Cold/Heat/Drowsy/Spore Resistance and Recovery into single Tolerance skills. Existing Recovery progression is converted into its matching Tolerance without discarding accumulated XP or work.
+- Renamed the blue condition panel to Resiliency, moved it below Main Skills on the left, removed the green Recovery panel, and moved the two runtime test buttons to the right.
+- Added Curse Tolerance and Petrification Resistance. Petrification covers the shared amulet/Citadel gain path; neither skill has a recovery-speed effect.
+- Tolerances train only when the matching affliction increases. Hunger movement training and all Recovery XP were removed.
+- Halved both condition-resistance and recovery-speed bonuses to 0.15% per level now that each Tolerance owns both effects.
+- Added Strength item-slot milestones to Fanny Packs and Jet Packs while preserving Jet Pack fuel and excluding Rocket Packs. Backpacks retain their existing behavior.
+- Rebalanced XP: Endurance 3x; wall/rope/vine climbing 2x; Wet Grip and Climbing Tenacity 3x; Athletics and Agility 20% lower.
+- Removed stale Pack Rat, recovery-XP, and Hunger-movement configuration entries.
+- Documented the sprint-to-jump momentum finding and candidate Gliding/Aeronautics and Throwing skills.
+- Updated package/source version to 0.4.0.
 
 ## 0.3.2
 

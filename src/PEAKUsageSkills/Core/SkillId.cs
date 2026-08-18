@@ -18,10 +18,7 @@ namespace PEAKUsageSkills.Core
         HungerTolerance = 13,
         WetGrip = 15,
         ClimbingTenacity = 16,
-        PoisonRecovery = 17,
-        ColdRecovery = 18,
-        HeatRecovery = 19,
-        DrowsyRecovery = 20,
-        SporeRecovery = 21
+        CurseTolerance = 22,
+        PetrificationResistance = 23
     }
 }

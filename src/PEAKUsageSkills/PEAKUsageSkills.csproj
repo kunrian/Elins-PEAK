@@ -5,7 +5,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>PEAKUsageSkills</AssemblyName>
     <RootNamespace>PEAKUsageSkills</RootNamespace>
-    <Version>0.3.2</Version>
+    <Version>0.4.0</Version>
     <PeakManagedDir>$(PeakGameDir)\PEAK_Data\Managed</PeakManagedDir>
     <BepInExCoreDir>$(GaleProfileDir)\BepInEx\core</BepInExCoreDir>
     <GalePluginsDir>$(GaleProfileDir)\BepInEx\plugins</GalePluginsDir>

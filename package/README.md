@@ -8,7 +8,7 @@ The idea is simple: **if you keep doing something, you should get better at it.*
 
 It is heavily inspired by the use-based progression of **Elin**: there is no single character level deciding what you are good at, and you do not spend a pile of generic points after a run. Your skills grow because you actually used them!
 
-Elin's PEAK currently adds **21 persistent skills**, each with a default maximum level of **999**. Progress belongs to **your player**, is stored locally, and carries between sessions instead of letting the lobby host decide everyone's progression.
+Elin's PEAK currently adds **18 persistent skills**, each with a default maximum level of **999**. Progress belongs to **your player**, is stored locally, and carries between sessions instead of letting the lobby host decide everyone's progression.
 
 ## What can I level?
 
@@ -38,22 +38,16 @@ Climbing is split up because a wall, a rope, and a vine do not behave the same w
 
 Repeated exposure to conditions creates its own progression instead of being rolled into one generic resistance stat.
 
-- **Toxicology** — Reduces incoming Poison buildup.
-- **Cold Tolerance** — Reduces incoming Cold buildup.
-- **Heat Tolerance** — Reduces incoming Heat buildup.
-- **Drowsy Tolerance** — Reduces incoming Drowsy buildup.
-- **Spore Tolerance** — Reduces incoming Spore buildup.
-- **Hunger Tolerance** — Trains by continuing to move while at 30 or more displayed Hunger and reduces future Hunger buildup.
+- **Poison Tolerance** — Reduces incoming Poison and speeds its natural recovery.
+- **Cold Tolerance** — Reduces incoming Cold and speeds natural recovery where PEAK marks that recovery path.
+- **Heat Tolerance** — Reduces incoming Heat and speeds its natural recovery.
+- **Drowsy Tolerance** — Reduces incoming Drowsy and speeds its natural recovery.
+- **Spore Tolerance** — Reduces incoming Spores and speeds their natural recovery.
+- **Hunger Tolerance** — Reduces incoming Hunger.
+- **Curse Tolerance** — Reduces incoming Curse.
+- **Petrification Resistance** — Reduces petrification from the shared amulet and Citadel path.
 
-There is also a completely separate set of **natural recovery skills**:
-
-- **Poison Recovery**
-- **Cold Recovery**
-- **Heat Recovery**
-- **Drowsy Recovery**
-- **Spore Recovery**
-
-These improve how quickly the matching condition naturally recovers. Direct cleansing does **not** count as natural recovery XP, so repeatedly using an item to wipe a condition away is not the same thing as your character learning to recover from it.
+These eight skills appear together in the blue **Resiliency** panel. They gain XP only when the matching affliction actually increases; natural recovery and cleansing no longer grant XP. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
 
 ## Strength: yes, your backpack can grow
 
@@ -69,7 +63,7 @@ Strength does more than make the Weight affliction less painful. As it levels, i
 | 120 | +4 |
 | 200 | +5 |
 
-Your **main inventory remains PEAK's normal vanilla size**. Extra backpack items use PEAK's ordinary Weight system, and Strength reduces that effective Weight as it levels. There is no separate overflow movement penalty, stamina penalty, or Pack Rat mitigation layer anymore.
+Your **main inventory remains PEAK's normal vanilla size**. The ordinary Backpack starts with 4 item slots, the Fanny Pack starts with 2, and the Jet Pack starts with 1; all three receive the same +1/+2/+3/+4/+5 Strength milestones. The Jet Pack's separate fuel slot is untouched. Rocket Packs have no item storage and are explicitly excluded. Extra stored items still use PEAK's ordinary Weight system.
 
 > **BackpackCapacity should remain disabled alongside Elin's PEAK** because both mods change the same backpack data. MoreSlots is not required, and compatibility with it is not currently guaranteed.
 
@@ -83,7 +77,7 @@ XP is disabled in the **Airport/lobby**, so standing around before a run does no
 
 ## Skill menu
 
-Elin's PEAK adds skill information directly to the pause menu, split into multiple sections so all 21 skills are not crammed into one unreadable block.
+Elin's PEAK adds skill information directly to the pause menu. Main Skills are on the left, the blue Resiliency section sits below them, and lightweight +10/reset test buttons sit on the right for the current runtime-validation cycle.
 
 You can see your skill levels, progression, and current bonuses, with hover explanations for what the skills actually do. The goal is for you to be able to look at a skill and understand *why* it is leveling and what the next levels are doing without needing to keep this README open on another monitor.
 
@@ -113,20 +107,18 @@ The current defaults use the following underlying work values:
 
 | Skill | Default XP source |
 |---|---|
-| Endurance | 2 XP per normalized point of raw stamina requested |
+| Endurance | 6 XP per normalized point of raw stamina requested |
 | Strength | 2 XP per raw Weight × movement meter |
-| Wall Climbing | 2 XP per intentional climbing meter |
-| Rope Climbing | 2 XP per intentional climbing meter |
-| Vine Climbing | 2 XP per intentional climbing meter |
-| Athletics | 0.35 XP per qualifying walking meter |
-| Athletics while sprinting | 1.4 XP per qualifying sprinting meter |
-| Agility | 4 XP per successfully executed local jump |
+| Wall Climbing | 4 XP per intentional climbing meter |
+| Rope Climbing | 4 XP per intentional climbing meter |
+| Vine Climbing | 4 XP per intentional climbing meter |
+| Athletics | 0.28 XP per qualifying walking meter |
+| Athletics while sprinting | 1.12 XP per qualifying sprinting meter |
+| Agility | 3.2 XP per successfully executed local jump |
 | Resilience | 100 XP per normalized point of raw fall Injury |
-| Condition resistance skills | 100 XP per normalized point of actual incoming matching status |
-| Natural recovery skills | 100 XP per normalized point naturally recovered |
-| Hunger Tolerance | 0.1 XP per displayed Hunger point × movement meter while Hunger is at least 30 |
-| Wet Grip | 2 XP per slippery climbing meter, weighted by slipperiness |
-| Climbing Tenacity | 2 XP per intentional wall-climbing meter while regular stamina is below 20% |
+| Resiliency skills | 100 XP per normalized point of actual incoming matching affliction |
+| Wet Grip | 6 XP per slippery climbing meter, weighted by slipperiness |
+| Climbing Tenacity | 6 XP per intentional wall-climbing meter while regular stamina is below 20% |
 
 These values can be changed in the generated BepInEx configuration.
 
@@ -148,11 +140,11 @@ Default positive scaling includes:
 | Athletics sprint movement force | +0.2% per level |
 | Agility jump impulse | +0.15% per level |
 | Agility air-control responsiveness | +0.025% per level |
-| Matching natural condition recovery | +0.3% per level |
+| Matching natural condition recovery | +0.15% per level for Poison/Cold/Heat/Drowsy/Spores |
 
 Reduction-style effects use an **anchored reciprocal curve** rather than simply subtracting a flat percentage forever. This applies to systems such as Strength Weight reduction, climbing/sprint/jump efficiency, Resilience, condition resistance, Wet Grip, and Climbing Tenacity.
 
-With the current default reduction rate of `0.003`, the curve reaches the old level-999 reduction target by approximately level 500, then continues scaling toward **99.9% reduction at level 999**. This keeps very high progression meaningful without allowing a basic linear formula to cross zero and turn a penalty into nonsense.
+Most reduction effects use a default rate of `0.003`; Resiliency uses the halved `0.0015` rate. The curve accelerates after its level-500 anchor and continues toward **99.9% reduction at level 999**. This keeps very high progression meaningful without allowing a basic linear formula to cross zero and turn a penalty into nonsense.
 
 ## Stamina implementation
 
@@ -162,9 +154,7 @@ Endurance currently increases capacity and regeneration. General stamina-cost re
 
 ## Condition handling
 
-Resistance is applied to incoming status before the game adds it to the local character. The associated resistance skill receives XP from the amount that actually gets through after modification, with Hunger handled separately through movement-based training.
-
-Natural recovery skills normally apply when PEAK reports that the matching condition is decreasing naturally. Cold is the odd one out: PEAK naturally warms you by adding Heat, which internally subtracts Cold, so passive environmental warming is recognized as Cold Recovery. Status-changing items and other direct cleanses still do **not** train recovery skills.
+Tolerance is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spore Tolerance also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
 
 ## Save data and backups
 

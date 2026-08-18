@@ -35,7 +35,7 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 
 The script validates `package/manifest.json`, checks the 256×256 icon, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root must contain `manifest.json`, `README.md`, `CHANGELOG.md`, `icon.png`, and the plugin DLL in the structure expected by Thunderstore.
 
-The current local 0.3.2 validation artifact is `dist\Elins_PEAK-0.3.2.zip` with SHA-256 `9626F03481F2F4BD4C53428F0886ED992BC63331437A6BF58FA15FDD181C36A6`, rebuilt on 2026-08-18 with zero warnings/errors. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the final publication artifact again.
+The current local artifact is `dist\Elins_PEAK-0.4.0.zip` with SHA-256 `D493F40397E44F6AC06104902B6EA6234AF5B81BF9C5FC17C1D70A6ABD4ED050`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused runtime/balance cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
 
 ## Runtime deployment and data
 
@@ -55,7 +55,7 @@ Back up the progression file before destructive/manual test changes. Resetting a
 3. Update root and package changelogs. Keep `package/README.md` player-facing and personal in tone.
 4. Ensure root engineering docs distinguish implemented, runtime-verified, and merely planned work.
 5. Confirm `package/icon.png` is the owner's final 256×256 image.
-6. Run restore/build/tests/package script.
+6. Run the Release solution build and package script. Run the full test suite when core math or persistence behavior warrants it; record explicitly when it is skipped for a focused runtime cycle.
 7. Inspect the ZIP contents and manifest dependencies.
 8. Install the exact packaged artifact into `devtest` and run focused tests.
 9. Commit only intentional files; never commit local config, saves, logs, binaries outside the release artifact policy, or third-party mods.
@@ -71,7 +71,7 @@ Use a branch from current `main`, stage explicit paths, commit a coherent change
 & 'C:\Program Files\GitHub CLI\gh.exe' auth status
 ```
 
-GitHub source publication is not a Thunderstore upload. Thunderstore publication requires its own authenticated workflow and should happen only after the exact package passes runtime validation. The last observed public Thunderstore version was 0.3.1; 0.3.2 has not been confirmed as uploaded there.
+GitHub source publication is not a Thunderstore upload. Thunderstore publication requires its own authenticated workflow and should happen only after the exact package passes runtime validation. No remote push or Thunderstore upload is authorized for the current 0.4.0 live-test build.
 
 ## Updating after a PEAK release
 

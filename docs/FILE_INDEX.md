@@ -24,8 +24,8 @@ This map helps a new conversation find the current source of truth quickly.
 |---|---|
 | `src/PEAKUsageSkills/Plugin.cs` | Plugin lifecycle, service creation, Harmony application, save/update flow. |
 | `src/PEAKUsageSkills/Core/SkillId.cs` | Stable active skill identifiers; value 14 remains retired. |
-| `src/PEAKUsageSkills/Core/SkillMath.cs` | XP curve, linear/anchored scaling, HUD width, stamina capacity, backpack milestones, Hunger work. |
-| `src/PEAKUsageSkills/Core/ProgressionService.cs` | XP eligibility, awarding, leveling, effective maximum, dirty save state. |
+| `src/PEAKUsageSkills/Core/SkillMath.cs` | XP curve, linear/anchored scaling, HUD width, stamina capacity, backpack milestones. |
+| `src/PEAKUsageSkills/Core/ProgressionService.cs` | XP eligibility, awarding, leveling, Recovery-to-Tolerance save migration, dirty save state. |
 | `src/PEAKUsageSkills/Config/UsageSkillsConfig.cs` | All public config entries and exact-default schema migrations. |
 | `src/PEAKUsageSkills/Effects/EffectService.cs` | Converts effective levels/config into gameplay multipliers. |
 
@@ -34,21 +34,21 @@ This map helps a new conversation find the current source of truth quickly.
 | Path | Purpose |
 |---|---|
 | `src/PEAKUsageSkills/GameAdapters/RunStateAdapter.cs` | Gameplay scene, Airport, and custom-run eligibility. |
-| `src/PEAKUsageSkills/GameAdapters/ConditionSkillAdapter.cs` | PEAK status-to-Resistance/Recovery mapping. |
-| `src/PEAKUsageSkills/GameAdapters/InventorySkillService.cs` | Strength backpack capacity and safe data expansion. |
+| `src/PEAKUsageSkills/GameAdapters/ConditionSkillAdapter.cs` | PEAK status-to-Tolerance and recovery-effect mapping. |
+| `src/PEAKUsageSkills/GameAdapters/InventorySkillService.cs` | Typed Backpack/Fanny/Jet Strength capacity and safe data expansion; Rocket exclusion. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/StaminaPatches.cs` | Endurance XP/effects, activity stamina costs, bonus-pool usability, stamina HUD. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/WeightPatches.cs` | Strength Weight multiplier and optional numeric-label attempt. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/ClimbingPatches.cs` | Wall/rope/vine performance, Wet Grip, Climbing Tenacity. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/MovementPatches.cs` | Athletics, jumps, and air control. |
-| `src/PEAKUsageSkills/GameAdapters/Patches/FallAndAfflictionPatches.cs` | Resilience, condition Resistance/Recovery, item and cold-warmth scopes. |
-| `src/PEAKUsageSkills/GameAdapters/Patches/InventoryPatches.cs` | Backpack initialization, deserialization, wheel, and visuals. |
-| `src/PEAKUsageSkills/Tracking/ActivitySampler.cs` | Distance/work sampling for Strength, Hunger, climbing, Wet Grip, Tenacity, Athletics. |
+| `src/PEAKUsageSkills/GameAdapters/Patches/FallAndAfflictionPatches.cs` | Resilience, Tolerances, shared Petrification hook, natural recovery effect, and cold-warmth scope. |
+| `src/PEAKUsageSkills/GameAdapters/Patches/InventoryPatches.cs` | Type-neutral deserialization plus typed wheel and visuals. |
+| `src/PEAKUsageSkills/Tracking/ActivitySampler.cs` | Distance/work sampling for Strength, climbing, Wet Grip, Tenacity, Athletics. |
 
 ## UI, diagnostics, and persistence
 
 | Path | Purpose |
 |---|---|
-| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Three passive panels, `Lv. ##.##`, one refresh per open, hover tooltips. |
+| `src/PEAKUsageSkills/UI/PauseMenuIntegration.cs` | Main/Resiliency panels, `Lv. ##.##`, right-side test controls, one refresh per open, hover tooltips. |
 | `src/PEAKUsageSkills/UI/DebugOverlay.cs` | Optional config-driven compact diagnostics overlay. |
 | `src/PEAKUsageSkills/Diagnostics/DiagnosticHub.cs` | Rate-limited aggregate BepInEx logging. |
 | `src/PEAKUsageSkills/Diagnostics/RuntimeMetrics.cs` | Current runtime measurements used by logs/overlay. |
@@ -59,7 +59,7 @@ This map helps a new conversation find the current source of truth quickly.
 
 | Path | Purpose |
 |---|---|
-| `tests/PEAKUsageSkills.Tests/SkillMathTests.cs` | Pure tests for progression/scaling/HUD/backpack/Hunger math. |
+| `tests/PEAKUsageSkills.Tests/SkillMathTests.cs` | Pure tests for progression/scaling/HUD/backpack math. |
 | `tests/PEAKUsageSkills.Tests/PEAKUsageSkills.Tests.csproj` | Test project. |
 
 ## Documentation authority

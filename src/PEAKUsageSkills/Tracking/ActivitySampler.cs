@@ -56,7 +56,6 @@ namespace PEAKUsageSkills.Tracking
                 Plugin.Diagnostics?.RecordRejected(SkillId.Athletics, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.WetGrip, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.ClimbingTenacity, "TeleportDelta", distance);
-                Plugin.Diagnostics?.RecordRejected(SkillId.HungerTolerance, "TeleportDelta", distance);
                 return;
             }
 
@@ -71,20 +70,6 @@ namespace PEAKUsageSkills.Tracking
                         work,
                         Plugin.Settings.StrengthXpPerWork.Value,
                         character.data.isClimbingAnything ? "WeightedClimbing" : "WeightedMovement");
-                }
-
-                float hunger = character.refs?.afflictions?.GetCurrentStatus(CharacterAfflictions.STATUSTYPE.Hunger) ?? 0f;
-                double hungerWork = SkillMath.HungerMovementWork(
-                    hunger,
-                    distance,
-                    Plugin.Settings.HungerTrainingThreshold.Value);
-                if (hungerWork > 0d)
-                {
-                    Plugin.Progression.AwardWork(
-                        SkillId.HungerTolerance,
-                        hungerWork,
-                        Plugin.Settings.HungerMovementXpPerWork.Value,
-                        "HungryMovement");
                 }
             }
 

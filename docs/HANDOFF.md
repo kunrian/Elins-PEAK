@@ -1,201 +1,77 @@
-# Elin's PEAK complete handoff
+# Elin's PEAK handoff
 
-**Updated:** 2026-08-18
+**Date:** 2026-08-18
 
-**Repository:** <https://github.com/kunrian/Elins-PEAK>
+**Source/package version:** 0.4.0
 
-**Source/package version:** 0.3.2
+**Game assembly inspected:** PEAK `Assembly-CSharp.dll` SHA-256 `CAD8EF0702F512F0AD4595F9C169D4025EB8FA351083B64FD4E9FD6F78D5D14C`
 
-**Baseline merged commit:** `32b6e00` (0.3.2 release merge)
+**0.4.0 package:** `dist/Elins_PEAK-0.4.0.zip`, SHA-256 `D493F40397E44F6AC06104902B6EA6234AF5B81BF9C5FC17C1D70A6ABD4ED050`
 
-This is the primary handoff for starting a new conversation. Read it with `../AGENTS.md`; do not reconstruct project history from the old logs or the sibling preimplementation specification unless a detail is missing here.
+## Where the project is
 
-## One-paragraph state
+Elin's PEAK is a local-player, use-based BepInEx/Harmony progression mod with 18 persistent skills and a default maximum level of 999. Version 0.3.2 received a successful solo runtime pass in the Gale `devtest` profile: the plugin loaded, the pause-menu test controls worked, Strength expanded the ordinary Backpack at the expected milestones, reset worked, and no plugin exception appeared. That supersedes older documentation which called the live profile stale.
 
-Elin's PEAK is a standalone BepInEx/Harmony mod that gives the local player 21 persistent, use-based skills. Progress is stored outside Gale profiles, the host does not assign levels, Airport XP is disabled, and most effects are applied by transforming current PEAK calculations. The 0.3.2 source compiles, all 50 unit tests pass, and the Thunderstore ZIP was generated successfully. However, the installed devtest copy is still 0.3.1, so the 0.3.2 removal of main slots/Pack Rat, Strength-backed backpack capacity, Cold Recovery correction, and latest XP rates have not yet been tested in a fresh game session. Multiplayer has never been runtime-tested and remains the final testing phase.
+Version 0.4.0 is the current implementation. It compiles with zero warnings/errors and is packaged for the next runtime pass. It has not yet been approved by a fresh in-game log, and multiplayer remains untested.
 
-## Current release and installation state
+## 0.4.0 behavior
 
-| Surface | State |
-|---|---|
-| GitHub `main` | 0.3.2 source merged |
-| Local package | `dist/Elins_PEAK-0.3.2.zip` |
-| 0.3.2 ZIP SHA256 | `9626F03481F2F4BD4C53428F0886ED992BC63331437A6BF58FA15FDD181C36A6` (documentation-branch validation build) |
-| Thunderstore | 0.3.1 was the last observed published package; 0.3.2 was not uploaded during this work |
-| Gale `devtest` | Stale `ChiseledCactusTeam-Elins_PEAK` 0.3.1 installation |
-| Gale `Default` | No Elin's PEAK live installation was present in the last audit |
-| Progression save | `%LOCALAPPDATA%\LandCrab\PEAK\PEAKUsageSkills\progression.json` |
-| Backups | Five rotating JSON files beside the save |
+- Main Skills: Strength, Endurance, Wall Climbing, Rope Climbing, Vine Climbing, Athletics, Agility, Resilience, Wet Grip, and Climbing Tenacity.
+- Blue Resiliency skills: Poison, Cold, Heat, Drowsy, Spore, Hunger, and Curse Tolerance plus Petrification Resistance.
+- The five former Recovery skills are retired. On first 0.4.0 load, their complete accumulated XP and lifetime work are merged into the matching Tolerance, then the old save keys are removed.
+- A Tolerance gets XP only when the matching affliction increases. Natural recovery, item cleansing, and hungry movement do not grant Resiliency XP.
+- Poison/Cold/Heat/Drowsy/Spore Tolerance each applies incoming reduction and natural-recovery acceleration. Curse, Hunger, and Petrification have no recovery-speed effect.
+- Both condition bonuses were halved from 0.3% to 0.15% per level because one skill now owns both benefits.
+- Curse is handled through `CharacterAfflictions.AddStatus`. Petrification is handled once at `CharacterAfflictions.AddPetrify`, the shared positive-gain path used by status additions, amulet actions, and Citadel climb/collision modifiers.
+- Main inventory stays vanilla. Strength adds +1/+2/+3/+4/+5 item slots at levels 20/40/70/120/200 to Backpack (base 4), Fanny Pack (base 2), and Jet Pack (base 1). Jet fuel is a separate data entry/UI slice and is untouched. Rocket Pack is explicitly excluded.
+- The blue Resiliency panel is below Main Skills on the left. The +10-all and reset-all runtime controls are on the right.
 
-Do not assume a successful package build installed the mod. Do not assume a GitHub merge published Thunderstore. These are separate operations.
+## 0.4.0 default XP rates
 
-## Current game and toolchain fingerprint
+| Skill/source | XP rate |
+|---|---:|
+| Endurance | 6 per normalized stamina requested |
+| Strength | 2 per raw Weight × meter |
+| Wall/Rope/Vine Climbing | 4 per intentional meter |
+| Athletics walk / sprint | 0.28 / 1.12 per meter |
+| Agility | 3.2 per successful jump |
+| Resilience | 100 per normalized fall Injury |
+| Resiliency | 100 per normalized actual incoming affliction |
+| Wet Grip | 6 per slippery weighted wall meter |
+| Climbing Tenacity | 6 per low-stamina wall meter |
 
-- Project root: `C:\Users\Chiseled\Documents\Projects\PEAK\PEAKUsageSkills`
-- Reference plugin profile: `C:\Users\Chiseled\AppData\Roaming\com.kesomannen.gale\peak\profiles\Default\BepInEx\plugins`
-- Runtime test profile: `C:\Users\Chiseled\AppData\Roaming\com.kesomannen.gale\peak\profiles\devtest`
-- Local PEAK: `C:\Program Files (x86)\Steam\steamapps\common\PEAK`
-- `Assembly-CSharp.dll` last modified 2026-08-15 and inspected at SHA256 `CAD8EF0702F512F0AD4595F9C169D4025EB8FA351083B64FD4E9FD6F78D5D14C`
-- Project targets `netstandard2.1`; tests target .NET 10. The machine has .NET 10 installed.
-- README compatibility target: PEAK 2.1.a.
+Config migration changes only values still equal to the old defaults; user-tuned values are preserved. Obsolete recovery-XP, hungry-movement, and Pack Rat entries are removed from the generated config.
 
-Reinspect the assembly after any PEAK update before trusting private hooks or generated coroutine names.
+## Verified assembly findings
 
-## Product decisions that are already settled
+### Sprint momentum and jumping
 
-- Maximum level is 999 by default.
-- Next-level XP is `round(100 * level^1.21)`.
-- Pause-menu levels use Elin-style `Lv. ##.##`, where the last two digits are floored percent progress to the next level.
-- Positive bonuses scale linearly. Reduction effects use the anchored curve defined in `SkillMath.AnchoredReductionMultiplier`: the old level-999 reciprocal target is reached near level 500, then the multiplier approaches 0.001 at level 999.
-- Wall, rope, and vine climbing are separate skills.
-- Poison, Cold, Heat, Drowsy, and Spores have separate Resistance and natural Recovery skills.
-- Sleep maps to PEAK's `Drowsy` status. Zombification exposure maps to `Spores`.
-- Hunger uses one Tolerance skill: it gains XP only from movement at 30 or more displayed Hunger and intentionally keeps PEAK's 2.5-point display increments.
-- Endurance increases real base stamina capacity and regeneration. It does not provide general stamina-cost reduction.
-- Main inventory is vanilla-sized. Strength, not Pack Rat, owns backpack milestones.
-- No extra overflow movement or stamina penalty exists.
-- Progression/effects are local. The owner explicitly preferred the Atomic Leveling style over host-selected levels for this phase.
-- XP never accrues in the Airport. Custom-run XP is off by default.
-- Diagnostics use BepInEx logs. Manual data exports are not part of the current workflow.
-- Multiplayer testing is last. Anti-farming systems beyond basic validity are deferred.
+`CharacterMovement.GetMovementForce` adds grounded movement/sprint force. `JumpRpc` adds a vertical impulse but does not clear or replace horizontal velocity. Existing horizontal sprint momentum therefore carries into the jump. Athletics is an acceleration/force modifier, not a direct jump-distance multiplier, and its extra ground force stops once airborne; short run-ups and drag can make the distance difference subtle. The report that sprint velocity is discarded at jump time is not supported by the inspected code.
 
-## Implemented systems
+### Glider, parachute, and balloons
 
-### Progression and persistence
+`Glider.FixedUpdate` pays opening/per-frame stamina and calls `CharacterMovement.ApplyGlider`, which applies fall drag and forward force. Balloons instead modify gravity and jump multipliers. The parachute uses the parasol-drag path. They are related by airborne traversal but are not one shared mechanic. A future **Aeronautics** skill is viable, but its scope must be chosen explicitly: glider-only is the cleanest hook; glider/parachute/balloons would require separate adapters and balance rules.
 
-- 21 `SkillId` values with per-skill level, current XP, and lifetime work.
-- Atomic JSON save replacement and five rotating backups.
-- Save values are clamped on access.
-- Retired `PackRat` data is removed during save load.
-- Dirty saves flush periodically, on scene load, application quit, and plugin destruction.
+### Throwing
 
-### Measurement
+`CharacterItems.DropItemRpc` converts a 0..1 throw charge into force, then multiplies it by the item's own `throwForceMultiplier`. A future **Throwing** skill can train from valid charged local throws and scale the computed impulse while preserving item-specific behavior. It should not rewrite `throwCharge`, because PEAK also uses that value for thrown-data/events.
 
-- A 0.2-second local sampler measures physical movement from `Character.Center`.
-- Deltas above 5 meters are rejected as transitions/teleports.
-- Strength uses raw pre-Strength Weight times physical distance.
-- Athletics requires grounded intentional horizontal movement.
-- Each climbing skill requires its matching state plus intentional input.
-- Wet Grip requires slippery wall-climbing work.
-- Climbing Tenacity currently requires wall climbing while `Character.GetTotalStamina()` is below 0.20.
-- Endurance samples the raw `UseStamina` request before activity-specific efficiency.
-- Agility awards only when the local non-pal jump RPC executes.
-- Resilience scopes both normal and wall fall-damage paths before Injury is added.
-- Resistance XP uses the actual accepted status increase. Hunger XP is kept out of the high-frequency status hook.
-- Recovery XP uses actual natural reduction. Direct `Action_ModifyStatus` items are excluded.
+## Known open issue
 
-### Effects
+Cold exposure XP and incoming Cold reduction work through `AddStatus`. The recovery-speed half remains unverified because the latest log showed ordinary warming as `Cold:SubtractLocal`, not PEAK's `decreasedNaturally` path, and the prior Heat scope did not activate. Do not reintroduce Recovery XP to solve this. The next fix should first identify the actual warming caller and apply only the Cold Tolerance recovery multiplier there.
 
-- Endurance base capacity and scoped regeneration.
-- Stamina frame/backing/outline extension above 100 without merging Well Fed/extra stamina into base capacity.
-- Vanilla bonus stamina remains spendable when regular stamina empties during sprinting.
-- Strength reduces effective Weight and refreshes it on Strength level-up.
-- Strength backpack slots at levels 20/40/70/120/200.
-- Wall/rope/vine speed and activity-specific stamina efficiency.
-- Vine momentum retention by moving slide damping lightly toward 1, capped at 75% retention.
-- Athletics ground and additional sprint force plus sprint efficiency.
-- Agility jump impulse, jump efficiency, and very light air control.
-- Resilience fall Injury reduction.
-- Five incoming-condition resistance multipliers and five recovery-speed multipliers.
-- Wet Grip reduces slippy downward behavior and wind climbing stamina penalty without reducing Cold itself.
-- Climbing Tenacity improves sub-20% climbing control, exhausted slide behavior, and wall stamina cost.
+## Minimal next runtime pass
 
-### UI and diagnostics
+1. Confirm startup reports Elin's PEAK 0.4.0 and all hook-health entries, including Petrification and Backpack Wheel, are healthy.
+2. Open ESC: Main Skills and blue Resiliency should be stacked on the left; both small test buttons should be on the right; no green panel should exist.
+3. Use +10/reset once and confirm all 18 skills change and persist.
+4. At Strength milestone levels, open a Backpack, Fanny Pack, and Jet Pack. Confirm item capacities are base + milestone, Jet has exactly one separate fuel slot, and Rocket Pack is unchanged.
+5. Receive Curse and Petrification through real gameplay. Confirm XP is awarded once and the received amount is reduced at elevated levels.
+6. Spot-check one natural Poison/Heat/Drowsy/Spore recovery for speed but no XP. Capture Cold warming separately for the outstanding hook investigation.
+7. Compare a standing jump with a full sprint jump on flat ground using the same Agility level; horizontal momentum should remain.
 
-- Pause UI has red Main Skills, blue Resistance, and green Recovery sections.
-- Values refresh once when the pause UI opens, not every 0.25 seconds.
-- Hover tooltips explain the skill and current bonus.
-- Development level/reset/status buttons were removed for release.
-- A config-only compact debug overlay still exists.
-- Automatic logs report patch health, snapshots, raw/effective stamina and Weight, status aggregates, fall amounts, save writes, and XP work sources.
+Do not run the full unit suite for this balance/runtime cycle unless a core math change warrants it. A Release solution build and package validation are sufficient before the live pass.
 
-## Work history: what was tried
+## Publication state
 
-### Initialization and logging
-
-- An early DLL failed to initialize; the error was reviewed and the assembly was replaced only after PEAK was closed.
-- Craft PEAK produced an infinite error log and prevented the menu from loading in one test instance. Craft PEAK was disabled and its conflict was deliberately not investigated further.
-- A later broad solo run exercised lobby, first biome, climbing, eating, damage, poison, Weight changes, and other status effects. Those logs became the basis for hook discovery and balancing.
-
-### Stamina and HUD
-
-- Vanilla can exceed 100 through lollipop/temporary effects, but its frame does not expand as desired.
-- Early frame attempts shifted the green bar outside the frame and allowed status segments to overlap or stop short.
-- The current approach derives actual rendered width from Unity rectangles, holds the left edge fixed, expands the frame only from Endurance base capacity, and lets Weight/Hunger/statuses redistribute within that frame.
-- The Well Fed/extra stamina pool originally was not used after the regular pool emptied during sprinting. `Character.OutOfRegularStamina` is now patched so vanilla `UseStamina` can roll into bonus stamina. A later runtime pass confirmed the food bar was consumed.
-- Runtime tests at saved level and debug levels 50/100/300 showed the frame eventually scaling as intended. Level 999 math is unit-tested, not runtime-tested.
-
-### Weight and status numbers
-
-- Gameplay Weight reduction worked, but the displayed PeakStatsEx Weight number did not reliably refresh or show one decimal place.
-- A post-PeakStatsEx text rewrite was attempted. PeakStatsEx owns/caches the label, so exact display remains unresolved and must not become the primary gameplay focus without a dedicated compatibility pass.
-- Hunger display was intentionally left at vanilla/PeakStatsEx 2.5-point increments.
-- Weight now refreshes on Strength level changes, but the final 0.3.2 behavior still needs a fresh runtime check.
-
-### Pause UI
-
-- Skills were initially tiny and centered over the menu.
-- They were moved to side panels and enlarged.
-- Debug/test/reset/effect buttons were added during measurement; some overlapped or disappeared due layout assumptions.
-- Constant pause-menu refresh was removed at owner request; current values populate once on open.
-- Final release layout uses three colored passive panels and hover bubbles. Font size was accepted, but overall panel/window fit was still described as rough and remains polish work.
-
-### Inventory progression
-
-- BackpackCapacity and MoreSlots were inspected as references; the intent was to implement capacity internally rather than depend on them.
-- Pack Rat originally unlocked four main slots and five backpack slots, trained from overflow movement, and mitigated added Weight/movement/stamina penalties.
-- Variable main arrays, hotbar clones, extra number-key switching, drop handling, backpack serialization, wheel slices, and backpack visuals were implemented.
-- Main-inventory expansion later bugged the inventory/UI. The entire main-slot/hotbar path, Pack Rat skill, training, and overflow penalties were removed in 0.3.2.
-- Backpack expansion remains internal and is now tied to saved Strength. It never shrinks occupied backpack data.
-
-### Conditions and Cold Recovery
-
-- Poison, Heat, Drowsy, and Spore recovery were observed through `SubtractStatus(..., decreasedNaturally: true)`.
-- Cold did not use that normal flag. Assembly inspection showed PEAK naturally warms by adding `Hot`; `AddStatus(Hot)` internally subtracts existing `Cold` with the default non-natural flag.
-- 0.3.2 scopes environmental Heat-versus-Cold cancellation as `NaturalRecovery:ColdByWarmth` and applies Cold Recovery there.
-- `Action_ModifyStatus.RunAction` establishes an explicit item scope so status-changing items do not gain Recovery XP.
-- This correction compiles but has not yet been confirmed in a new runtime log.
-
-### Balance changes
-
-- XP exponent changed to 1.21.
-- Strength settled at `raw Weight * distance * 2 XP`.
-- Wall/rope/vine settled at 2 XP per intentional meter in any direction.
-- Agility settled at 4 XP per executed jump.
-- Athletics was reduced 30% to 0.35 XP/m walking and 1.4 XP/m sprinting.
-- Hunger Tolerance logged dramatically faster than the other skills and was reduced from 1.0 to 0.1 XP per displayed Hunger-point-meter above the threshold.
-- Endurance currently remains 2 XP per normalized raw stamina request, which equals 0.02 XP per displayed stamina point. An earlier plain-language request discussed 1 XP per stamina used; the current normalized implementation should be explicitly accepted or retuned rather than assumed equivalent.
-
-## What has not been tried or remains unverified
-
-- No multiplayer host/client run, reconnect, host migration, mixed-version lobby, or multiple-group progression test.
-- No 0.3.2 solo run after removing Pack Rat/main slots.
-- No 0.3.2 Cold Recovery environmental-warming versus item-cleanse comparison.
-- No validation of every Strength backpack milestone with save/load, wheel, visuals, death/drop, and reconnect.
-- No current custom-run XP test.
-- No level-999 runtime stress test.
-- No systematic compatibility matrix with current PEAK Unlimited, EasyBackpack Fix, ItemStats, Sense of Direction, Piggyback, Atomic Leveling, or PeakStatsEx combinations.
-- No anti-farm pass for jump spam, micro-movement, deliberate repeated fall/status farming, or rate caps.
-- No performance profile of 2-second diagnostics during long/multiplayer sessions.
-- No Thunderstore upload of 0.3.2 during the recorded work.
-
-## Immediate recommended next sequence
-
-1. Close PEAK and replace the stale devtest 0.3.1 package with local 0.3.2 only when explicitly authorized.
-2. Back up the progression save and run one clean solo session with diagnostics enabled.
-3. Verify startup patch health and confirm `PackRat`/overflow fields no longer appear in fresh logs.
-4. Exercise Strength levels 1/20/40/70/120/200 and backpack serialize/wheel/visual behavior.
-5. Compare passive environmental warming against a status-changing item and confirm only the first logs `NaturalRecovery:ColdByWarmth` and Cold Recovery XP.
-6. Recheck Athletics/Hunger progression rates in a normal-length run.
-7. Recheck pause panel fit at common resolutions and PeakStatsEx Weight text behavior.
-8. Only after the solo pass, run final multiplayer validation.
-
-## Copy/paste prompt for a new conversation
-
-```text
-Continue work on Elin's PEAK in C:\Users\Chiseled\Documents\Projects\PEAK\PEAKUsageSkills.
-Read AGENTS.md and docs/HANDOFF.md completely, then check git status and docs/TESTING_AND_COMPATIBILITY.md.
-Treat current source/runtime behavior as authoritative over the old PEAK_UsageSkills_Spec folder.
-Do not deploy to Gale, reset saves, publish GitHub, or upload Thunderstore unless I explicitly ask.
-Before changing a PEAK hook, inspect the current Assembly-CSharp.dll and update docs/ARCHITECTURE_AND_HOOKS.md.
-```
+The exact 0.4.0 package payload is installed in the `devtest` live plugin folder; PEAK was confirmed closed, and the installed/source DLL hashes match. It has not been launched yet. The previous live folder is recoverable from `dist/Elins_PEAK-live-before-0.4.0-20260818-02.zip`. The local Git repository may be updated and committed, but no remote push or Thunderstore upload is authorized by this handoff.

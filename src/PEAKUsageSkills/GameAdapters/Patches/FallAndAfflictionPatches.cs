@@ -112,11 +112,10 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             public bool Local;
             public float Before;
             public float RawRequested;
-            public float AppliedRequested;
             public CharacterAfflictions.STATUSTYPE StatusType;
             public string Source;
-            public bool ConditionExposure;
-            public SkillId ConditionSkill;
+            public bool ToleranceExposure;
+            public SkillId ToleranceSkill;
             public bool EnvironmentalColdRecovery;
         }
 
@@ -135,11 +134,10 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 Local = local,
                 Before = local ? __instance!.GetCurrentStatus(statusType) : 0f,
                 RawRequested = amount,
-                AppliedRequested = amount,
                 StatusType = statusType,
                 Source = fromRPC ? "AddRPC" : "AddLocal",
-                ConditionExposure = false,
-                ConditionSkill = default,
+                ToleranceExposure = false,
+                ToleranceSkill = default,
                 EnvironmentalColdRecovery = false
             };
 
@@ -171,26 +169,32 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                     amount *= Plugin.Effects.ResilienceFallMultiplier;
                 }
 
-                __state.AppliedRequested = amount;
                 __state.Source = "Fall:" + fallSource;
                 Plugin.Diagnostics?.RecordFall(rawAmount, amount, fallSource);
                 return;
             }
 
-            if (!ConditionSkillAdapter.TryGetResistanceSkill(statusType, out SkillId conditionSkill))
+            // Every Petrify gain, including AddStatus callers, flows through
+            // CharacterAfflictions.AddPetrify. Its dedicated patch owns the
+            // resistance and XP calculation so it is never applied twice.
+            if (statusType == CharacterAfflictions.STATUSTYPE.Petrify)
+            {
+                __state.Local = false;
+                return;
+            }
+
+            if (!ConditionSkillAdapter.TryGetToleranceSkill(statusType, out SkillId toleranceSkill))
             {
                 return;
             }
 
-            __state.ConditionExposure = true;
-            __state.ConditionSkill = conditionSkill;
+            __state.ToleranceExposure = true;
+            __state.ToleranceSkill = toleranceSkill;
             __state.Source = "Exposure:" + statusType;
             if (!warmingExistingCold && Plugin.Effects.CanApply(__instance!.character))
             {
-                amount *= Plugin.Effects.ConditionGainMultiplier(conditionSkill);
+                amount *= Plugin.Effects.ConditionGainMultiplier(toleranceSkill);
             }
-
-            __state.AppliedRequested = amount;
         }
 
         private static void Postfix(CharacterAfflictions __instance, bool __result, State __state)
@@ -202,13 +206,12 @@ namespace PEAKUsageSkills.GameAdapters.Patches
 
             float after = __instance.GetCurrentStatus(__state.StatusType);
             float actual = after - __state.Before;
-            if (__state.ConditionExposure
-                && __state.ConditionSkill != SkillId.HungerTolerance
+            if (__state.ToleranceExposure
                 && __result
                 && actual > 0f)
             {
                 Plugin.Progression.AwardWork(
-                    __state.ConditionSkill,
+                    __state.ToleranceSkill,
                     actual,
                     Plugin.Settings.ConditionXpPerStatus.Value,
                     __state.Source);
@@ -233,6 +236,62 @@ namespace PEAKUsageSkills.GameAdapters.Patches
         }
     }
 
+    [HarmonyPatch(typeof(CharacterAfflictions), "AddPetrify")]
+    internal static class AddPetrifyPatch
+    {
+        private struct State
+        {
+            public bool Local;
+            public int Before;
+            public int RawRequested;
+        }
+
+        private static void Prefix(CharacterAfflictions __instance, ref int petrify, out State __state)
+        {
+            bool local = __instance != null
+                && __instance.character != null
+                && Character.localCharacter == __instance.character;
+            __state = new State
+            {
+                Local = local,
+                Before = local ? __instance!.character!.data.petrifyAmount : 0,
+                RawRequested = petrify
+            };
+
+            if (local && petrify > 0 && Plugin.Effects.CanApply(__instance!.character!))
+            {
+                petrify = Mathf.Max(0, Mathf.RoundToInt(
+                    petrify * Plugin.Effects.ConditionGainMultiplier(SkillId.PetrificationResistance)));
+            }
+        }
+
+        private static void Postfix(CharacterAfflictions __instance, State __state)
+        {
+            if (!__state.Local || __state.RawRequested <= 0)
+            {
+                return;
+            }
+
+            int after = __instance.character.data.petrifyAmount;
+            int actualPoints = Mathf.Max(0, after - __state.Before);
+            if (actualPoints > 0)
+            {
+                Plugin.Progression.AwardWork(
+                    SkillId.PetrificationResistance,
+                    actualPoints / 100d,
+                    Plugin.Settings.ConditionXpPerStatus.Value,
+                    "Exposure:Petrify");
+            }
+
+            Plugin.Diagnostics?.RecordStatusChange(
+                CharacterAfflictions.STATUSTYPE.Petrify.ToString(),
+                __state.RawRequested / 100f,
+                actualPoints / 100f,
+                after / 100f,
+                "Exposure:Petrify");
+        }
+    }
+
     [HarmonyPatch(typeof(CharacterAfflictions), "SubtractStatus")]
     internal static class SubtractStatusPatch
     {
@@ -243,9 +302,8 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             public float Requested;
             public CharacterAfflictions.STATUSTYPE StatusType;
             public string Source;
-            public bool NaturalRecovery;
-            public bool HasRecoverySkill;
-            public SkillId RecoverySkill;
+            public bool HasRecoveryTolerance;
+            public SkillId RecoveryTolerance;
         }
 
         private static void Prefix(
@@ -271,18 +329,17 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 Source = environmentalColdRecovery
                     ? "NaturalRecovery:ColdByWarmth"
                     : decreasedNaturally ? "NaturalRecovery" : fromRPC ? "SubtractRPC" : "SubtractLocal",
-                NaturalRecovery = naturalRecovery,
-                HasRecoverySkill = ConditionSkillAdapter.TryGetRecoverySkill(statusType, out SkillId recoverySkill),
-                RecoverySkill = recoverySkill
+                HasRecoveryTolerance = ConditionSkillAdapter.TryGetRecoveryTolerance(statusType, out SkillId recoveryTolerance),
+                RecoveryTolerance = recoveryTolerance
             };
 
             if (local
                 && naturalRecovery
                 && amount > 0f
-                && __state.HasRecoverySkill
+                && __state.HasRecoveryTolerance
                 && Plugin.Effects.CanApply(__instance!.character))
             {
-                amount *= Plugin.Effects.ConditionRecoveryMultiplier(__state.RecoverySkill);
+                amount *= Plugin.Effects.ConditionRecoveryMultiplier(__state.RecoveryTolerance);
                 if (!environmentalColdRecovery)
                 {
                     __state.Source = "NaturalRecovery:" + statusType;
@@ -299,16 +356,6 @@ namespace PEAKUsageSkills.GameAdapters.Patches
 
             float after = __instance.GetCurrentStatus(__state.StatusType);
             float actual = after - __state.Before;
-            float actualRecovered = Mathf.Max(0f, -actual);
-            if (__state.NaturalRecovery && __state.HasRecoverySkill && actualRecovered > 0f)
-            {
-                Plugin.Progression.AwardWork(
-                    __state.RecoverySkill,
-                    actualRecovered,
-                    Plugin.Settings.ConditionRecoveryXpPerStatus.Value,
-                    __state.Source);
-            }
-
             Plugin.Diagnostics?.RecordStatusChange(
                 __state.StatusType.ToString(),
                 -__state.Requested,

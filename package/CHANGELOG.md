@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+
+- Combined condition Resistance and Recovery into eight blue Resiliency skills, including new Curse Tolerance and Petrification Resistance.
+- Tolerances now train only from receiving their matching affliction; existing Recovery progression is merged into its Tolerance.
+- Fanny Packs and Jet Packs now receive Strength's extra item slots. Jet fuel remains separate, and Rocket Packs are excluded.
+- Rebalanced Endurance, climbing, Athletics, Agility, Wet Grip, and Climbing Tenacity XP.
+- Moved the Resiliency panel below Main Skills and the test controls to the right.
+- Removed stale Pack Rat and retired recovery-training configuration.
+
 ## 0.3.2
 
 - Removed the bugged main-inventory slot expansion. Your normal inventory stays vanilla-sized.

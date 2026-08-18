@@ -13,8 +13,8 @@ These instructions are the repository-local source of truth for future coding ag
 
 - The mod is standalone BepInEx/Harmony code with hard dependencies only on PEAKLib Core and PEAKLib UI.
 - Progression and gameplay effects are local and player-owned. The host does not select another player's level. No custom RPC/config-handshake layer is implemented yet.
-- The release has 21 skills. Pack Rat is retired and its save entry is removed during load.
-- Main-inventory capacity remains vanilla. Strength unlocks backpack slots at levels 20, 40, 70, 120, and 200.
+- The release has 18 skills: 10 Main Skills and 8 blue Resiliency skills. Retired Recovery progression is merged into matching Tolerances during load.
+- Main-inventory capacity remains vanilla. Strength unlocks typed item slots for Backpack, Fanny Pack, and Jet Pack at levels 20, 40, 70, 120, and 200; Jet fuel and Rocket Pack remain untouched.
 - Airport/lobby XP is always rejected. Custom-run XP is disabled by default.
 - Multiplayer runtime testing is the final validation phase, not an assumption of correctness.
 - Anti-farming beyond fundamental action validity and teleport rejection remains intentionally deferred.
@@ -37,11 +37,11 @@ These instructions are the repository-local source of truth for future coding ag
 ## Build, deployment, and releases
 
 - Build against the local PEAK assemblies through `Config.Build.user.props`.
-- `dotnet test .\PEAKUsageSkills.slnx -c Release` and `scripts\Build-Package.ps1` are the normal validation gates.
+- A zero-warning Release solution build and `scripts\Build-Package.ps1` are the normal gates. Run the full unit suite when core math/persistence changes warrant it; focused runtime cycles do not require every test.
 - The build must not deploy to Gale unless `DeployToDevtest=true` is explicitly selected.
 - Do not replace a live DLL while PEAK is running.
 - A local package build, a Gale installation, a GitHub merge, and a Thunderstore upload are separate actions. Never infer authorization for one from another.
-- The devtest profile currently contains a stale 0.3.1 installation. Repository 0.3.2 changes have not received a fresh runtime pass.
+- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.0 changes require a fresh runtime pass and must not be described as live-verified yet.
 
 ## Scope discipline
 

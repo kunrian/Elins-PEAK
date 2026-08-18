@@ -6,7 +6,6 @@ namespace PEAKUsageSkills.GameAdapters
 {
     internal static class InventorySkillService
     {
-        public const int VanillaBackpackSlots = 4;
         private static Character? cachedBackpackCharacter;
         private static ItemInstanceData? cachedBackpackInstance;
         private static BackpackData? cachedBackpackData;
@@ -14,23 +13,52 @@ namespace PEAKUsageSkills.GameAdapters
         public static int ExtraBackpackSlots => SkillMath.ExtraBackpackSlots(
             Plugin.Progression.GetLevel(SkillId.Strength));
 
-        public static int DesiredBackpackCapacity => VanillaBackpackSlots + ExtraBackpackSlots;
-
-        public static void EnsureBackpackCapacity(BackpackData? data, string source)
+        public static bool IsItemStorage(BackpackSlot.BackpackType backpackType)
         {
-            if (data == null)
+            return backpackType == BackpackSlot.BackpackType.Backpack
+                || backpackType == BackpackSlot.BackpackType.Fannypack
+                || backpackType == BackpackSlot.BackpackType.Jetpack;
+        }
+
+        public static int BaseItemSlots(BackpackSlot.BackpackType backpackType)
+        {
+            switch (backpackType)
             {
-                return;
+                case BackpackSlot.BackpackType.Backpack:
+                    return 4;
+                case BackpackSlot.BackpackType.Fannypack:
+                    return 2;
+                case BackpackSlot.BackpackType.Jetpack:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
+        public static int DesiredItemCapacity(BackpackSlot.BackpackType backpackType)
+        {
+            int baseSlots = BaseItemSlots(backpackType);
+            return baseSlots == 0 ? 0 : baseSlots + ExtraBackpackSlots;
+        }
+
+        public static int EnsureBackpackCapacity(
+            BackpackData? data,
+            BackpackSlot.BackpackType backpackType,
+            string source)
+        {
+            if (data == null || !IsItemStorage(backpackType))
+            {
+                return 0;
             }
 
             ItemSlot[] existing = data.itemSlots ?? Array.Empty<ItemSlot>();
-            int required = Math.Max(DesiredBackpackCapacity, HighestOccupiedIndex(existing) + 1);
+            int required = Math.Max(DesiredItemCapacity(backpackType), HighestOccupiedIndex(existing) + 1);
             if (existing.Length < required)
             {
                 Array.Resize(ref existing, required);
                 data.itemSlots = existing;
                 Plugin.ModLog.LogInfo(
-                    $"[UsageSkills:Inventory] backpack slots expanded to {required} "
+                    $"[UsageSkills:Inventory] {backpackType} item slots expanded to {required} "
                     + $"strength={Plugin.Progression.GetLevel(SkillId.Strength)} source={source}");
             }
 
@@ -38,14 +66,28 @@ namespace PEAKUsageSkills.GameAdapters
             {
                 existing[index] ??= new ItemSlot((byte)index);
             }
+
+            return required;
         }
 
-        public static BackpackData? TryGetEquippedBackpackData(Character? character)
+        public static BackpackData? TryGetEquippedBackpackData(
+            Character? character,
+            out BackpackSlot.BackpackType backpackType)
         {
+            backpackType = character?.player?.backpackSlot?.backpackType
+                ?? BackpackSlot.BackpackType.None;
             if (character?.player?.backpackSlot == null || character.player.backpackSlot.IsEmpty())
             {
                 cachedBackpackCharacter = character;
                 cachedBackpackInstance = null;
+                cachedBackpackData = null;
+                return null;
+            }
+
+            if (!IsItemStorage(backpackType))
+            {
+                cachedBackpackCharacter = character;
+                cachedBackpackInstance = character.player.backpackSlot.data;
                 cachedBackpackData = null;
                 return null;
             }
@@ -87,17 +129,26 @@ namespace PEAKUsageSkills.GameAdapters
 
     internal sealed class InventorySkillController : MonoBehaviour
     {
-        private int lastBackpackCapacity;
+        private BackpackData? lastBackpackData;
+        private int lastDesiredCapacity;
+        private BackpackSlot.BackpackType lastBackpackType;
 
         private void Update()
         {
-            int desiredBackpack = InventorySkillService.DesiredBackpackCapacity;
-            BackpackData? backpack = InventorySkillService.TryGetEquippedBackpackData(Character.localCharacter);
+            BackpackData? backpack = InventorySkillService.TryGetEquippedBackpackData(
+                Character.localCharacter,
+                out BackpackSlot.BackpackType backpackType);
+            int desiredBackpack = InventorySkillService.DesiredItemCapacity(backpackType);
             if (backpack != null
-                && (desiredBackpack != lastBackpackCapacity || backpack.itemSlots.Length < desiredBackpack))
+                && (!ReferenceEquals(backpack, lastBackpackData)
+                    || backpackType != lastBackpackType
+                    || desiredBackpack != lastDesiredCapacity
+                    || backpack.itemSlots.Length < desiredBackpack))
             {
-                InventorySkillService.EnsureBackpackCapacity(backpack, "Controller");
-                lastBackpackCapacity = desiredBackpack;
+                InventorySkillService.EnsureBackpackCapacity(backpack, backpackType, "Controller");
+                lastBackpackData = backpack;
+                lastBackpackType = backpackType;
+                lastDesiredCapacity = desiredBackpack;
             }
         }
     }

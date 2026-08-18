@@ -6,7 +6,7 @@ This directory is the canonical engineering and handoff documentation for Elin's
 
 1. [`../AGENTS.md`](../AGENTS.md) — repository directives and product decisions.
 2. [`HANDOFF.md`](HANDOFF.md) — complete current-state handoff, history, and immediate next steps.
-3. [`SKILLS_AND_BALANCE.md`](SKILLS_AND_BALANCE.md) — the implemented 21-skill table, XP units, and effects.
+3. [`SKILLS_AND_BALANCE.md`](SKILLS_AND_BALANCE.md) — the implemented 18-skill table, XP units, and effects.
 4. [`TESTING_AND_COMPATIBILITY.md`](TESTING_AND_COMPATIBILITY.md) — what has and has not been runtime-tested.
 5. [`ROADMAP.md`](ROADMAP.md) — pending work, open design choices, and candidate future skills.
 

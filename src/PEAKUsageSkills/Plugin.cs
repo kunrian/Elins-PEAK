@@ -24,7 +24,7 @@ namespace PEAKUsageSkills
     {
         public const string PluginGuid = "com.chiseled.peak.usageskills";
         public const string PluginName = "Elin's PEAK";
-        public const string PluginVersion = "0.3.2";
+        public const string PluginVersion = "0.4.0";
 
         private Harmony? harmony;
 
@@ -89,8 +89,12 @@ namespace PEAKUsageSkills
             if (skillId == SkillId.Strength && Settings.DebugAllSkillLevelOverride.Value < 0)
             {
                 WeightPatch.RefreshLocalWeight($"StrengthLevel:{level}");
+                BackpackData? data = InventorySkillService.TryGetEquippedBackpackData(
+                    Character.localCharacter,
+                    out BackpackSlot.BackpackType backpackType);
                 InventorySkillService.EnsureBackpackCapacity(
-                    InventorySkillService.TryGetEquippedBackpackData(Character.localCharacter),
+                    data,
+                    backpackType,
                     $"StrengthLevel:{level}");
             }
         }
@@ -112,6 +116,7 @@ namespace PEAKUsageSkills
             RecordHook("WallFalls", typeof(CharacterClimbing), "CheckFallDamage");
             RecordHook("Afflictions", typeof(CharacterAfflictions), "AddStatus");
             RecordHook("ConditionRecovery", typeof(CharacterAfflictions), "SubtractStatus");
+            RecordHook("Petrification", typeof(CharacterAfflictions), "AddPetrify");
             RecordHook("BackpackInventory", typeof(BackpackData), "DeserializeValue");
             RecordHook("BackpackWheel", typeof(BackpackWheel), "InitWheel");
             RecordHook("WetGrip", typeof(WindChillZone), "ApplyStatus");

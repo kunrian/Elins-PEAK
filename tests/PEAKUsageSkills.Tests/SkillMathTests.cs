@@ -146,13 +146,5 @@ namespace PEAKUsageSkills.Tests
         {
             Assert.Equal(expected, SkillMath.ExtraBackpackSlots(level));
         }
-
-        [Fact]
-        public void HungerWorkRequiresThirtyDisplayedPoints()
-        {
-            Assert.Equal(0d, SkillMath.HungerMovementWork(0.299f, 2f));
-            Assert.Equal(60d, SkillMath.HungerMovementWork(0.30f, 2f), 5);
-            Assert.Equal(150d, SkillMath.HungerMovementWork(0.75f, 2f), 5);
-        }
     }
 }

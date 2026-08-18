@@ -16,12 +16,13 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | Climbing | Separate Wall, Rope, and Vine skills | Accepted |
 | Directional climbing XP | Intentional distance in all directions | Accepted; down/side movement can be legitimate work |
 | Agility | Executed jump XP, impulse/cost/light air control | Accepted; no landing-displacement scorer yet |
-| Conditions | Separate Resistance and natural Recovery for Poison/Cold/Heat/Drowsy/Spores | Accepted |
+| Conditions | One Tolerance per affliction; Poison/Cold/Heat/Drowsy/Spores also own recovery speed | Accepted in 0.4.0; Recovery progression is merged |
 | Sleep/zombie naming | Sleep = Drowsy, zombification exposure = Spores | Verified in game assembly |
-| Hunger | One Tolerance skill; XP only from movement at displayed Hunger >=30 | Accepted; Hunger Recovery deliberately absent |
-| Cold Recovery | Passive Heat-to-Cold cancellation counts; item actions do not | Implemented in 0.3.2, runtime confirmation pending |
+| Hunger | One Tolerance skill; XP only from actual incoming Hunger | Accepted in 0.4.0; movement training removed |
+| Curse/Petrify | Add Curse Tolerance and Petrification Resistance; no recovery timers | Accepted in 0.4.0 |
+| Cold recovery speed | Keep as part of Cold Tolerance but trace actual `SubtractLocal` warming caller | Open follow-up; never grants XP |
 | Inventory | Main inventory stays vanilla | Accepted after expanded main slots caused bugs |
-| Backpack | Strength unlocks +1/+2/+3/+4/+5 at 20/40/70/120/200 | Accepted, runtime confirmation pending |
+| Back items | Strength unlocks +1/+2/+3/+4/+5 for Backpack/Fanny/Jet item slots; Jet fuel untouched; Rocket excluded | Accepted in 0.4.0 |
 | Pack Rat | Removed, including overflow penalties and XP | Retired in 0.3.2; save migration deletes its entry |
 | MoreSlots | Not required; compatibility not guaranteed | No dependency |
 | BackpackCapacity | Disable alongside Elin's PEAK | Both modify backpack data |
@@ -29,8 +30,8 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | Custom-run XP | Off by default, configurable | Implemented, dedicated runtime test pending |
 | Anti-farming | Fundamental validity now; rate limits/diminishing returns later | Explicitly deferred by owner |
 | Diagnostics | Rate-limited BepInEx logs; no manual import/export | Accepted |
-| Pause menu | Three passive colored panels, refresh once on open | Accepted; layout polish remains |
-| Debug controls | Remove level/reset/status buttons from release UI | Accepted; config debug override/overlay remain |
+| Pause menu | Main and blue Resiliency stacked on left; green Recovery removed; refresh once on open | Accepted in 0.4.0 |
+| Debug controls | Keep lightweight +10-all and reset-all buttons on the right for runtime testing | Owner override in 0.4.0 |
 | Weight display | Gameplay value matters; PeakStatsEx decimal label is secondary compatibility work | Current limitation |
 | Multiplayer order | Solo validation first, multiplayer last | Accepted |
 
@@ -42,7 +43,7 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 - Treating bonus/Well Fed stamina as Endurance base capacity.
 - Resizing the stamina frame from current status totals instead of Endurance capacity.
 - Constant 0.25-second pause-menu refresh.
-- Release-visible test/reset/effect buttons.
+- Separate condition Recovery skills and Recovery XP.
 - Main-inventory array/hotbar expansion.
 - Pack Rat overflow penalties and mitigation.
 - Giving Recovery XP for antidotes or other direct cleansing.

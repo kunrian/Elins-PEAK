@@ -103,14 +103,5 @@ namespace PEAKUsageSkills.Core
             return 0;
         }
 
-        public static double HungerMovementWork(float normalizedHunger, float distance, float threshold = 0.30f)
-        {
-            if (normalizedHunger < threshold || distance <= 0f)
-            {
-                return 0d;
-            }
-
-            return Math.Max(0f, normalizedHunger) * 100d * distance;
-        }
     }
 }
