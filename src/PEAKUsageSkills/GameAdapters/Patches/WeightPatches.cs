@@ -22,10 +22,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             float effectiveWeight = rawWeight;
             if (rawWeight > 0f && Plugin.Effects.CanApply(__instance.character))
             {
-                int overflowItems = InventorySkillService.GetOverflowItemCount(__instance.character);
-                effectiveWeight = rawWeight
-                    * Plugin.Effects.PackRatWeightMultiplier(overflowItems)
-                    * Plugin.Effects.StrengthWeightMultiplier;
+                effectiveWeight = rawWeight * Plugin.Effects.StrengthWeightMultiplier;
                 if (System.Math.Abs(effectiveWeight - rawWeight) > 0.00001f)
                 {
                     __instance.SetStatus(CharacterAfflictions.STATUSTYPE.Weight, effectiveWeight, true);

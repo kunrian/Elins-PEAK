@@ -118,32 +118,6 @@ namespace PEAKUsageSkills.Effects
                 config.ConditionRecoveryPerLevel.Value);
         }
 
-        public float PackRatPenaltyMultiplier => SkillMath.AnchoredReductionMultiplier(
-            GetEffectiveLevel(SkillId.PackRat),
-            config.PackRatMitigationPerLevel.Value);
-
-        public float PackRatWeightMultiplier(int overflowItems)
-        {
-            return 1f + Math.Max(0, overflowItems)
-                * Math.Max(0f, config.PackRatWeightPenaltyPerItem.Value)
-                * PackRatPenaltyMultiplier;
-        }
-
-        public float PackRatMovementMultiplier(int overflowItems)
-        {
-            float penalty = Math.Max(0, overflowItems)
-                * Math.Max(0f, config.PackRatMovementPenaltyPerItem.Value)
-                * PackRatPenaltyMultiplier;
-            return Math.Max(0.1f, 1f - penalty);
-        }
-
-        public float PackRatStaminaMultiplier(int overflowItems)
-        {
-            return 1f + Math.Max(0, overflowItems)
-                * Math.Max(0f, config.PackRatStaminaPenaltyPerItem.Value)
-                * PackRatPenaltyMultiplier;
-        }
-
         public float WetGripPenaltyMultiplier => SkillMath.AnchoredReductionMultiplier(
             GetEffectiveLevel(SkillId.WetGrip),
             config.WetGripReductionPerLevel.Value);

@@ -27,14 +27,13 @@ namespace PEAKUsageSkills.Config
             WallClimbingXpPerMeter = config.Bind("XP", "WallClimbingXpPerMeter", 2f, "XP per intentional wall-climbing meter in any direction.");
             RopeClimbingXpPerMeter = config.Bind("XP", "RopeClimbingXpPerMeter", 2f, "XP per intentional rope-climbing meter in any direction.");
             VineClimbingXpPerMeter = config.Bind("XP", "VineClimbingXpPerMeter", 2f, "XP per intentional vine-climbing meter in any direction.");
-            AthleticsXpPerMeter = config.Bind("XP", "AthleticsXpPerMeter", 0.5f, "XP per qualifying grounded walking meter.");
-            AthleticsSprintXpPerMeter = config.Bind("XP", "AthleticsSprintXpPerMeter", 2f, "XP per qualifying grounded sprinting meter.");
+            AthleticsXpPerMeter = config.Bind("XP", "AthleticsXpPerMeter", 0.35f, "XP per qualifying grounded walking meter.");
+            AthleticsSprintXpPerMeter = config.Bind("XP", "AthleticsSprintXpPerMeter", 1.4f, "XP per qualifying grounded sprinting meter.");
             AgilityXpPerJump = config.Bind("XP", "AgilityXpPerJump", 4f, "XP per successfully executed local jump.");
             ResilienceXpPerInjury = config.Bind("XP", "ResilienceXpPerInjury", 100f, "XP per normalized point of raw fall Injury.");
             ConditionXpPerStatus = config.Bind("XP", "ConditionXpPerStatus", 100f, "XP per normalized point of actual incoming Poison, Cold, Hot, Drowsy, or Spores.");
             ConditionRecoveryXpPerStatus = config.Bind("XP", "ConditionRecoveryXpPerStatus", 100f, "XP per normalized point naturally recovered from Poison, Cold, Hot, Drowsy, or Spores.");
-            HungerMovementXpPerWork = config.Bind("XP", "HungerMovementXpPerWork", 1f, "XP per displayed Hunger point x movement meter while Hunger is at least 30.");
-            PackRatXpPerWork = config.Bind("XP", "PackRatXpPerWork", 2f, "XP per movement meter x occupied slot beyond vanilla capacity.");
+            HungerMovementXpPerWork = config.Bind("XP", "HungerMovementXpPerWork", 0.1f, "XP per displayed Hunger point x movement meter while Hunger is at least 30.");
             WetGripXpPerMeter = config.Bind("XP", "WetGripXpPerMeter", 2f, "XP per slippery wall-climbing meter, weighted by current slipperiness.");
             ClimbingTenacityXpPerMeter = config.Bind("XP", "ClimbingTenacityXpPerMeter", 2f, "XP per intentional wall-climbing meter while regular stamina is below 20%.");
 
@@ -65,10 +64,6 @@ namespace PEAKUsageSkills.Config
             MaximumResilienceFallReduction = config.Bind("Effects", "MaximumResilienceFallReduction", 0.15f, "Legacy cap retained for configuration compatibility; linear level scaling does not use it.");
             ConditionResistancePerLevel = config.Bind("Effects", "ConditionResistancePerLevel", 0.003f, "Anchored incoming-condition reduction rate per matching resistance level.");
             ConditionRecoveryPerLevel = config.Bind("Effects", "ConditionRecoveryPerLevel", 0.003f, "Natural condition-recovery increase per matching recovery level.");
-            PackRatMitigationPerLevel = config.Bind("Effects", "PackRatMitigationPerLevel", 0.003f, "Anchored reduction rate applied to all over-capacity penalties.");
-            PackRatWeightPenaltyPerItem = config.Bind("Effects", "PackRatWeightPenaltyPerItem", 0.10f, "Raw Weight increase for each occupied item beyond vanilla capacity.");
-            PackRatMovementPenaltyPerItem = config.Bind("Effects", "PackRatMovementPenaltyPerItem", 0.05f, "Movement-force reduction for each occupied item beyond vanilla capacity.");
-            PackRatStaminaPenaltyPerItem = config.Bind("Effects", "PackRatStaminaPenaltyPerItem", 0.05f, "Stamina-cost increase for each occupied item beyond vanilla capacity.");
             WetGripReductionPerLevel = config.Bind("Effects", "WetGripReductionPerLevel", 0.003f, "Anchored reduction rate for slippery downward pull and wind climbing drain.");
             ClimbingTenacityReductionPerLevel = config.Bind("Effects", "ClimbingTenacityReductionPerLevel", 0.003f, "Anchored reduction rate for the below-20%-stamina climbing penalty.");
             HungerTrainingThreshold = config.Bind("Effects", "HungerTrainingThreshold", 0.30f, "Normalized Hunger required before movement can train Hunger Tolerance.");
@@ -113,6 +108,15 @@ namespace PEAKUsageSkills.Config
                 configSchema.Value = 2;
                 config.Save();
             }
+
+            if (configSchema.Value < 3)
+            {
+                MigrateExact(AthleticsXpPerMeter, 0.5f, 0.35f);
+                MigrateExact(AthleticsSprintXpPerMeter, 2f, 1.4f);
+                MigrateExact(HungerMovementXpPerWork, 1f, 0.1f);
+                configSchema.Value = 3;
+                config.Save();
+            }
         }
 
         private static void MigrateExact(ConfigEntry<float> entry, float oldDefault, float newDefault)
@@ -147,7 +151,6 @@ namespace PEAKUsageSkills.Config
         public ConfigEntry<float> ConditionXpPerStatus { get; }
         public ConfigEntry<float> ConditionRecoveryXpPerStatus { get; }
         public ConfigEntry<float> HungerMovementXpPerWork { get; }
-        public ConfigEntry<float> PackRatXpPerWork { get; }
         public ConfigEntry<float> WetGripXpPerMeter { get; }
         public ConfigEntry<float> ClimbingTenacityXpPerMeter { get; }
         public ConfigEntry<float> StrengthReductionPerLevel { get; }
@@ -177,10 +180,6 @@ namespace PEAKUsageSkills.Config
         public ConfigEntry<float> MaximumResilienceFallReduction { get; }
         public ConfigEntry<float> ConditionResistancePerLevel { get; }
         public ConfigEntry<float> ConditionRecoveryPerLevel { get; }
-        public ConfigEntry<float> PackRatMitigationPerLevel { get; }
-        public ConfigEntry<float> PackRatWeightPenaltyPerItem { get; }
-        public ConfigEntry<float> PackRatMovementPenaltyPerItem { get; }
-        public ConfigEntry<float> PackRatStaminaPenaltyPerItem { get; }
         public ConfigEntry<float> WetGripReductionPerLevel { get; }
         public ConfigEntry<float> ClimbingTenacityReductionPerLevel { get; }
         public ConfigEntry<float> HungerTrainingThreshold { get; }

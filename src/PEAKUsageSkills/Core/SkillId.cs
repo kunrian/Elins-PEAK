@@ -16,7 +16,6 @@ namespace PEAKUsageSkills.Core
         DrowsyTolerance = 11,
         SporeTolerance = 12,
         HungerTolerance = 13,
-        PackRat = 14,
         WetGrip = 15,
         ClimbingTenacity = 16,
         PoisonRecovery = 17,

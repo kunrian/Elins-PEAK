@@ -24,8 +24,6 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 }
             }
 
-            int overflowItems = InventorySkillService.GetOverflowItemCount(___character);
-            __result *= Plugin.Effects.PackRatMovementMultiplier(overflowItems);
         }
     }
 

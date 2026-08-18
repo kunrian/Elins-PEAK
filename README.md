@@ -1,65 +1,172 @@
 # Elin's PEAK
 
-Elin's PEAK adds persistent, use-based skill progression to PEAK. Skills improve by performing their related actions, and each player's levels are stored locally rather than being selected by the host.
+## Level Up Everything!
 
-Current release: `0.3.0`
+PEAK already gives you a mountain full of terrible decisions, near-death climbs, overloaded backpacks, poison, cold, heat, exhaustion, and the occasional extremely avoidable fall. **Elin's PEAK makes your character actually learn from all of it!**
 
-Target game version: PEAK `2.1.a`
+The idea is simple: **if you keep doing something, you should get better at it.** Carry too much stuff and you slowly become better at handling the weight. Climb constantly and your climbing improves. Run everywhere, jump everything, survive awful falls, push through bad conditions, or keep moving while starving and those experiences start turning into permanent progression.
 
-## Features
+It is heavily inspired by the use-based progression of **Elin**: there is no single character level deciding what you are good at, and you do not spend a pile of generic points after a run. Your skills grow because you actually used them!
 
-- 22 player-owned skills with a default maximum level of 999.
-- Persistent progression with atomic saves and rotating backups.
-- Strength, Endurance, Athletics, Agility, Resilience, and specialized climbing skills.
-- Separate resistance and natural-recovery progression for Poison, Cold, Heat, Drowsy, and Spores.
-- Pack Rat progression that unlocks additional main-inventory and backpack slots.
-- Wet Grip and Climbing Tenacity for slippery surfaces and low-stamina climbing.
-- A three-section pause-menu display with hover descriptions and current bonuses.
-- No experience gain in the Airport/lobby.
+Elin's PEAK currently adds **21 persistent skills**, each with a default maximum level of **999**. Progress belongs to **your player**, is stored locally, and carries between sessions instead of letting the lobby host decide everyone's progression.
 
-## Progression
+## What can I level?
 
-Experience required for the next level is calculated as:
+A lot!
+
+### Get stronger, faster, and harder to kill
+
+- **Strength** — Carry weight while moving to train it. Higher Strength reduces the effective Weight affliction from what you are hauling and unlocks additional backpack slots at milestone levels.
+- **Endurance** — Spend stamina to train it. Endurance increases your actual maximum stamina and improves stamina regeneration.
+- **Athletics** — Walking trains it; sprinting trains it faster. Athletics improves normal ground movement, sprint movement, and sprint stamina efficiency.
+- **Agility** — Jump! Agility improves jump impulse, jump stamina efficiency, and gives you a little more control while airborne.
+- **Resilience** — Surviving legitimate fall injuries trains it. Higher Resilience reduces future fall Injury.
+
+You are not picking a build from a menu here. If you are the person sprinting across every flat surface, you naturally become the better runner. If you insist on carrying half the mountain in your backpack, your character eventually starts adapting to that too.
+
+### Climbing gets its own progression
+
+Climbing is split up because a wall, a rope, and a vine do not behave the same way!
+
+- **Wall Climbing** — Improves wall-climbing speed and reduces wall-climbing stamina cost.
+- **Rope Climbing** — Improves rope-climbing speed and stamina efficiency.
+- **Vine Climbing** — Improves vine-climbing speed and stamina efficiency, while also preserving more vine momentum.
+- **Wet Grip** — Trains while climbing slippery walls. It reduces slippery downward pull and related climbing drain without simply making you immune to Cold.
+- **Climbing Tenacity** — Trains while you continue wall climbing below 20% regular stamina. It reduces the nasty low-stamina climbing penalty, so repeatedly pushing those desperate last few meters actually makes you better at doing it!
+
+### The mountain can train you too
+
+Repeated exposure to conditions creates its own progression instead of being rolled into one generic resistance stat.
+
+- **Toxicology** — Reduces incoming Poison buildup.
+- **Cold Tolerance** — Reduces incoming Cold buildup.
+- **Heat Tolerance** — Reduces incoming Heat buildup.
+- **Drowsy Tolerance** — Reduces incoming Drowsy buildup.
+- **Spore Tolerance** — Reduces incoming Spore buildup.
+- **Hunger Tolerance** — Trains by continuing to move while at 30 or more displayed Hunger and reduces future Hunger buildup.
+
+There is also a completely separate set of **natural recovery skills**:
+
+- **Poison Recovery**
+- **Cold Recovery**
+- **Heat Recovery**
+- **Drowsy Recovery**
+- **Spore Recovery**
+
+These improve how quickly the matching condition naturally recovers. Direct cleansing does **not** count as natural recovery XP, so repeatedly using an item to wipe a condition away is not the same thing as your character learning to recover from it.
+
+## Strength: yes, your backpack can grow
+
+Strength does more than make the Weight affliction less painful. As it levels, it also unlocks more room in your backpack. The extra space is earned by actually hauling weight around, so the character who insists on carrying half the mountain gradually becomes better equipped to keep doing exactly that.
+
+### Backpack unlocks
+
+| Strength level | Extra backpack slots |
+|---:|---:|
+| 20 | +1 |
+| 40 | +2 |
+| 70 | +3 |
+| 120 | +4 |
+| 200 | +5 |
+
+Your **main inventory remains PEAK's normal vanilla size**. Extra backpack items use PEAK's ordinary Weight system, and Strength reduces that effective Weight as it levels. There is no separate overflow movement penalty, stamina penalty, or Pack Rat mitigation layer anymore.
+
+> **BackpackCapacity should remain disabled alongside Elin's PEAK** because both mods change the same backpack data. MoreSlots is not required, and compatibility with it is not currently guaranteed.
+
+## Your progression is yours
+
+Your skill progression is **player-owned and stored locally**. Joining somebody else's lobby does not mean the host gets to decide that everyone is suddenly level 4, level 50, or level 999.
+
+That also means your character can continue growing across different sessions and groups. The progression system is intended to feel like *your* long-term character history rather than a temporary server setting.
+
+XP is disabled in the **Airport/lobby**, so standing around before a run does not progress skills. Custom-run XP is also disabled by default, although that can be changed through configuration.
+
+## Skill menu
+
+Elin's PEAK adds skill information directly to the pause menu, split into multiple sections so all 21 skills are not crammed into one unreadable block.
+
+You can see your skill levels, progression, and current bonuses, with hover explanations for what the skills actually do. The goal is for you to be able to look at a skill and understand *why* it is leveling and what the next levels are doing without needing to keep this README open on another monitor.
+
+---
+
+# Technical details
+
+Everything below is the more exact implementation/scaling information. You do **not** need to know any of this just to play the mod.
+
+## Progression curve
+
+By default, all skills share a maximum level of **999**.
+
+Experience required for the next level is:
 
 ```text
 XP(next) = round(100 * level^1.21)
 ```
 
-Reduction effects use an anchored curve that reaches the original level-999 target at level 500, then approaches 99.9% reduction at level 999. Positive capacity, regeneration, speed, impulse, air-control, momentum-retention, and natural-recovery bonuses scale linearly.
+The curve intentionally keeps progression going for a very long time. Early levels arrive quickly enough to make a new character feel like they are learning, while later levels become increasingly expensive instead of letting every skill casually hit 999.
 
-## Skill overview
+The maximum level is configurable locally, but it is part of the player's progression/save configuration rather than something selected by a multiplayer host.
 
-- **Strength:** Trains while moving with weight and reduces effective carried weight.
-- **Endurance:** Trains from stamina use, increases maximum stamina, and improves regeneration.
-- **Wall Climbing:** Improves wall-climbing speed and stamina efficiency.
-- **Rope Climbing:** Improves rope-climbing speed and stamina efficiency.
-- **Vine Climbing:** Improves vine movement, stamina efficiency, and momentum retention.
-- **Athletics:** Trains from walking and sprinting; improves movement, sprint speed, and sprint efficiency.
-- **Agility:** Trains from jumping; improves jump impulse, jump efficiency, and light air control.
-- **Resilience:** Trains from qualifying fall injury and reduces future fall injury.
-- **Pack Rat:** Unlocks inventory capacity and mitigates overflow weight, movement, and stamina penalties.
-- **Wet Grip:** Reduces slippery downward pull and climbing drain without modifying Cold.
-- **Climbing Tenacity:** Restores control and efficiency while climbing below 20% stamina.
-- **Resistance skills:** Reduce incoming Poison, Cold, Heat, Drowsy, and Spore buildup.
-- **Recovery skills:** Improve natural recovery for those five conditions. Direct cleansing does not grant recovery XP.
-- **Hunger Tolerance:** Trains from movement at 30 or more displayed Hunger.
+## Default XP sources
 
-## Built-in inventory capacity
+The current defaults use the following underlying work values:
 
-- Main inventory gains +1/+2/+3/+4 slots at Pack Rat levels 10/50/100/200.
-- Backpacks gain +1/+2/+3/+4/+5 slots at levels 20/40/70/120/200.
-- Every occupied slot beyond the vanilla 3 main and 4 backpack slots begins with +10% weight, -5% movement force, and +5% stamina cost.
-- Pack Rat mitigates all three overflow penalties.
+| Skill | Default XP source |
+|---|---|
+| Endurance | 2 XP per normalized point of raw stamina requested |
+| Strength | 2 XP per raw Weight × movement meter |
+| Wall Climbing | 2 XP per intentional climbing meter |
+| Rope Climbing | 2 XP per intentional climbing meter |
+| Vine Climbing | 2 XP per intentional climbing meter |
+| Athletics | 0.35 XP per qualifying walking meter |
+| Athletics while sprinting | 1.4 XP per qualifying sprinting meter |
+| Agility | 4 XP per successfully executed local jump |
+| Resilience | 100 XP per normalized point of raw fall Injury |
+| Condition resistance skills | 100 XP per normalized point of actual incoming matching status |
+| Natural recovery skills | 100 XP per normalized point naturally recovered |
+| Hunger Tolerance | 0.1 XP per displayed Hunger point × movement meter while Hunger is at least 30 |
+| Wet Grip | 2 XP per slippery climbing meter, weighted by slipperiness |
+| Climbing Tenacity | 2 XP per intentional wall-climbing meter while regular stamina is below 20% |
 
-The separate MoreSlots and BackpackCapacity mods should remain disabled when using this built-in implementation.
+These values can be changed in the generated BepInEx configuration.
 
-## Installation
+## Effect scaling
 
-Install with a Thunderstore-compatible mod manager. The package declares BepInEx, PEAKLib Core, and PEAKLib UI as dependencies.
+Positive bonuses such as stamina capacity, regeneration, movement speed, jump impulse, air control, vine momentum retention, and natural recovery scale linearly from the configured per-level values.
 
-For a local package test in Gale or r2modman, import `dist/Elins_PEAK-0.3.0.zip` as a local mod.
+Default positive scaling includes:
 
-## Save data
+| Effect | Default scaling |
+|---|---:|
+| Endurance maximum stamina | +0.5% per level |
+| Endurance stamina regeneration | +0.1% per level |
+| Wall climbing speed | +0.3% per level |
+| Rope climbing speed | +0.3% per level |
+| Vine climbing speed | +0.3% per level |
+| Vine momentum retention | +0.05 percentage points per level, capped at 75% |
+| Athletics ground movement force | +0.1% per level |
+| Athletics sprint movement force | +0.2% per level |
+| Agility jump impulse | +0.15% per level |
+| Agility air-control responsiveness | +0.025% per level |
+| Matching natural condition recovery | +0.3% per level |
+
+Reduction-style effects use an **anchored reciprocal curve** rather than simply subtracting a flat percentage forever. This applies to systems such as Strength Weight reduction, climbing/sprint/jump efficiency, Resilience, condition resistance, Wet Grip, and Climbing Tenacity.
+
+With the current default reduction rate of `0.003`, the curve reaches the old level-999 reduction target by approximately level 500, then continues scaling toward **99.9% reduction at level 999**. This keeps very high progression meaningful without allowing a basic linear formula to cross zero and turn a penalty into nonsense.
+
+## Stamina implementation
+
+Endurance expands **real base stamina capacity** rather than only drawing a fake larger number on the HUD. The stamina bar backing and outline can extend beyond the vanilla range when the option is enabled.
+
+Endurance currently increases capacity and regeneration. General stamina-cost reduction from Endurance itself is intentionally disabled; activity-specific efficiency comes from the skill related to that activity instead, such as Athletics, Agility, or the individual climbing skills.
+
+## Condition handling
+
+Resistance is applied to incoming status before the game adds it to the local character. The associated resistance skill receives XP from the amount that actually gets through after modification, with Hunger handled separately through movement-based training.
+
+Natural recovery skills normally apply when PEAK reports that the matching condition is decreasing naturally. Cold is the odd one out: PEAK naturally warms you by adding Heat, which internally subtracts Cold, so passive environmental warming is recognized as Cold Recovery. Status-changing items and other direct cleanses still do **not** train recovery skills.
+
+## Save data and backups
 
 Progression is stored at:
 
@@ -67,27 +174,46 @@ Progression is stored at:
 %LOCALAPPDATA%\LandCrab\PEAK\PEAKUsageSkills\progression.json
 ```
 
-Five rotating backups are kept in the adjacent `backups` directory.
+The mod uses safe/atomic writes and keeps **five rotating backups** in the adjacent `backups` directory. Progress is not written on every individual XP tick; dirty progression is saved periodically instead.
 
-## Compatibility notes
+## Configuration
 
-- PeakStatsEx currently owns and caches the rendered weight number. Gameplay weight recalculates immediately, but exact one-decimal HUD presentation remains a known compatibility issue.
-- Hunger intentionally retains the game's 2.5-point display increments.
-- Multiplayer is designed around player-owned local progression, but final multiplayer runtime validation is still pending.
-- Anti-farming and diminishing-return systems beyond basic action validity are intentionally deferred.
+The generated BepInEx config includes controls for:
 
-## Build and test
+- Master enable/disable.
+- XP gain enable/disable.
+- Gameplay effects enable/disable.
+- XP in custom runs.
+- Maximum skill level.
+- Save interval.
+- XP rates for individual skill families.
+- Per-level effect scaling.
+- Stamina-bar extension.
+- Diagnostics and debug options.
 
-Copy `Config.Build.user.props.template` to `Config.Build.user.props`, then set the local PEAK installation and Gale profile paths.
+The defaults are the intended balance for the current release, but most of the underlying progression and effect values are exposed for people who want a faster, slower, harsher, or completely absurd long-term progression curve.
 
-```powershell
-dotnet build .\PEAKUsageSkills.slnx -c Release
-dotnet test .\PEAKUsageSkills.slnx -c Release
-.\scripts\Build-Package.ps1
-```
+## Installation
 
-The build does not deploy to Gale unless `DeployToDevtest` is explicitly set to `true`.
+Install through a Thunderstore-compatible mod manager such as Gale or r2modman.
 
-## Source
+The package declares the following dependencies:
 
-Source code and issue tracking: https://github.com/kunrian/Elins-PEAK
+- `BepInEx-BepInExPack_PEAK-5.4.75301`
+- `PEAKModding-PEAKLib_Core-1.7.2`
+- `PEAKModding-PEAKLib_UI-1.6.1`
+
+## Compatibility and current limitations
+
+- Built for **PEAK `2.1.a`**.
+- **BackpackCapacity** should remain disabled because Elin's PEAK expands the same backpack data through Strength. **MoreSlots** is not required, and compatibility with it is not currently guaranteed.
+- **PeakStatsEx** may continue showing its own cached/rounded Weight number even though gameplay Weight is recalculated immediately.
+- Hunger intentionally keeps PEAK's normal **2.5-point display increments**.
+- Multiplayer progression is designed around locally owned player saves, but final multiplayer runtime validation is still pending.
+- Broader anti-farming and diminishing-return systems are intentionally deferred for now. Basic action validity is already used in several places so obviously unrelated actions do not simply award the wrong XP.
+
+## Source and issues
+
+The source is public, and issues/technical reports can be submitted here:
+
+https://github.com/kunrian/Elins-PEAK

@@ -30,7 +30,6 @@ namespace PEAKUsageSkills.UI
             SkillId.Athletics,
             SkillId.Agility,
             SkillId.Resilience,
-            SkillId.PackRat,
             SkillId.WetGrip,
             SkillId.ClimbingTenacity
         };
@@ -64,7 +63,6 @@ namespace PEAKUsageSkills.UI
             { SkillId.Athletics, "Athletics" },
             { SkillId.Agility, "Agility" },
             { SkillId.Resilience, "Resilience" },
-            { SkillId.PackRat, "Pack Rat" },
             { SkillId.WetGrip, "Wet Grip" },
             { SkillId.ClimbingTenacity, "Climbing Tenacity" },
             { SkillId.Toxicology, "Poison Resistance" },
@@ -203,7 +201,7 @@ namespace PEAKUsageSkills.UI
             {
                 case SkillId.Strength:
                     reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.StrengthReductionPerLevel.Value)) * 100f;
-                    return $"Reduces carried Weight using the 0.3% anchored curve. Current bonus: {reduction:F1}% less Weight.";
+                    return $"Reduces carried Weight and unlocks backpack slots at levels 20/40/70/120/200. Current: {reduction:F1}% less Weight, +{GameAdapters.InventorySkillService.ExtraBackpackSlots} backpack slots.";
                 case SkillId.Endurance:
                     return $"Adds 0.5% base stamina and 0.1% regeneration per level. Current: +{level * 0.5f:F1} stamina, +{level * 0.1f:F1}% regeneration.";
                 case SkillId.WallClimbing:
@@ -221,9 +219,6 @@ namespace PEAKUsageSkills.UI
                     return $"Improves jump impulse and very lightly improves air control. Current: +{level * 0.15f:F1}% jump impulse, {reduction:F1}% less jump cost.";
                 case SkillId.Resilience:
                     return ReductionTooltip("fall Injury", level, Plugin.Settings.ResilienceFallReductionPerLevel.Value);
-                case SkillId.PackRat:
-                    reduction = (1f - SkillMath.AnchoredReductionMultiplier(level, Plugin.Settings.PackRatMitigationPerLevel.Value)) * 100f;
-                    return $"Unlocks main/backpack slots at milestones and reduces over-capacity penalties. Current: +{GameAdapters.InventorySkillService.ExtraMainSlots} main, +{GameAdapters.InventorySkillService.ExtraBackpackSlots} backpack, {reduction:F1}% penalty mitigation.";
                 case SkillId.WetGrip:
                     return ReductionTooltip("rain/slippery climbing pull and wind stamina drain", level, Plugin.Settings.WetGripReductionPerLevel.Value);
                 case SkillId.ClimbingTenacity:

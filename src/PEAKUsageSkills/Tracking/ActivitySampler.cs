@@ -54,7 +54,6 @@ namespace PEAKUsageSkills.Tracking
                 Plugin.Diagnostics?.RecordRejected(SkillId.RopeClimbing, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.VineClimbing, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.Athletics, "TeleportDelta", distance);
-                Plugin.Diagnostics?.RecordRejected(SkillId.PackRat, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.WetGrip, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.ClimbingTenacity, "TeleportDelta", distance);
                 Plugin.Diagnostics?.RecordRejected(SkillId.HungerTolerance, "TeleportDelta", distance);
@@ -72,18 +71,6 @@ namespace PEAKUsageSkills.Tracking
                         work,
                         Plugin.Settings.StrengthXpPerWork.Value,
                         character.data.isClimbingAnything ? "WeightedClimbing" : "WeightedMovement");
-                }
-
-                int packRatTrainingLoad = InventorySkillService.GetPackRatTrainingLoad(character);
-                if (packRatTrainingLoad > 0)
-                {
-                    Plugin.Progression.AwardWork(
-                        SkillId.PackRat,
-                        distance * packRatTrainingLoad,
-                        Plugin.Settings.PackRatXpPerWork.Value,
-                        Plugin.Progression.GetLevel(SkillId.PackRat) < 10
-                            ? "FullVanillaInventoryBootstrap"
-                            : "OverCapacityMovement");
                 }
 
                 float hunger = character.refs?.afflictions?.GetCurrentStatus(CharacterAfflictions.STATUSTYPE.Hunger) ?? 0f;

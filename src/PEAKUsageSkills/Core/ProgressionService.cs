@@ -26,6 +26,12 @@ namespace PEAKUsageSkills.Core
             this.log = log;
             this.runState = runState;
             save = store.Load();
+            if (save.Skills.Remove("PackRat"))
+            {
+                dirty = true;
+                log.LogInfo("Removed retired Pack Rat progression from the local save.");
+            }
+
             EnsureAllSkills();
         }
 

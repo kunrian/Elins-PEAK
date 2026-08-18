@@ -61,8 +61,6 @@ namespace PEAKUsageSkills.GameAdapters.Patches
 
             if (Plugin.Effects.CanApply(__instance))
             {
-                int overflowItems = InventorySkillService.GetOverflowItemCount(__instance);
-                usage *= Plugin.Effects.PackRatStaminaMultiplier(overflowItems);
                 if (wallClimbing)
                 {
                     usage *= Plugin.Effects.WallCostMultiplier;
