@@ -18,7 +18,9 @@ namespace PEAKUsageSkills.GameAdapters
         {
             get
             {
-                return ActiveSceneName.IndexOf("airport", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                return ActiveSceneName.IndexOf(
+                    "airport",
+                    System.StringComparison.OrdinalIgnoreCase) >= 0;
             }
         }
 
@@ -26,7 +28,7 @@ namespace PEAKUsageSkills.GameAdapters
         {
             get
             {
-                return !IsAirport && ActiveSceneName.IndexOf("level", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                return !IsAirport && Character.localCharacter != null;
             }
         }
 
@@ -34,7 +36,10 @@ namespace PEAKUsageSkills.GameAdapters
         {
             get
             {
-                if (!config.EnableMod.Value || !config.EnableExperience.Value || !IsGameplayScene || Character.localCharacter == null)
+                if (!config.EnableMod.Value
+                    || !config.EnableExperience.Value
+                    || !IsGameplayScene
+                    || Character.localCharacter == null)
                 {
                     return false;
                 }

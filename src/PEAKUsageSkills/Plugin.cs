@@ -108,6 +108,8 @@ namespace PEAKUsageSkills
         private static void InspectPatchHealth()
         {
             RecordHook("StaminaCapacity", typeof(Character), "GetMaxStamina");
+            RecordHook("PassOutThreshold",typeof(CharacterAfflictions),"get_shouldPassOut");
+            RecordHook("PassOutRecovery", typeof(Character), "HandlePassedOut");
             RecordHook("StaminaCost", typeof(Character), "UseStamina");
             RecordHook("BonusSprint", typeof(Character), "OutOfRegularStamina");
             RecordHook("StaminaRegen", typeof(Character), "UpdateVariablesFixed");

@@ -6,6 +6,9 @@ using PEAKUsageSkills.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace PEAKUsageSkills.GameAdapters.Patches
 {
@@ -20,6 +23,116 @@ namespace PEAKUsageSkills.GameAdapters.Patches
                 float statusSum = __instance.refs?.afflictions?.statusSum ?? 0f;
                 __result = SkillMath.ExpandedStaminaCapacity(__result, statusSum, capacityBonus);
             }
+        }
+    }
+    internal static class EndurancePassOutThreshold
+    {
+        public static float GetThreshold(Character character)
+        {
+            if (character == null || !Plugin.Effects.CanApply(character))
+            {
+                return 1f;
+            }
+
+            return Math.Max(1f, Plugin.Effects.EnduranceCapacityMultiplier);
+        }
+
+        public static IEnumerable<CodeInstruction> ReplaceVanillaThreshold(
+            IEnumerable<CodeInstruction> instructions,
+            MethodBase originalMethod)
+        {
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+
+            // statusSum is a PROPERTY, not a field.
+            // Accessing afflictions.statusSum in C# compiles to get_statusSum().
+            MethodInfo? statusSumGetter =
+                AccessTools.PropertyGetter(typeof(CharacterAfflictions), "statusSum")
+                ?? AccessTools.Method(typeof(CharacterAfflictions), "get_statusSum");
+
+            MethodInfo? thresholdMethod = AccessTools.Method(
+                typeof(EndurancePassOutThreshold),
+                nameof(GetThreshold));
+
+            if (statusSumGetter == null || thresholdMethod == null)
+            {
+                Plugin.ModLog.LogError(
+                    $"[UsageSkills:PassOut] Could not resolve statusSum getter/threshold method while patching {originalMethod.Name}.");
+
+                return codes;
+            }
+
+            int replacements = 0;
+
+            for (int i = 1; i < codes.Count; i++)
+            {
+                CodeInstruction previous = codes[i - 1];
+                CodeInstruction current = codes[i];
+
+                bool loadsStatusSum =
+                    (previous.opcode == OpCodes.Call
+                        || previous.opcode == OpCodes.Callvirt)
+                    && Equals(previous.operand, statusSumGetter);
+
+                bool loadsVanillaThreshold =
+                    current.opcode == OpCodes.Ldc_R4
+                    && current.operand is float value
+                    && Math.Abs(value - 1f) < 0.0001f;
+
+                if (!loadsStatusSum || !loadsVanillaThreshold)
+                {
+                    continue;
+                }
+
+                // Vanilla:
+                //
+                //     call/callvirt CharacterAfflictions.get_statusSum
+                //     ldc.r4 1.0
+                //
+                // Becomes:
+                //
+                //     call/callvirt CharacterAfflictions.get_statusSum
+                //     ldarg.0
+                //     call GetThreshold(Character)
+                //
+                // Mutate the original instruction so its Harmony labels and
+                // exception metadata remain attached automatically.
+                current.opcode = OpCodes.Ldarg_0;
+                current.operand = null;
+
+                codes.Insert(
+                    i + 1,
+                    new CodeInstruction(OpCodes.Call, thresholdMethod));
+
+                replacements++;
+                i++;
+            }
+
+            if (replacements == 0)
+            {
+                Plugin.ModLog.LogError(
+                    $"[UsageSkills:PassOut] No vanilla statusSum vs 1.0 threshold found in {originalMethod.Name}. "
+                    + "Endurance pass-out scaling will not affect this method.");
+            }
+            else
+            {
+                Plugin.ModLog.LogInfo(
+                    $"[UsageSkills:PassOut] Patched {originalMethod.Name} threshold(s)={replacements}.");
+            }
+
+            return codes;
+        }
+    }
+
+    [HarmonyPatch(typeof(Character), "HandlePassedOut")]
+    internal static class EndurancePassOutRecoveryPatch
+    {
+        private static IEnumerable<CodeInstruction> Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            MethodBase __originalMethod)
+        {
+            return EndurancePassOutThreshold.ReplaceVanillaThreshold(
+                instructions,
+                __originalMethod);
         }
     }
 
@@ -88,6 +201,51 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             }
 
             Plugin.Diagnostics?.RecordStaminaRequest(rawUsage, usage, source);
+        }
+    }
+
+    [HarmonyPatch(typeof(CharacterAfflictions), "get_shouldPassOut")]
+    internal static class EnduranceShouldPassOutThresholdPatch
+    {
+        private static void Postfix(
+            CharacterAfflictions __instance,
+            ref bool __result)
+        {
+            // Vanilla does not want to pass out.
+            // This will be the overwhelming majority of calls.
+            if (!__result)
+            {
+                return;
+            }
+
+            if (__instance == null)
+            {
+                return;
+            }
+
+            Character? character = __instance.character;
+
+            // Only modify the local player's Endurance behavior.
+            if (character == null
+                || Character.localCharacter != character
+                || !Plugin.Effects.CanApply(character))
+            {
+                return;
+            }
+
+            float threshold = Plugin.Effects.EnduranceCapacityMultiplier;
+
+            if (threshold <= 1.0001f)
+            {
+                return;
+            }
+
+            float statusSum = __instance.statusSum;
+
+            if (statusSum >= 1f && statusSum < threshold)
+            {
+                __result = false;
+            }
         }
     }
 
