@@ -13,12 +13,13 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | Reduction scaling | Anchored reciprocal curve through 999 | Accepted; reaches old 999 target near 500 and 0.001 multiplier at 999 |
 | Positive scaling | Linear per level | Accepted, with explicit caps only where implemented (vine retention 75%) |
 | Endurance | Capacity + regeneration, matching pass-out threshold, no global cost reduction | Pass-out paths aligned in 0.4.5; activity skills own efficiency |
+| Sprint stamina boundary | Stop at exhausted regular stamina; do not continue into bonus/food stamina | Vanilla behavior restored in 0.4.6 |
 | Climbing | Separate Wall, Rope, and Vine skills | Accepted |
 | Directional climbing XP | Intentional distance in all directions | Accepted; down/side movement can be legitimate work |
 | Agility | Executed jump XP, impulse/cost/light air control | Accepted; no landing-displacement scorer yet |
 | Conditions | One Tolerance per affliction; Poison/Cold/Heat/Drowsy/Spores also own recovery speed | Accepted in 0.4.0; Recovery progression is merged |
 | Sleep/zombie naming | Sleep = Drowsy, zombification exposure = Spores | Verified in game assembly |
-| Hunger | One Tolerance skill; XP only from actual incoming Hunger | Accepted in 0.4.0; movement training removed |
+| Hunger | One Tolerance skill; movement XP begins at displayed Hunger 10, at 0.02 XP per Hunger point × meter; incoming Hunger does not train it | Owner override in 0.4.7; supersedes the 0.4.0 exposure-only decision |
 | Curse/Petrify | Add Curse Tolerance and Petrification Resistance; no recovery timers | Accepted in 0.4.0 |
 | Cold recovery speed | Keep as part of Cold Tolerance but trace actual `SubtractLocal` warming caller | Open follow-up; never grants XP |
 | Inventory | Main inventory stays vanilla | Accepted after expanded main slots caused bugs |

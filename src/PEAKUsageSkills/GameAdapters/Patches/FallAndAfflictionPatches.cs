@@ -207,6 +207,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             float after = __instance.GetCurrentStatus(__state.StatusType);
             float actual = after - __state.Before;
             if (__state.ToleranceExposure
+                && __state.ToleranceSkill != SkillId.HungerTolerance
                 && __result
                 && actual > 0f)
             {

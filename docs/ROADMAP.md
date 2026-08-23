@@ -1,8 +1,9 @@
-# Roadmap from 0.4.5
+# Roadmap from 0.4.7
 
 ## Priority 0 — focused live validation
 
-- Run one short startup pass with the corrected metadata artifact and confirm both loader/plugin lines report 0.4.5.
+- Confirm startup reports 0.4.7 and config schema 8 restores Hunger rate `0.02` and threshold `0.10` without replacing custom values.
+- Validate no Hunger XP below 10 or from incoming Hunger alone; compare equal movement near Hunger 10, 30, and a higher value.
 - Validate live PEAK-language switching/fallback, CJK rendering, and Vitality save/config migration.
 - Validate Strength capacity on Backpack/Fanny/Jet and confirm Jet fuel/Rocket behavior remain vanilla.
 - Capture Curse/Petrification XP/effect evidence from an amulet and Citadel hazard; the explicit `AddPetrify(int)` hook is already healthy.
@@ -33,4 +34,4 @@ Recommended first design: award XP for valid charged local throws, weighted by c
 
 ## Publication note
 
-Thunderstore 0.4.5 is already published. Its DLL has the intended gameplay behavior but stale 0.4.2 identity metadata. Treat uploading the corrected artifact as a separate owner-authorized release action after its short startup check.
+Thunderstore 0.4.5 remains published. Gale `devtest` remains on the owner-validated 0.4.6 build until a separate deployment request; 0.4.7 is the packaged/GitHub release target and still needs its focused Hunger runtime pass.

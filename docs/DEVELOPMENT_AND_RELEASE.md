@@ -35,9 +35,9 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 
 The script validates `package/manifest.json`, checks the 256×256 icon, validates matching non-empty keys across all six JSON catalogs, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root contains `manifest.json`, the English/localized READMEs, `CHANGELOG.md`, and `icon.png`; the DLL and `Localization/*.json` live together under `BepInEx/plugins/Elins_PEAK`.
 
-The corrected local artifact is `dist\Elins_PEAK-0.4.5.zip` with SHA-256 `82740E85B5BF80CB79F0FCCD121172CB232FDCA912731DBB140E95F33D49F7FE`, built on 2026-08-23 with zero warnings/errors. Its DLL is SHA-256 `F9AE8869BFFF90610DA8208672CDE92B16DA7868642B4DC5E0980FFD4A0B3BF8`, reports assembly/file version 0.4.5.0, and identifies source commit `e277459` in its informational version.
+The current artifact is `dist\Elins_PEAK-0.4.7.zip` with SHA-256 `EC2235040EC2329979D8A589C396CBE73C549DCD6EC0E4F8903BC7B2818AAEEE`, built on 2026-08-23 with zero warnings/errors. Its DLL is SHA-256 `8A64F9064A1F39A3F5CEE170FB2AED5ED46FE4FF16C421BAD5146A18410D89DF` and reports assembly/file version 0.4.7.0. The focused Hunger math test passed four cases; the full suite was intentionally skipped for this isolated balance restoration.
 
-The Thunderstore-published 0.4.5 ZIP is SHA-256 `1B4F4C6E3988050721C30E28FD32D16F3DE3038B7701916E222121F158EC3E0D`. It contains the intended 0.4.4/0.4.5 gameplay code but a DLL that self-reports 0.4.2. The corrected artifact is therefore a distinct build and must not be described as the already-tested/uploaded bytes. The full test suite was intentionally skipped because this reconciliation changed release metadata/docs and incorporated an already runtime-tested adapter patch, not core math or persistence.
+The Thunderstore-published 0.4.5 ZIP is SHA-256 `1B4F4C6E3988050721C30E28FD32D16F3DE3038B7701916E222121F158EC3E0D`. It contains the intended 0.4.4/0.4.5 gameplay code but a DLL that self-reports 0.4.2. The owner validated the separate 0.4.6 Gale build; 0.4.7 is packaged and source-published but not deployed to Gale or uploaded to Thunderstore.
 
 ## Runtime deployment and data
 
@@ -49,6 +49,8 @@ For focused testing, deploy to the Gale `devtest` profile only. Disable Craft PE
 - Backups: adjacent rotating progression backups maintained by `SaveStore`
 
 Back up the progression file before destructive/manual test changes. Resetting a user's skills is an explicit data change and should not be inferred from a normal build or install request.
+
+Before the 0.4.6 deployment, the live package was archived as `2026-08-18\dist\Elins_PEAK-live-before-0.4.6-20260823.zip`, SHA-256 `272F34BBDC0FE5B878144791269478F54ABAF77ECEDC10B6D8D0FAFB984A0A4A`. The deployment copied only package/plugin files and left the active config and progression save untouched.
 
 ## Version update checklist
 
@@ -73,7 +75,7 @@ Use a branch from current `main`, stage explicit paths, commit a coherent change
 & 'C:\Program Files\GitHub CLI\gh.exe' auth status
 ```
 
-GitHub source publication is not a Thunderstore upload. Thunderstore 0.4.5 was published on 2026-08-19; its source realignment and corrected version metadata do not authorize replacing that package or the live Gale DLL. Any later upload should use the exact artifact that receives the final startup/runtime check.
+GitHub source publication is not a Thunderstore upload. Thunderstore 0.4.5 was published on 2026-08-19. Version 0.4.7 is the GitHub/package release state; Gale remains on the owner-validated 0.4.6 build pending a separate deployment request.
 
 ## Updating after a PEAK release
 

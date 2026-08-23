@@ -26,7 +26,7 @@ This map helps a new conversation find the current source of truth quickly.
 |---|---|
 | `src/PEAKUsageSkills/Plugin.cs` | Plugin lifecycle, service creation, Harmony application, save/update flow. |
 | `src/PEAKUsageSkills/Core/SkillId.cs` | Stable active skill identifiers; value 14 remains retired. |
-| `src/PEAKUsageSkills/Core/SkillMath.cs` | XP curve, linear/anchored scaling, HUD width, stamina capacity, backpack milestones. |
+| `src/PEAKUsageSkills/Core/SkillMath.cs` | XP curve, linear/anchored scaling, HUD width, stamina capacity, backpack milestones, and Hunger movement work. |
 | `src/PEAKUsageSkills/Core/ProgressionService.cs` | XP eligibility, awarding, leveling, Recovery-to-Tolerance save migration, dirty save state. |
 | `src/PEAKUsageSkills/Config/UsageSkillsConfig.cs` | All public config entries and exact-default schema migrations. |
 | `src/PEAKUsageSkills/Effects/EffectService.cs` | Converts effective levels/config into gameplay multipliers. |
@@ -39,13 +39,13 @@ This map helps a new conversation find the current source of truth quickly.
 | `src/PEAKUsageSkills/GameAdapters/RunStateAdapter.cs` | Local-character gameplay, Airport exclusion, and custom-run eligibility without assuming vanilla scene names. |
 | `src/PEAKUsageSkills/GameAdapters/ConditionSkillAdapter.cs` | PEAK status-to-Tolerance and recovery-effect mapping. |
 | `src/PEAKUsageSkills/GameAdapters/InventorySkillService.cs` | Typed Backpack/Fanny/Jet Strength capacity and safe data expansion; Rocket exclusion. |
-| `src/PEAKUsageSkills/GameAdapters/Patches/StaminaPatches.cs` | Endurance XP/effects, aligned pass-out thresholds, activity stamina costs, bonus-pool usability, and stamina HUD. |
+| `src/PEAKUsageSkills/GameAdapters/Patches/StaminaPatches.cs` | Endurance XP/effects, aligned pass-out thresholds, activity stamina costs, regeneration, and stamina HUD. Vanilla owns the regular-stamina sprint boundary. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/WeightPatches.cs` | Strength Weight multiplier and optional numeric-label attempt. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/ClimbingPatches.cs` | Wall/rope/vine performance, Wet Grip, Climbing Tenacity. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/MovementPatches.cs` | Athletics, jumps, and air control. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/FallAndAfflictionPatches.cs` | Vitality, Resiliency afflictions, shared Petrification hook, natural recovery effect, and cold-warmth scope. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/InventoryPatches.cs` | Type-neutral deserialization plus typed wheel and visuals. |
-| `src/PEAKUsageSkills/Tracking/ActivitySampler.cs` | Distance/work sampling for Strength, climbing, Wet Grip, Tenacity, Athletics. |
+| `src/PEAKUsageSkills/Tracking/ActivitySampler.cs` | Distance/work sampling for Strength, climbing, Wet Grip, Tenacity, Athletics, and thresholded Hunger training. |
 
 ## UI, diagnostics, and persistence
 
@@ -62,7 +62,7 @@ This map helps a new conversation find the current source of truth quickly.
 
 | Path | Purpose |
 |---|---|
-| `tests/PEAKUsageSkills.Tests/SkillMathTests.cs` | Pure tests for progression/scaling/HUD/backpack math. |
+| `tests/PEAKUsageSkills.Tests/SkillMathTests.cs` | Pure tests for progression/scaling/HUD/backpack/Hunger-work math. |
 | `tests/PEAKUsageSkills.Tests/PEAKUsageSkills.Tests.csproj` | Test project. |
 
 ## Documentation authority

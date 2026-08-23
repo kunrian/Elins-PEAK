@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.7
+
+- Hunger now gains EXP from movement beginning at 10 Hunger instead of incoming Hunger gains.
+- Reduced the EXP rate per Hunger point and movement meter from 0.1 to 0.02.
+
+## 0.4.6
+
+- Sprinting now stops when regular stamina is exhausted instead of continuing into bonus food stamina.
+- Updated the default Endurance and sprinting Athletics EXP rates.
+
 ## 0.4.5
 
 - Fixed passing out at higher stamina thresholds. Thanks to Noelle and Kirsho in the modding discord for the amazing troubleshooting and guidance!

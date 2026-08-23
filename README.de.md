@@ -32,7 +32,7 @@ Aktuell gibt es **18 dauerhafte Fähigkeiten** mit einer Standardobergrenze von 
 Das blaue **Widerstand**-Feld enthält acht getrennte Fähigkeiten:
 **Gift, Kälte, Hitze, Müdigkeit, Sporen, Hunger, Fluch und Versteinerung.**
 
-EP gibt es nur, wenn der passende Zustand tatsächlich zunimmt. Gift, Kälte, Hitze, Müdigkeit und Sporen verbessern zusätzlich natürliche Erholung, sofern PEAK den jeweiligen Abbau als natürliche Erholung markiert.
+Gift, Kälte, Hitze, Müdigkeit, Sporen, Fluch und Versteinerung geben EP, wenn der passende Zustand tatsächlich zunimmt. Hunger wird stattdessen durch Bewegung ab 10 Hunger trainiert. Gift, Kälte, Hitze, Müdigkeit und Sporen verbessern zusätzlich natürliche Erholung, sofern PEAK den jeweiligen Abbau als natürliche Erholung markiert.
 
 ## Stärke erweitert Rucksäcke
 
@@ -67,14 +67,15 @@ Standard-Maximum: 999.
 ## Standard-XP
 | Fähigkeit | Quelle |
 |---|---|
-| Ausdauer | 10 EP pro normalisiertem Punkt angeforderter Roh-Ausdauer |
+| Ausdauer | 20 EP pro normalisiertem Punkt angeforderter Roh-Ausdauer |
 | Stärke | 2 EP pro Roh-Weight × Bewegungsmeter |
 | Wand/Seil/Ranke | 8 EP pro gültigem Klettermeter |
 | Gehen | 0,22 EP pro Meter |
-| Sprint | 1,05 EP pro Meter |
+| Sprint | 0,9 EP pro Meter |
 | Beweglichkeit | 8 EP pro gültigem Sprung |
 | Vitalität | 100 EP pro normalisiertem Punkt roher Fall-Injury |
-| Widerstände | 100 EP pro tatsächlich aufgebautem passenden Statuspunkt |
+| Widerstände außer Hunger | 100 EP pro tatsächlich aufgebautem passenden Statuspunkt |
+| Hunger | 0,02 EP pro angezeigtem Hungerpunkt × Bewegungsmeter ab 10 Hunger |
 | Nassgriff | 20 EP pro rutschigem Klettermeter, gewichtet nach Rutschigkeit |
 | Kletterzähigkeit | 40 EP pro Wandklettermeter unter 20% normaler Ausdauer |
 

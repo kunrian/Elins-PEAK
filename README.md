@@ -46,7 +46,7 @@ Repeated exposure to conditions creates its own progression instead of being rol
 - **Curse & Petrification** — Reduces received values.
 - **Hunger** — Increases the interval time that hunger increases
 
-These eight skills appear together in the blue **Resiliency** panel. EXP is gained by gaining these afflictions. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
+These eight skills appear together in the blue **Resiliency** panel. Poison, Cold, Heat, Drowsy, Spores, Curse, and Petrification gain EXP when the matching affliction increases. Hunger instead trains while moving at 10 or more Hunger. Curse and Petrification do not have recovery-speed bonuses because PEAK provides no natural recovery timer for them.
 
 ## Strength: yes, your backpack can grow!
 
@@ -106,16 +106,17 @@ The current defaults use the following underlying work values:
 
 | Skill | Default XP source |
 |---|---|
-| Endurance | 10 XP per normalized point of raw stamina requested |
+| Endurance | 20 XP per normalized point of raw stamina requested |
 | Strength | 2 XP per raw Weight × movement meter |
 | Wall Climbing | 8 XP per intentional climbing meter |
 | Rope Climbing | 8 XP per intentional climbing meter |
 | Vine Climbing | 8 XP per intentional climbing meter |
 | Athletics | 0.22 XP per qualifying walking meter |
-| Athletics while sprinting | 1.05 XP per qualifying sprinting meter |
+| Athletics while sprinting | 0.9 XP per qualifying sprinting meter |
 | Agility | 8 XP per successfully executed local jump |
 | Vitality | 100 XP per normalized point of raw fall Injury |
-| Resiliency skills | 100 XP per normalized point of actual incoming matching affliction |
+| Resiliency skills except Hunger | 100 XP per normalized point of actual incoming matching affliction |
+| Hunger | 0.02 XP per displayed Hunger point × movement meter while at 10 or more Hunger |
 | Wet Grip | 20 XP per slippery climbing meter, weighted by slipperiness |
 | Climbing Tenacity | 40 XP per intentional wall-climbing meter while regular stamina is below 20% |
 
@@ -153,7 +154,7 @@ Endurance currently increases capacity and regeneration. General stamina-cost re
 
 ## Condition handling
 
-Tolerance is applied before PEAK adds the incoming affliction to the local character, and XP is based on the amount that actually gets through. Poison, Cold, Heat, Drowsy, and Spore Tolerance also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
+Tolerance is applied before PEAK adds the incoming affliction to the local character. Exposure XP for every Resiliency skill except Hunger is based on the amount that actually gets through; Hunger XP instead comes from movement at 10 or more Hunger. Poison, Cold, Heat, Drowsy, and Spore Tolerance also speed PEAK paths marked as natural recovery. Cold remains the odd case: the observed runtime path often subtracts Cold locally without PEAK's natural-recovery flag, so that timer portion still needs a dedicated follow-up; Cold exposure XP and incoming reduction are independent of that issue.
 
 ## Save data and backups
 

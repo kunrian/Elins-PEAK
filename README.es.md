@@ -32,7 +32,7 @@ Actualmente hay **18 habilidades persistentes** con un nivel máximo predetermin
 El panel azul de **Resistencia** contiene ocho habilidades:
 **Veneno, Frío, Calor, Somnolencia, Esporas, Hambre, Maldición y Petrificación.**
 
-Solo ganan EXP cuando la aflicción correspondiente aumenta de verdad. Veneno, Frío, Calor, Somnolencia y Esporas también aceleran las rutas que PEAK marca como recuperación natural.
+Veneno, Frío, Calor, Somnolencia, Esporas, Maldición y Petrificación ganan EXP cuando la aflicción correspondiente aumenta de verdad. Hambre se entrena al moverse con 10 o más puntos de Hambre. Veneno, Frío, Calor, Somnolencia y Esporas también aceleran las rutas que PEAK marca como recuperación natural.
 
 ## Fuerza también amplía las mochilas
 
@@ -67,14 +67,15 @@ Máximo predeterminado: 999.
 ## Fuentes de EXP
 | Habilidad | Fuente |
 |---|---|
-| Resistencia física | 10 EXP por punto normalizado de resistencia bruta solicitada |
+| Resistencia física | 20 EXP por punto normalizado de resistencia bruta solicitada |
 | Fuerza | 2 EXP por Weight bruto × metro recorrido |
 | Pared/cuerda/enredadera | 8 EXP por metro válido |
 | Caminar | 0,22 EXP por metro |
-| Sprint | 1,05 EXP por metro |
+| Sprint | 0,9 EXP por metro |
 | Agilidad | 8 EXP por salto válido |
 | Vitalidad | 100 EXP por punto normalizado de Injury de caída |
-| Resistencias | 100 EXP por punto real de la aflicción correspondiente |
+| Resistencias excepto Hambre | 100 EXP por punto real de la aflicción correspondiente |
+| Hambre | 0,02 EXP por punto visible de Hambre × metro recorrido con 10 o más |
 | Agarre mojado | 20 EXP por metro resbaladizo, ponderado por deslizamiento |
 | Tenacidad | 40 EXP por metro de pared por debajo del 20% de resistencia normal |
 

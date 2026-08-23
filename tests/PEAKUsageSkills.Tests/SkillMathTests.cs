@@ -146,5 +146,15 @@ namespace PEAKUsageSkills.Tests
         {
             Assert.Equal(expected, SkillMath.ExtraBackpackSlots(level));
         }
+
+        [Theory]
+        [InlineData(0.099f, 2f, 0d)]
+        [InlineData(0.10f, 2f, 20d)]
+        [InlineData(0.30f, 2f, 60d)]
+        [InlineData(0.75f, 2f, 150d)]
+        public void HungerMovementStartsAtTenDisplayedPoints(float hunger, float distance, double expected)
+        {
+            Assert.Equal(expected, SkillMath.HungerMovementWork(hunger, distance), 5);
+        }
     }
 }

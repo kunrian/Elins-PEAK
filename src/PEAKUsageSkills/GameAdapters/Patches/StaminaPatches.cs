@@ -250,23 +250,6 @@ namespace PEAKUsageSkills.GameAdapters.Patches
         }
     }
 
-    [HarmonyPatch(typeof(Character), "OutOfRegularStamina")]
-    internal static class BonusStaminaSprintPatch
-    {
-        private static void Postfix(Character __instance, ref bool __result)
-        {
-            if (__result
-                && Plugin.Effects.CanApply(__instance)
-                && __instance.data.extraStamina >= 0.001f)
-            {
-                // Vanilla sprinting stops on the regular pool even though
-                // UseStamina supports spending bonus stamina. Keep sprinting
-                // long enough for the normal spender to roll into that pool.
-                __result = false;
-            }
-        }
-    }
-
     internal static class RegenScope
     {
         [ThreadStatic]

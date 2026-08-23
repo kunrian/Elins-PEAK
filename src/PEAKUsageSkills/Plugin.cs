@@ -26,7 +26,7 @@ namespace PEAKUsageSkills
     {
         public const string PluginGuid = "com.chiseled.peak.usageskills";
         public const string PluginName = "Elin's PEAK";
-        public const string PluginVersion = "0.4.5";
+        public const string PluginVersion = "0.4.7";
 
         private Harmony? harmony;
 
@@ -111,7 +111,6 @@ namespace PEAKUsageSkills
             RecordHook("PassOutThreshold", typeof(CharacterAfflictions), "get_shouldPassOut");
             RecordHook("PassOutRecovery", typeof(Character), "HandlePassedOut");
             RecordHook("StaminaCost", typeof(Character), "UseStamina");
-            RecordHook("BonusSprint", typeof(Character), "OutOfRegularStamina");
             RecordHook("StaminaRegen", typeof(Character), "UpdateVariablesFixed");
             RecordHook("StaminaHud", typeof(StaminaBar), "Update");
             RecordHook("Weight", typeof(CharacterAfflictions), "UpdateWeight");

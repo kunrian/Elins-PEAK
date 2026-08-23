@@ -32,7 +32,7 @@ Le mod propose actuellement **18 compétences persistantes**, avec un niveau max
 Le panneau bleu **Résistance** contient huit compétences :
 **Poison, Froid, Chaleur, Somnolence, Spores, Faim, Malédiction et Pétrification.**
 
-Elles ne gagnent de l'EXP que lorsque l'affliction correspondante augmente réellement. Poison, Froid, Chaleur, Somnolence et Spores améliorent aussi les voies que PEAK marque comme récupération naturelle.
+Poison, Froid, Chaleur, Somnolence, Spores, Malédiction et Pétrification gagnent de l'EXP lorsque l'affliction correspondante augmente réellement. Faim progresse plutôt en se déplaçant avec au moins 10 points de Faim. Poison, Froid, Chaleur, Somnolence et Spores améliorent aussi les voies que PEAK marque comme récupération naturelle.
 
 ## La Force agrandit aussi les sacs
 
@@ -67,14 +67,15 @@ Maximum par défaut : 999.
 ## Sources d'EXP
 | Compétence | Source |
 |---|---|
-| Endurance | 10 EXP par point normalisé d'endurance brute demandée |
+| Endurance | 20 EXP par point normalisé d'endurance brute demandée |
 | Force | 2 EXP par Weight brut × mètre parcouru |
 | Paroi/corde/liane | 8 EXP par mètre valide |
 | Marche | 0,22 EXP par mètre |
-| Sprint | 1,05 EXP par mètre |
+| Sprint | 0,9 EXP par mètre |
 | Agilité | 8 EXP par saut valide |
 | Vitalité | 100 EXP par point normalisé d'Injury de chute |
-| Résistances | 100 EXP par point réellement appliqué de l'affliction correspondante |
+| Résistances sauf Faim | 100 EXP par point réellement appliqué de l'affliction correspondante |
+| Faim | 0,02 EXP par point de Faim affiché × mètre parcouru à partir de 10 |
 | Adhérence humide | 20 EXP par mètre glissant, pondéré par le niveau de glisse |
 | Ténacité | 40 EXP par mètre de paroi sous 20% d'endurance normale |
 
