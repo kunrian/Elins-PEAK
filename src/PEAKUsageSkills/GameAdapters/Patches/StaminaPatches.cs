@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using PEAKUsageSkills.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
 
 namespace PEAKUsageSkills.GameAdapters.Patches
 {
@@ -25,6 +25,7 @@ namespace PEAKUsageSkills.GameAdapters.Patches
             }
         }
     }
+
     internal static class EndurancePassOutThreshold
     {
         public static float GetThreshold(Character character)

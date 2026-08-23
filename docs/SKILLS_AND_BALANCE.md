@@ -1,6 +1,6 @@
 # Skills and balance
 
-This is the implemented 0.4.2 default balance. Generated BepInEx configuration can override the rates.
+This is the implemented 0.4.5 default balance. Generated BepInEx configuration can override the rates.
 
 All skills default to level 1, cap at 999, and use `round(100 × level^1.21)` XP for the next level. Airport XP is always disabled; custom-run XP is disabled by default.
 
@@ -9,7 +9,7 @@ All skills default to level 1, cap at 999, and use `round(100 × level^1.21)` XP
 | Skill | Training default | Effect |
 |---|---|---|
 | Strength | raw Weight × movement meter × 2 XP | Anchored Weight reduction; +1/+2/+3/+4/+5 stored-item slots at 20/40/70/120/200. |
-| Endurance | normalized raw stamina requested × 10 XP | +0.5% base stamina and +0.1% regeneration per level. |
+| Endurance | normalized raw stamina requested × 10 XP | +0.5% base stamina and +0.1% regeneration per level; the matching expanded threshold is honored before pass-out. |
 | Wall Climbing | intentional meter × 8 XP | +0.3% speed per level; anchored stamina-cost reduction. |
 | Rope Climbing | intentional meter × 8 XP | +0.3% speed per level; anchored stamina-cost reduction. |
 | Vine Climbing | intentional meter × 8 XP | +0.3% speed, anchored cost reduction, and light momentum retention. |

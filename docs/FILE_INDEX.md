@@ -12,7 +12,7 @@ This map helps a new conversation find the current source of truth quickly.
 | `Directory.Build.props` | Shared version/build properties. |
 | `Config.Build.user.props.template` | Template for local game/profile assembly paths. |
 | `PEAKUsageSkills.slnx` | Solution entry point. |
-| `scripts/Build-Package.ps1` | Validates and builds the Thunderstore archive. |
+| `scripts/Build-Package.ps1` | Validates version parity, package assets/localizations, the compiled assembly, and the Thunderstore archive. |
 | `package/manifest.json` | Package identity, version, and dependency source of truth. |
 | `package/README.md` | Player-facing Thunderstore README. |
 | `package/CHANGELOG.md` | Player-facing packaged changelog. |
@@ -36,10 +36,10 @@ This map helps a new conversation find the current source of truth quickly.
 
 | Path | Purpose |
 |---|---|
-| `src/PEAKUsageSkills/GameAdapters/RunStateAdapter.cs` | Gameplay scene, Airport, and custom-run eligibility. |
+| `src/PEAKUsageSkills/GameAdapters/RunStateAdapter.cs` | Local-character gameplay, Airport exclusion, and custom-run eligibility without assuming vanilla scene names. |
 | `src/PEAKUsageSkills/GameAdapters/ConditionSkillAdapter.cs` | PEAK status-to-Tolerance and recovery-effect mapping. |
 | `src/PEAKUsageSkills/GameAdapters/InventorySkillService.cs` | Typed Backpack/Fanny/Jet Strength capacity and safe data expansion; Rocket exclusion. |
-| `src/PEAKUsageSkills/GameAdapters/Patches/StaminaPatches.cs` | Endurance XP/effects, activity stamina costs, bonus-pool usability, stamina HUD. |
+| `src/PEAKUsageSkills/GameAdapters/Patches/StaminaPatches.cs` | Endurance XP/effects, aligned pass-out thresholds, activity stamina costs, bonus-pool usability, and stamina HUD. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/WeightPatches.cs` | Strength Weight multiplier and optional numeric-label attempt. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/ClimbingPatches.cs` | Wall/rope/vine performance, Wet Grip, Climbing Tenacity. |
 | `src/PEAKUsageSkills/GameAdapters/Patches/MovementPatches.cs` | Athletics, jumps, and air control. |

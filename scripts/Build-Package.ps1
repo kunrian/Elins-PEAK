@@ -10,6 +10,8 @@ $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $packageSource = Join-Path $repositoryRoot "package"
 $manifestPath = Join-Path $packageSource "manifest.json"
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+$projectPath = Join-Path $repositoryRoot "src\PEAKUsageSkills\PEAKUsageSkills.csproj"
+$pluginSourcePath = Join-Path $repositoryRoot "src\PEAKUsageSkills\Plugin.cs"
 
 if ($manifest.name -notmatch '^[A-Za-z0-9_]{1,128}$') {
     throw "manifest.json contains an invalid package name: $($manifest.name)"
@@ -17,6 +19,25 @@ if ($manifest.name -notmatch '^[A-Za-z0-9_]{1,128}$') {
 
 if ($manifest.version_number -notmatch '^\d+\.\d+\.\d+$') {
     throw "manifest.json contains an invalid semantic version: $($manifest.version_number)"
+}
+
+[xml]$project = Get-Content -LiteralPath $projectPath -Raw
+$projectVersion = [string]$project.Project.PropertyGroup.Version
+if ($projectVersion -ne $manifest.version_number) {
+    throw "Project version $projectVersion does not match manifest version $($manifest.version_number)."
+}
+
+$pluginSource = Get-Content -LiteralPath $pluginSourcePath -Raw
+$pluginVersionMatch = [regex]::Match(
+    $pluginSource,
+    'public\s+const\s+string\s+PluginVersion\s*=\s*"(?<version>\d+\.\d+\.\d+)"')
+if (-not $pluginVersionMatch.Success) {
+    throw "Could not read PluginVersion from $pluginSourcePath."
+}
+
+$pluginVersion = $pluginVersionMatch.Groups["version"].Value
+if ($pluginVersion -ne $manifest.version_number) {
+    throw "Plugin version $pluginVersion does not match manifest version $($manifest.version_number)."
 }
 
 if ([string]::IsNullOrWhiteSpace($manifest.description) -or $manifest.description.Length -gt 250) {
@@ -79,6 +100,12 @@ if ($LASTEXITCODE -ne 0) {
 $pluginPath = Join-Path $repositoryRoot "src\PEAKUsageSkills\bin\$Configuration\netstandard2.1\PEAKUsageSkills.dll"
 if (-not (Test-Path -LiteralPath $pluginPath -PathType Leaf)) {
     throw "Compiled plugin was not found: $pluginPath"
+}
+
+$assemblyVersion = [System.Reflection.AssemblyName]::GetAssemblyName($pluginPath).Version
+$compiledVersion = "$($assemblyVersion.Major).$($assemblyVersion.Minor).$($assemblyVersion.Build)"
+if ($compiledVersion -ne $manifest.version_number) {
+    throw "Compiled assembly version $compiledVersion does not match manifest version $($manifest.version_number)."
 }
 
 $distRoot = [System.IO.Path]::GetFullPath((Join-Path $repositoryRoot "dist"))

@@ -1,6 +1,8 @@
 # Elin's PEAK
 
-**Languages:** English · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Français](README.fr.md)
+**Languages(Translated via chatGPT)** [English](https://github.com/kunrian/Elins-PEAK/blob/main/README.md) · [简体中文](https://github.com/kunrian/Elins-PEAK/blob/main/README.zh-CN.md) · [日本語](https://github.com/kunrian/Elins-PEAK/blob/main/README.ja.md) · [한국어](https://github.com/kunrian/Elins-PEAK/blob/main/README.ko.md) · [Deutsch](https://github.com/kunrian/Elins-PEAK/blob/main/README.de.md) · [Español](https://github.com/kunrian/Elins-PEAK/blob/main/README.es.md) · [Français](https://github.com/kunrian/Elins-PEAK/blob/main/README.fr.md)
+
+- Please let me know if these can be improved. Thank you kindly!
 
 ## Level Up Everything!
 

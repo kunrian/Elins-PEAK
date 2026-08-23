@@ -12,7 +12,7 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | XP curve | `round(100 * level^1.21)` | Accepted after balance revision |
 | Reduction scaling | Anchored reciprocal curve through 999 | Accepted; reaches old 999 target near 500 and 0.001 multiplier at 999 |
 | Positive scaling | Linear per level | Accepted, with explicit caps only where implemented (vine retention 75%) |
-| Endurance | Capacity + regeneration, no global cost reduction | Accepted; activity skills own efficiency |
+| Endurance | Capacity + regeneration, matching pass-out threshold, no global cost reduction | Pass-out paths aligned in 0.4.5; activity skills own efficiency |
 | Climbing | Separate Wall, Rope, and Vine skills | Accepted |
 | Directional climbing XP | Intentional distance in all directions | Accepted; down/side movement can be legitimate work |
 | Agility | Executed jump XP, impulse/cost/light air control | Accepted; no landing-displacement scorer yet |
@@ -27,7 +27,8 @@ This is a compact record of owner decisions and superseded proposals. It prevent
 | MoreSlots | Not required; compatibility not guaranteed | No dependency |
 | BackpackCapacity | Disable alongside Elin's PEAK | Both modify backpack data |
 | XP in Airport | Always off | Accepted and observed in logs |
-| Custom-run XP | Off by default, configurable | Implemented, dedicated runtime test pending |
+| Gameplay scene detection | Spawned local character outside Airport; no `Level_*` name requirement | Accepted in 0.4.4 for terrain/scene-randomizer compatibility |
+| Custom-run XP | Off by default, configurable through `RunSettings.IsCustomRun` | Implemented; dedicated enabled/disabled runtime comparison pending |
 | Anti-farming | Fundamental validity now; rate limits/diminishing returns later | Explicitly deferred by owner |
 | Diagnostics | Rate-limited BepInEx logs; no manual import/export | Accepted |
 | Pause menu | Main and blue Resiliency stacked on left; green Recovery removed; refresh once on open | Accepted in 0.4.0 |

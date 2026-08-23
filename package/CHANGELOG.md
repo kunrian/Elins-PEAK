@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.5
+
+- Fixed passing out at higher stamina thresholds. Thanks to Noelle and Kirsho in the modding discord for the amazing troubleshooting and guidance!
+- fixed lower values
+
+## 0.4.4
+
+- compat with terrain randomizer and other mods
+
+## 0.4.3
+
+- fixed translation links
+
 ## 0.4.2
 
 - Added translated skill names and tooltips for Simplified Chinese, Japanese, Korean, German, Spanish, and French. The skill panel now follows PEAK's language setting and refreshes when it changes; untranslated languages fall back to English.

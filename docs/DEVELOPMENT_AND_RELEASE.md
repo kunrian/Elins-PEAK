@@ -35,7 +35,9 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 
 The script validates `package/manifest.json`, checks the 256×256 icon, validates matching non-empty keys across all six JSON catalogs, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root contains `manifest.json`, the English/localized READMEs, `CHANGELOG.md`, and `icon.png`; the DLL and `Localization/*.json` live together under `BepInEx/plugins/Elins_PEAK`.
 
-The current local artifact is `dist\Elins_PEAK-0.4.2.zip` with SHA-256 `590A350E9A7E78D292B9010354C85D109EE065B05F2FF744FDF67416C55BD1A9`, built on 2026-08-18 with zero warnings/errors. The solution and test project were compiled, but the full test suite was intentionally not executed for this focused localization/overload-targeting cycle. Rebuilding may change the ZIP hash even when payloads are equivalent, so record the exact live-tested/publication artifact again.
+The corrected local artifact is `dist\Elins_PEAK-0.4.5.zip` with SHA-256 `48E988F98DD119142FA11F73B9AF8A73544DB4E1F266AD96918C7072280C9094`, built on 2026-08-23 with zero warnings/errors. Its DLL is SHA-256 `DEBBF02876805CA681243820E795172E275D8BDF12FF02EF338E8A6392D164F0` and reports assembly/file version 0.4.5.0.
+
+The Thunderstore-published 0.4.5 ZIP is SHA-256 `1B4F4C6E3988050721C30E28FD32D16F3DE3038B7701916E222121F158EC3E0D`. It contains the intended 0.4.4/0.4.5 gameplay code but a DLL that self-reports 0.4.2. The corrected artifact is therefore a distinct build and must not be described as the already-tested/uploaded bytes. The full test suite was intentionally skipped because this reconciliation changed release metadata/docs and incorporated an already runtime-tested adapter patch, not core math or persistence.
 
 ## Runtime deployment and data
 
@@ -50,7 +52,7 @@ Back up the progression file before destructive/manual test changes. Resetting a
 
 ## Version update checklist
 
-1. Update the assembly/plugin version in source/project metadata.
+1. Update the assembly/plugin version in source/project metadata. `Build-Package.ps1` rejects disagreement among `PluginVersion`, the project `<Version>`, the manifest, and the compiled assembly.
 2. Update `package/manifest.json` to the same semantic version.
 3. Update root and package changelogs. Keep `package/README.md` player-facing and personal in tone.
 4. Ensure root engineering docs distinguish implemented, runtime-verified, and merely planned work.
@@ -71,7 +73,7 @@ Use a branch from current `main`, stage explicit paths, commit a coherent change
 & 'C:\Program Files\GitHub CLI\gh.exe' auth status
 ```
 
-GitHub source publication is not a Thunderstore upload. The owner authorized the 0.4.2 Git commit/push; Thunderstore publication remains a separate authenticated workflow and should happen only after the exact package passes runtime validation.
+GitHub source publication is not a Thunderstore upload. Thunderstore 0.4.5 was published on 2026-08-19; its source realignment and corrected version metadata do not authorize replacing that package or the live Gale DLL. Any later upload should use the exact artifact that receives the final startup/runtime check.
 
 ## Updating after a PEAK release
 

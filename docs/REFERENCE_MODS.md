@@ -42,4 +42,4 @@ The package manifest is the authority for exact dependency package identifiers/v
 
 ## Profile hygiene for reliable tests
 
-Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 0.3.2 solo log is a valid baseline; it does not approve the 0.4.2 localization/Petrification changes, naming migration, or typed Fanny/Jet capacity.
+Start with a minimal `devtest` profile containing the required loader/libraries and Elin's PEAK. Add optional mods one at a time for compatibility runs. Always capture the loaded plugin list and version header with the log. The 2026-08-19 profile included TerrainRandomiser and confirmed the 0.4.5 pass-out/localization/Petrification hooks loaded without an Elin's PEAK patch exception, but it is not a substitute for isolated conflict testing or the pending feature-specific checks in `TESTING_AND_COMPATIBILITY.md`.

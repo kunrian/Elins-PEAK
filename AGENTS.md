@@ -16,6 +16,8 @@ These instructions are the repository-local source of truth for future coding ag
 - The release has 18 skills: 10 Main Skills and 8 blue Resiliency skills. Retired Recovery progression is merged into matching Tolerances during load.
 - Main-inventory capacity remains vanilla. Strength unlocks typed item slots for Backpack, Fanny Pack, and Jet Pack at levels 20, 40, 70, 120, and 200; Jet fuel and Rocket Pack remain untouched.
 - Airport/lobby XP is always rejected. Custom-run XP is disabled by default.
+- Gameplay eligibility uses a spawned local character outside the Airport rather than requiring a `Level_*` scene name, so terrain and scene-randomizer mods do not silently disable progression. `RunSettings.IsCustomRun` still controls the separate custom-run config gate.
+- Endurance's expanded stamina threshold applies to both `CharacterAfflictions.shouldPassOut` and `Character.HandlePassedOut`; keep both hooks aligned if PEAK changes either path.
 - Pause-menu translations register through PEAKLib UI and PEAK's `LocalizedText` table. The UI follows PEAK's selected language live; supplied translations cover French, German, Spanish, Simplified Chinese, Japanese, and Korean, with English fallback for every other selection or missing key.
 - Multiplayer runtime testing is the final validation phase, not an assumption of correctness.
 - Anti-farming beyond fundamental action validity and teleport rejection remains intentionally deferred.
@@ -42,7 +44,7 @@ These instructions are the repository-local source of truth for future coding ag
 - The build must not deploy to Gale unless `DeployToDevtest=true` is explicitly selected.
 - Do not replace a live DLL while PEAK is running.
 - A local package build, a Gale installation, a GitHub merge, and a Thunderstore upload are separate actions. Never infer authorization for one from another.
-- Version 0.3.2 received a solo `devtest` runtime pass on 2026-08-18. Version 0.4.2 changes require a fresh runtime pass and must not be described as live-verified yet.
+- Version 0.4.5 is the current Thunderstore/Gale release. Its gameplay changes received a solo `devtest` pass on 2026-08-19, including healthy localization/Petrification/pass-out hooks and observed Endurance pass-out suppression. The published DLL accidentally self-reports 0.4.2; the corrected 0.4.5 source/package is build-verified but remains a distinct artifact until separately installed or uploaded.
 
 ## Scope discipline
 

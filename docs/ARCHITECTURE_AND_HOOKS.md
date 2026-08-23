@@ -1,12 +1,12 @@
 # Architecture and hooks
 
-This map describes source version 0.4.2 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
+This map describes source version 0.4.5 against the inspected PEAK assembly hash recorded in `HANDOFF.md`.
 
 ## Runtime flow
 
 1. `Plugin` binds/migrates config, registers supplied translations into PEAK's localization table, loads the local save, merges retired Recovery states, creates services, and patches each Harmony class fail-soft.
 2. `ActivitySampler` measures real character-center movement for Strength, climbing, Athletics, Wet Grip, and Climbing Tenacity.
-3. Direct patches observe stamina use, jumps, falls, affliction gains/removal, movement/climbing calculations, and typed back-item UI/data.
+3. Direct patches observe stamina use/pass-out decisions, jumps, falls, affliction gains/removal, movement/climbing calculations, and typed back-item UI/data.
 4. `ProgressionService` validates eligibility, accumulates XP, levels, and emits level changes.
 5. `EffectService` converts the effective level into linear bonuses or anchored reductions.
 6. `SaveStore` writes atomically on its interval/shutdown. Pause UI values refresh once each time the menu is enabled.
@@ -18,6 +18,7 @@ Progression and effects are local-player only. There is no custom RPC or host-ow
 | PEAK target | Purpose |
 |---|---|
 | `Character.GetMaxStamina`, `UpdateVariablesFixed`, `UseStamina` | Endurance capacity/regen and raw stamina-use XP; activity-specific cost transforms. |
+| `CharacterAfflictions.get_shouldPassOut`, `Character.HandlePassedOut` | Compare accumulated affliction against Endurance's expanded stamina threshold in both vanilla pass-out paths. |
 | `StaminaBar.Update` | Render extended Endurance capacity. |
 | `CharacterAfflictions.UpdateWeight` | Transform current local Weight and train Strength through sampled weighted movement. |
 | `CharacterClimbing.GetRequestedPostition` | Wall speed/control/cost plus Wet Grip and Tenacity effects. |
@@ -32,6 +33,14 @@ Progression and effects are local-player only. There is no custom RPC or host-ow
 | `BackpackWheel.InitWheel` | Apply typed logical capacity and add only normal item slices. Jet fuel remains its separate vanilla slice. |
 | `BackpackVisuals.RefreshVisuals` | Render typed item capacity for world/on-back visuals; skip Rocket Pack. |
 | `LocalizedText.OnLangugageChanged` | Refresh dynamic skill rows/section titles after PEAK changes language; no Harmony patch or separate language setting. |
+
+## Run eligibility invariant
+
+`RunStateAdapter` never grants XP in an Airport scene and still respects the configurable `RunSettings.IsCustomRun` gate. Outside the Airport, gameplay is recognized by the presence of `Character.localCharacter`, not by requiring a vanilla `Level_*` scene name. This prevents terrain/scene-randomizer mods from disabling progression merely by changing scene naming.
+
+## Endurance pass-out invariant
+
+PEAK checks the vanilla status-sum threshold in more than one place. A postfix suppresses `CharacterAfflictions.shouldPassOut` while the local player's status sum remains below `EffectService.EnduranceCapacityMultiplier`, and a guarded transpiler replaces the matching `1.0` comparison in `Character.HandlePassedOut`. Both are local-player/effect gated, preserve the vanilla decision at level 1, and log patch-health failure rather than silently claiming support when the target changes.
 
 ## Localization invariant
 
