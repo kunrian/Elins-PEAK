@@ -35,7 +35,7 @@ dotnet test .\PEAKUsageSkills.slnx -c Release
 
 The script validates `package/manifest.json`, checks the 256×256 icon, validates matching non-empty keys across all six JSON catalogs, builds without live deployment, stages the expected files, creates `dist/Elins_PEAK-<version>.zip`, checks archive entries, and reports a SHA-256 hash. The package root contains `manifest.json`, the English/localized READMEs, `CHANGELOG.md`, and `icon.png`; the DLL and `Localization/*.json` live together under `BepInEx/plugins/Elins_PEAK`.
 
-The corrected local artifact is `dist\Elins_PEAK-0.4.5.zip` with SHA-256 `48E988F98DD119142FA11F73B9AF8A73544DB4E1F266AD96918C7072280C9094`, built on 2026-08-23 with zero warnings/errors. Its DLL is SHA-256 `DEBBF02876805CA681243820E795172E275D8BDF12FF02EF338E8A6392D164F0` and reports assembly/file version 0.4.5.0.
+The corrected local artifact is `dist\Elins_PEAK-0.4.5.zip` with SHA-256 `82740E85B5BF80CB79F0FCCD121172CB232FDCA912731DBB140E95F33D49F7FE`, built on 2026-08-23 with zero warnings/errors. Its DLL is SHA-256 `F9AE8869BFFF90610DA8208672CDE92B16DA7868642B4DC5E0980FFD4A0B3BF8`, reports assembly/file version 0.4.5.0, and identifies source commit `e277459` in its informational version.
 
 The Thunderstore-published 0.4.5 ZIP is SHA-256 `1B4F4C6E3988050721C30E28FD32D16F3DE3038B7701916E222121F158EC3E0D`. It contains the intended 0.4.4/0.4.5 gameplay code but a DLL that self-reports 0.4.2. The corrected artifact is therefore a distinct build and must not be described as the already-tested/uploaded bytes. The full test suite was intentionally skipped because this reconciliation changed release metadata/docs and incorporated an already runtime-tested adapter patch, not core math or persistence.
 
